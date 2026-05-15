@@ -54,9 +54,114 @@
     <div class="card" id="section-offre" style="display:none">
       <h2>Ajouter une offre</h2>
       <label>Titre de l'offre</label>
-      <input type="text" id="titre" placeholder="Ex: Paella géante pour 10 personnes">
+      <input type="text" id="titre" placeholder="Ex: Paella geante pour 10 personnes">
       <label>Description</label>
-      <textarea id="description" rows="3" placeholder="Décrivez votre offre..."></textarea>
+      <textarea id="description" rows="3" placeholder="Decrivez votre offre..."></textarea>
       <label>Prix (XPF)</label>
       <input type="number" id="prix" placeholder="Ex: 3500">
-      <label>P
+      <label>Photos de l'offre</label>
+      <div class="upload-zone" onclick="document.getElementById('photos-input').click()">
+        Cliquez ici pour ajouter des photos
+      </div>
+      <input type="file" id="photos-input" multiple accept="image/*" style="display:none" onchange="apercuPhotos(this)">
+      <div class="preview-grid" id="apercu"></div>
+      <div class="progress" id="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+      <br>
+      <button onclick="publierOffre()">Publier l'offre</button>
+      <div class="msg" id="msg-offre"></div>
+    </div>
+
+  </div>
+  <script>
+    const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+    let fournisseurId = null;
+    let fichiers = [];
+
+    function afficherMsg(id, texte, type) {
+      const el = document.getElementById(id);
+      el.textContent = texte;
+      el.className = 'msg ' + type;
+    }
+
+    async function sauvegarderProfil() {
+      const nom = document.getElementById('nom').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const iban = document.getElementById('iban').value.trim();
+      const bic = document.getElementById('bic').value.trim();
+      if (!nom || !email) { afficherMsg('msg-profil', 'Nom et email obligatoires.', 'err'); return; }
+      try {
+        const res = await fetch(BACKEND + '/api/fournisseurs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nom, email, iban, bic })
+        });
+        const data = await res.json();
+        fournisseurId = data.id;
+        afficherMsg('msg-profil', 'Profil enregistre ! Vous pouvez maintenant ajouter une offre.', 'ok');
+        document.getElementById('section-offre').style.display = 'block';
+      } catch(e) {
+        afficherMsg('msg-profil', 'Erreur de connexion.', 'err');
+      }
+    }
+
+    function apercuPhotos(input) {
+      fichiers = Array.from(input.files);
+      const apercu = document.getElementById('apercu');
+      apercu.innerHTML = '';
+      fichiers.forEach(function(f) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(f);
+        apercu.appendChild(img);
+      });
+    }
+
+    async function uploaderPhoto(fichier) {
+      const signRes = await fetch(BACKEND + '/api/upload/sign', { method: 'POST' });
+      const { signature, timestamp, folder, cloud_name, api_key } = await signRes.json();
+      const form = new FormData();
+      form.append('file', fichier);
+      form.append('signature', signature);
+      form.append('timestamp', timestamp);
+      form.append('folder', folder);
+      form.append('api_key', api_key);
+      const upRes = await fetch('https://api.cloudinary.com/v1_1/' + cloud_name + '/image/upload', { method: 'POST', body: form });
+      return await upRes.json();
+    }
+
+    async function publierOffre() {
+      if (!fournisseurId) { afficherMsg('msg-offre', 'Enregistrez dabord votre profil.', 'err'); return; }
+      const titre = document.getElementById('titre').value.trim();
+      if (!titre) { afficherMsg('msg-offre', 'Le titre est obligatoire.', 'err'); return; }
+      try {
+        const offreRes = await fetch(BACKEND + '/api/offres', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fournisseur_id: fournisseurId,
+            titre: titre,
+            description: document.getElementById('description').value,
+            prix_xpf: document.getElementById('prix').value || null
+          })
+        });
+        const offre = await offreRes.json();
+        if (fichiers.length > 0) {
+          document.getElementById('progress-bar-wrap').style.display = 'block';
+          for (let i = 0; i < fichiers.length; i++) {
+            document.getElementById('progress-bar').style.width = ((i+1)/fichiers.length*100) + '%';
+            const uploaded = await uploaderPhoto(fichiers[i]);
+            await fetch(BACKEND + '/api/photos/' + uploaded.public_id.replace(/\//g,'_') + '/offre', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ offre_id: offre.id })
+            });
+          }
+        }
+        afficherMsg('msg-offre', 'Offre publiee ! Les photos sont en attente de moderation.', 'ok');
+        document.getElementById('progress-bar-wrap').style.display = 'none';
+      } catch(e) {
+        afficherMsg('msg-offre', 'Erreur lors de la publication.', 'err');
+      }
+    }
+  </script>
+</body>
+</html>
