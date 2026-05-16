@@ -9,163 +9,164 @@
     header h1 { margin: 0; font-size: 1.4rem; }
     nav { background: #16213e; padding: 10px 24px; }
     nav a { color: #ccc; text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
-    nav a:hover { color: white; }
-    .container { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
-    h2 { font-size: 1.2rem; margin-bottom: 16px; }
+    .section { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
+    h2 { font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #ddd; padding-bottom: 6px; }
+    .card { background: white; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+    .photo-card { display: flex; gap: 16px; align-items: flex-start; }
+    .photo-card img { width: 160px; height: 120px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+    .offre-card { display: flex; gap: 16px; align-items: center; }
+    .offre-card img { width: 80px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+    .fourn-card { display: flex; justify-content: space-between; align-items: center; }
+    .info { flex: 1; }
+    .info p { margin: 3px 0; font-size: 0.9rem; color: #555; }
+    .actions { display: flex; flex-direction: column; gap: 6px; }
+    .btn { border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.85rem; }
+    .btn-vert { background: #27ae60; }
+    .btn-rouge { background: #e74c3c; }
+    .btn-gris { background: #888; }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; color: white; font-size: 0.8rem; margin-top: 4px; }
+    .vide { color: #888; font-style: italic; }
     #compteur { background: #f0a500; color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.9rem; margin-left: 8px; }
-    .photo-card { background: white; border-radius: 8px; padding: 16px; margin-bottom: 16px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-    .photo-card img { width: 160px; height: 120px; object-fit: cover; border-radius: 6px; }
-    .photo-info { flex: 1; }
-    .photo-info p { margin: 4px 0; font-size: 0.9rem; color: #555; }
-    .btn-approuver { background: #27ae60; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; margin-right: 10px; font-size: 0.9rem; }
-    .btn-refuser { background: #e74c3c; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
-    .vide { color: #888; font-style: italic; margin-top: 20px; }
-    #chargement { color: #888; font-style: italic; }
   </style>
 </head>
 <body>
-  <header><h1>Panneau Admin — Modération photos</h1></header>
+  <header><h1>Panneau Admin — NC Deals</h1></header>
   <nav>
     <a href="index.html">Accueil</a>
     <a href="fournisseur.html">Espace fournisseur</a>
     <a href="admin.html">Admin</a>
   </nav>
-    <div style="max-width:1000px;margin:30px auto;padding:0 16px;">
-    <h2 style="font-size:1.2rem;margin-bottom:16px;">Moderation des offres</h2>
-    <div id="liste-offres"></div>
+
+  <div class="section">
+    <h2>Moderation des offres</h2>
+    <div id="liste-offres"><p class="vide">Chargement...</p></div>
   </div>
-  <div class="container">
-    <h2>Photos en attente de modération <span id="compteur">0</span></h2>
-    <div id="photos-container"><p id="chargement">Chargement...</p></div>
+
+  <div class="section">
+    <h2>Photos en attente de moderation <span id="compteur">0</span></h2>
+    <div id="photos-container"><p class="vide">Chargement...</p></div>
   </div>
-  <!-- GESTION FOURNISSEURS -->
-  <div class="container-admin" id="section-fournisseurs" style="max-width:1000px;margin:30px auto;padding:0 16px;display:none">
-    <h2 style="font-size:1.2rem;margin-bottom:16px;">Comptes fournisseurs</h2>
-    <div id="liste-fournisseurs"></div>
+
+  <div class="section">
+    <h2>Comptes fournisseurs</h2>
+    <div id="liste-fournisseurs"><p class="vide">Chargement...</p></div>
   </div>
+
   <script>
-    const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
-    const ADMIN_KEY = prompt('Clé admin :') || '';
-    async function chargerOffres() {
-  const res = await fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY));
-  if (!res.ok) return;
-  const offres = await res.json();
-  const container = document.getElementById('liste-offres');
-  if (!container) return;
-  if (offres.length === 0) { container.innerHTML = '<p>Aucune offre.</p>'; return; }
-  container.innerHTML = '';
-  offres.forEach(function(o) {
-    var couleur = o.statut === 'approuvee' ? '#27ae60' : o.statut === 'refusee' ? '#e74c3c' : '#f0a500';
-    var photo = o.photo_url ? '<img src="' + o.photo_url + '" style="width:100px;height:80px;object-fit:cover;border-radius:6px;">' : '<div style="width:100px;height:80px;background:#eee;border-radius:6px;"></div>';
-    var div = document.createElement('div');
-    div.style = 'background:white;padding:16px;margin-bottom:12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:flex;gap:16px;align-items:flex-start;';
-    div.innerHTML = photo +
-      '<div style="flex:1"><strong>' + o.titre + '</strong> — ' + (o.fournisseur_nom || 'Inconnu') + '<br>' +
-      '<small style="color:#888">' + (o.description || '') + ' | ' + (o.prix_xpf ? o.prix_xpf + ' XPF' : '') + '</small><br>' +
-      '<span style="background:' + couleur + ';color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;">' + o.statut + '</span></div>' +
-      '<div style="display:flex;flex-direction:column;gap:6px;">' +
-      '<button onclick="changerStatutOffre(' + o.id + ',\'approuvee\')" style="background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Approuver</button>' +
-      '<button onclick="changerStatutOffre(' + o.id + ',\'refusee\')" style="background:#e74c3c;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Refuser</button>' +
-      '<button onclick="changerStatutOffre(' + o.id + ',\'en_attente\')" style="background:#888;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">En attente</button></div>';
-    container.appendChild(div);
-  });
-}
+    var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+    var ADMIN_KEY = prompt('Cle admin :') || '';
 
-    async function changerStatutOffre(id, statut) {
-      await fetch(BACKEND + '/api/admin/offres/' + id + '/statut', {
-        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    // OFFRES
+    function chargerOffres() {
+      fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY))
+        .then(function(r) { return r.json(); })
+        .then(function(offres) {
+          var c = document.getElementById('liste-offres');
+          if (!offres || offres.error) { c.innerHTML = '<p class="vide">Acces refuse ou erreur.</p>'; return; }
+          if (offres.length === 0) { c.innerHTML = '<p class="vide">Aucune offre.</p>'; return; }
+          c.innerHTML = '';
+          offres.forEach(function(o) {
+            var couleur = o.statut === 'approuvee' ? '#27ae60' : o.statut === 'refusee' ? '#e74c3c' : '#f0a500';
+            var d = document.createElement('div');
+            d.className = 'card offre-card';
+            var imgHtml = o.photo_url ? '<img src="' + o.photo_url + '">' : '<div style="width:80px;height:60px;background:#eee;border-radius:6px;flex-shrink:0;"></div>';
+            d.innerHTML = imgHtml +
+              '<div class="info"><strong>' + o.titre + '</strong><p>' + (o.fournisseur_nom || '') + ' — ' + (o.prix_xpf || 0) + ' XPF</p>' +
+              '<span class="badge" style="background:' + couleur + '">' + o.statut + '</span></div>' +
+              '<div class="actions">' +
+              '<button class="btn btn-vert" onclick="statutOffre(' + o.id + ',\'approuvee\')">Approuver</button>' +
+              '<button class="btn btn-rouge" onclick="statutOffre(' + o.id + ',\'refusee\')">Refuser</button>' +
+              '<button class="btn btn-gris" onclick="statutOffre(' + o.id + ',\'en_attente\')">En attente</button>' +
+              '</div>';
+            c.appendChild(d);
+          });
+        }).catch(function(e) {
+          document.getElementById('liste-offres').innerHTML = '<p class="vide">Erreur : ' + e.message + '</p>';
+        });
+    }
+
+    function statutOffre(id, statut) {
+      fetch(BACKEND + '/api/admin/offres/' + id + '/statut', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ admin_key: ADMIN_KEY, statut: statut })
-      });
-      chargerOffres();
-    }
-    async function chargerFournisseurs() {
-      const res = await fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY));
-      if (!res.ok) { alert('Cle admin incorrecte.'); return; }
-      const fournisseurs = await res.json();
-      const container = document.getElementById('liste-fournisseurs');
-      if (fournisseurs.length === 0) { container.innerHTML = '<p>Aucun fournisseur.</p>'; return; }
-      container.innerHTML = fournisseurs.map(f => `
-        <div style="background:white;padding:16px;margin-bottom:12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <strong>${f.nom}</strong> — ${f.email}<br>
-            <small style="color:#888">IBAN: ${f.iban || 'non renseigne'} | Inscrit le: ${new Date(f.cree_le).toLocaleDateString('fr-FR')}</small>
-          </div>
-          <div>
-            <span style="background:${f.actif ? '#27ae60' : '#e74c3c'};color:white;padding:4px 10px;border-radius:12px;font-size:0.85rem;margin-right:10px">${f.actif ? 'Actif' : 'Inactif'}</span>
-            <button onclick="toggleFournisseur(${f.id}, ${f.actif})" style="background:${f.actif ? '#e74c3c' : '#27ae60'};color:white;border:none;padding:6px 14px;border-radius:6px;cursor:pointer">${f.actif ? 'Desactiver' : 'Activer'}</button>
-          </div>
-        </div>
-      `).join('');
-      document.getElementById('section-fournisseurs').style.display = 'block';
+      }).then(function() { chargerOffres(); });
     }
 
-    async function toggleFournisseur(id, actifActuel) {
-      await fetch(BACKEND + '/api/admin/fournisseurs/' + id + '/statut', {
-        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ admin_key: ADMIN_KEY, actif: !actifActuel })
-      });
-      chargerFournisseurs();
-      chargerOffres();
-    }
-    async function chargerPhotos() {
-      try {
-        const res = await fetch(BACKEND + '/api/admin/photos');
-        const photos = await res.json();
-        document.getElementById('compteur').textContent = photos.length;
-        const container = document.getElementById('photos-container');
-        if (photos.length === 0) {
-          container.innerHTML = '<div class="vide">Aucune photo en attente. Tout est modéré !</div>';
-          return;
-        }
-        container.innerHTML = '';
-        photos.forEach(photo => {
-          const card = document.createElement('div');
-          card.className = 'photo-card';
-          card.id = 'card-' + photo.id;
-          card.innerHTML = `
-            <img src="${photo.url}" alt="Photo">
-            <div class="photo-info">
-              <p><strong>ID photo :</strong> ${photo.id}</p>
-              <p><strong>Offre :</strong> ${photo.offre_id || 'Non liée'}</p>
-              <p><strong>Ajoutée le :</strong> ${new Date(photo.cree_le).toLocaleString('fr-FR')}</p>
-              <div style="margin-top:12px;">
-                <button class="btn-approuver" onclick="moderer('${photo.public_id}', 'approuver', ${photo.id})">Approuver</button>
-                <button class="btn-refuser" onclick="moderer('${photo.public_id}', 'refuser', ${photo.id})">Refuser</button>
-              </div>
-            </div>
-          `;
-          container.appendChild(card);
+    // PHOTOS
+    function chargerPhotos() {
+      fetch(BACKEND + '/api/admin/photos')
+        .then(function(r) { return r.json(); })
+        .then(function(photos) {
+          document.getElementById('compteur').textContent = photos.length;
+          var c = document.getElementById('photos-container');
+          if (photos.length === 0) { c.innerHTML = '<p class="vide">Aucune photo en attente.</p>'; return; }
+          c.innerHTML = '';
+          photos.forEach(function(p) {
+            var d = document.createElement('div');
+            d.className = 'card photo-card';
+            d.id = 'card-' + p.id;
+            d.innerHTML = '<img src="' + p.url + '" alt="Photo">' +
+              '<div class="info"><p><strong>ID :</strong> ' + p.id + '</p><p><strong>Offre :</strong> ' + (p.offre_id || 'Non liee') + '</p>' +
+              '<p><strong>Date :</strong> ' + new Date(p.cree_le).toLocaleString('fr-FR') + '</p>' +
+              '<div style="margin-top:10px;display:flex;gap:8px;">' +
+              '<button class="btn btn-vert" onclick="moderer(\'' + p.public_id + '\',\'approuver\',' + p.id + ')">Approuver</button>' +
+              '<button class="btn btn-rouge" onclick="moderer(\'' + p.public_id + '\',\'refuser\',' + p.id + ')">Refuser</button>' +
+              '</div></div>';
+            c.appendChild(d);
+          });
         });
-      } catch (e) {
-        document.getElementById('photos-container').innerHTML = '<div class="vide">Erreur de chargement : ' + e.message + '</div>';
-      }
     }
 
-    async function moderer(publicId, action, cardId) {
-      try {
-        const res = await fetch(BACKEND + '/api/upload/moderate/' + encodeURIComponent(publicId), {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action })
-        });
-        if (!res.ok) {
-          const err = await res.text();
-          alert('Erreur serveur : ' + err);
-          return;
-        }
-        document.getElementById('card-' + cardId).remove();
-        const restant = document.querySelectorAll('.photo-card').length;
+    function moderer(publicId, action, cardId) {
+      fetch(BACKEND + '/api/upload/moderate/' + encodeURIComponent(publicId), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action })
+      }).then(function(r) {
+        if (!r.ok) { alert('Erreur serveur'); return; }
+        var card = document.getElementById('card-' + cardId);
+        if (card) card.remove();
+        var restant = document.querySelectorAll('.photo-card').length;
         document.getElementById('compteur').textContent = restant;
-        if (restant === 0) {
-          document.getElementById('photos-container').innerHTML = '<div class="vide">Aucune photo en attente. Tout est modéré !</div>';
-        }
-      } catch (e) {
-        alert('Erreur réseau : ' + e.message);
-      }
+        if (restant === 0) document.getElementById('photos-container').innerHTML = '<p class="vide">Aucune photo en attente.</p>';
+      });
     }
 
+    // FOURNISSEURS
+    function chargerFournisseurs() {
+      fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var c = document.getElementById('liste-fournisseurs');
+          if (!data || data.error) { c.innerHTML = '<p class="vide">Acces refuse.</p>'; return; }
+          if (data.length === 0) { c.innerHTML = '<p class="vide">Aucun fournisseur.</p>'; return; }
+          c.innerHTML = '';
+          data.forEach(function(f) {
+            var d = document.createElement('div');
+            d.className = 'card fourn-card';
+            d.innerHTML = '<div class="info"><strong>' + f.nom + '</strong> — ' + f.email +
+              '<p>IBAN: ' + (f.iban || 'non renseigne') + ' | Inscrit le: ' + new Date(f.cree_le).toLocaleDateString('fr-FR') + '</p></div>' +
+              '<div style="display:flex;gap:8px;align-items:center;">' +
+              '<span class="badge" style="background:' + (f.actif ? '#27ae60' : '#e74c3c') + '">' + (f.actif ? 'Actif' : 'Inactif') + '</span>' +
+              '<button class="btn ' + (f.actif ? 'btn-rouge' : 'btn-vert') + '" onclick="toggleFourn(' + f.id + ',' + f.actif + ')">' + (f.actif ? 'Desactiver' : 'Activer') + '</button>' +
+              '</div>';
+            c.appendChild(d);
+          });
+        });
+    }
+
+    function toggleFourn(id, actif) {
+      fetch(BACKEND + '/api/admin/fournisseurs/' + id + '/statut', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_key: ADMIN_KEY, actif: !actif })
+      }).then(function() { chargerFournisseurs(); });
+    }
+
+    chargerOffres();
     chargerPhotos();
-    chargerFournisseurs(); 
+    chargerFournisseurs();
   </script>
 </body>
 </html>
