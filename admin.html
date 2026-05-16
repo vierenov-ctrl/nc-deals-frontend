@@ -47,28 +47,29 @@
     const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
     const ADMIN_KEY = prompt('Clé admin :') || '';
     async function chargerOffres() {
-      const res = await fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY));
-      if (!res.ok) return;
-      const offres = await res.json();
-      const container = document.getElementById('liste-offres');
-      if (!container) return;
-      if (offres.length === 0) { container.innerHTML = '<p>Aucune offre.</p>'; return; }
-      container.innerHTML = offres.map(o => `
-        <div style="background:white;padding:16px;margin-bottom:12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:flex;gap:16px;align-items:flex-start;">
-          ${o.photo_url ? `<img src="${o.photo_url}" style="width:100px;height:80px;object-fit:cover;border-radius:6px;">` : '<div style="width:100px;height:80px;background:#eee;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:0.8rem;">Sans photo</div>'}
-          <div style="flex:1">
-            <strong>${o.titre}</strong> — ${o.fournisseur_nom || 'Inconnu'}<br>
-            <small style="color:#888">${o.description || ''} | ${o.prix_xpf ? o.prix_xpf.toLocaleString('fr-FR') + ' XPF' : ''}</small><br>
-            <span style="background:${o.statut === 'approuvee' ? '#27ae60' : o.statut === 'refusee' ? '#e74c3c' : '#f0a500'};color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;">${o.statut}</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:6px;">
-            <button onclick="changerStatutOffre(${o.id},'approuvee')" style="background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Approuver</button>
-            <button onclick="changerStatutOffre(${o.id},'refusee')" style="background:#e74c3c;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Refuser</button>
-            <button onclick="changerStatutOffre(${o.id},'en_attente')" style="background:#888;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">En attente</button>
-          </div>
-        </div>
-      `).join('');
-    }
+  const res = await fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY));
+  if (!res.ok) return;
+  const offres = await res.json();
+  const container = document.getElementById('liste-offres');
+  if (!container) return;
+  if (offres.length === 0) { container.innerHTML = '<p>Aucune offre.</p>'; return; }
+  container.innerHTML = '';
+  offres.forEach(function(o) {
+    var couleur = o.statut === 'approuvee' ? '#27ae60' : o.statut === 'refusee' ? '#e74c3c' : '#f0a500';
+    var photo = o.photo_url ? '<img src="' + o.photo_url + '" style="width:100px;height:80px;object-fit:cover;border-radius:6px;">' : '<div style="width:100px;height:80px;background:#eee;border-radius:6px;"></div>';
+    var div = document.createElement('div');
+    div.style = 'background:white;padding:16px;margin-bottom:12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:flex;gap:16px;align-items:flex-start;';
+    div.innerHTML = photo +
+      '<div style="flex:1"><strong>' + o.titre + '</strong> — ' + (o.fournisseur_nom || 'Inconnu') + '<br>' +
+      '<small style="color:#888">' + (o.description || '') + ' | ' + (o.prix_xpf ? o.prix_xpf + ' XPF' : '') + '</small><br>' +
+      '<span style="background:' + couleur + ';color:white;padding:2px 8px;border-radius:10px;font-size:0.8rem;">' + o.statut + '</span></div>' +
+      '<div style="display:flex;flex-direction:column;gap:6px;">' +
+      '<button onclick="changerStatutOffre(' + o.id + ',\'approuvee\')" style="background:#27ae60;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Approuver</button>' +
+      '<button onclick="changerStatutOffre(' + o.id + ',\'refusee\')" style="background:#e74c3c;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">Refuser</button>' +
+      '<button onclick="changerStatutOffre(' + o.id + ',\'en_attente\')" style="background:#888;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">En attente</button></div>';
+    container.appendChild(div);
+  });
+}
 
     async function changerStatutOffre(id, statut) {
       await fetch(BACKEND + '/api/admin/offres/' + id + '/statut', {
