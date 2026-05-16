@@ -115,16 +115,14 @@
       });
     }
 
-    async function uploaderPhoto(fichier) {
-      const signRes = await fetch(BACKEND + '/api/upload/sign', { method: 'POST' });
-      const { signature, timestamp, folder, cloud_name, api_key } = await signRes.json();
+        async function uploaderPhoto(fichier) {
       const form = new FormData();
       form.append('file', fichier);
-      form.append('signature', signature);
-      form.append('timestamp', timestamp);
-      form.append('folder', folder);
-      form.append('api_key', api_key);
-      const upRes = await fetch('https://api.cloudinary.com/v1_1/' + cloud_name + '/image/upload', { method: 'POST', body: form });
+      form.append('upload_preset', 'nc-deals-offres');
+      const upRes = await fetch('https://api.cloudinary.com/v1_1/dphws2zzq/image/upload', {
+        method: 'POST',
+        body: form
+      });
       return await upRes.json();
     }
 
