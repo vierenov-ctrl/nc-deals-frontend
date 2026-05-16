@@ -8,66 +8,33 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef4ee; color: #1a3a1a; min-height: 100vh; }
 
-    /* HERO */
-    .hero {
-      background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%);
-      padding: 60px 20px 50px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: 4rem;
-      font-weight: 900;
-      color: white;
-      letter-spacing: 5px;
-      text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
-      margin-bottom: 12px;
-    }
+    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 60px 20px 50px; text-align: center; }
+    .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 12px; }
     .hero h1 .deals { color: #7ee8a2; }
-    .hero .tagline {
-      color: rgba(255,255,255,0.78);
-      font-size: 1rem;
-      font-style: italic;
-    }
+    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; }
 
-    /* ACCROCHE */
-    .accroche {
-      background: white;
-      border-left: 5px solid #1a6b3a;
-      margin: 25px auto;
-      max-width: 580px;
-      padding: 25px 30px;
-      border-radius: 0 12px 12px 0;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-    }
+    .accroche { background: white; border-left: 5px solid #1a6b3a; margin: 25px auto; max-width: 580px; padding: 25px 30px; border-radius: 0 12px 12px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
     .accroche h3 { color: #1a6b3a; font-size: 1.1rem; margin-bottom: 14px; }
     .accroche ul { list-style: none; }
     .accroche li { padding: 5px 0; font-size: 0.92rem; color: #2a5a2a; }
 
-    /* CONTAINER */
     .container { max-width: 580px; margin: 0 auto; padding: 0 20px 40px; }
-    .card {
-      background: white; border-radius: 16px; padding: 32px;
-      box-shadow: 0 5px 25px rgba(0,0,0,0.09); margin-bottom: 20px;
-    }
+    .card { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 5px 25px rgba(0,0,0,0.09); margin-bottom: 20px; }
     .card h2 { color: #1a6b3a; margin-bottom: 22px; font-size: 1.35rem; }
 
-    /* FORMS */
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 0.83rem; font-weight: 600; color: #2a5a2a; margin-bottom: 5px; }
-    .form-group input, .form-group textarea {
+    .form-group input, .form-group textarea, .form-group select {
       width: 100%; padding: 11px 14px; border: 2px solid #d0e8d0;
       border-radius: 9px; font-size: 0.97rem; font-family: inherit;
       transition: border-color 0.2s; color: #1a3a1a; background: #fafffe;
     }
-    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #1a6b3a; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #1a6b3a; }
     .form-group textarea { resize: vertical; min-height: 78px; }
+    .form-group select { cursor: pointer; }
+    .champ-custom { margin-top: 8px; }
 
-    /* BUTTONS */
-    .btn {
-      display: inline-block; padding: 12px 26px; border: none;
-      border-radius: 9px; font-size: 0.97rem; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; font-family: inherit;
-    }
+    .btn { display: inline-block; padding: 12px 26px; border: none; border-radius: 9px; font-size: 0.97rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
     .btn-primary { background: #1a6b3a; color: white; width: 100%; }
     .btn-primary:hover { background: #0d4a2a; transform: translateY(-1px); }
     .btn-secondary { background: #e8f5e9; color: #1a6b3a; }
@@ -75,23 +42,16 @@
     .btn-sm { padding: 8px 16px; font-size: 0.83rem; width: auto; }
     .lien { background: none; border: none; color: #1a6b3a; cursor: pointer; font-size: 0.88rem; text-decoration: underline; padding: 0; font-family: inherit; }
 
-    /* MESSAGES */
     .succes { color: #1a6b3a; background: #e8f5e9; padding: 11px 15px; border-radius: 8px; margin-top: 12px; font-size: 0.88rem; }
     .erreur { color: #c62828; background: #ffebee; padding: 11px 15px; border-radius: 8px; margin-top: 12px; font-size: 0.88rem; }
 
-    /* DASHBOARD */
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .dash-header h2 { color: #1a6b3a; font-size: 1.4rem; }
 
-    /* GALERIE + UPLOAD */
     .galerie { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
     .galerie-item { width: 95px; height: 95px; border-radius: 10px; overflow: hidden; border: 3px solid #1a6b3a; }
     .galerie-item img { width: 100%; height: 100%; object-fit: cover; }
-    .upload-zone {
-      border: 2.5px dashed #1a6b3a; border-radius: 12px;
-      padding: 22px; text-align: center; color: #1a6b3a;
-      cursor: pointer; transition: all 0.2s; font-size: 0.93rem; background: #f0faf0;
-    }
+    .upload-zone { border: 2.5px dashed #1a6b3a; border-radius: 12px; padding: 22px; text-align: center; color: #1a6b3a; cursor: pointer; transition: all 0.2s; font-size: 0.93rem; background: #f0faf0; }
     .upload-zone:hover { background: #e0f5e0; border-color: #0d4a2a; }
 
     hr.sep { border: none; border-top: 2px solid #e8e8e8; margin: 22px 0; }
@@ -105,13 +65,11 @@
 </head>
 <body>
 
-<!-- HERO -->
 <div class="hero">
   <h1>NC <span class="deals">Deals</span></h1>
   <div class="tagline">La marketplace des bons plans de Nouvelle-Calédonie</div>
 </div>
 
-<!-- BLOC ACCROCHE -->
 <div class="accroche" id="bloc-accroche">
   <h3>Pourquoi rejoindre NC Deals ?</h3>
   <ul>
@@ -176,7 +134,7 @@
   <!-- MOT DE PASSE OUBLIÉ -->
   <div id="section-oublie" class="card cache">
     <h2>Mot de passe oublié</h2>
-    <p style="color:#555; margin-bottom:18px; font-size:0.93rem;">Contactez l'administrateur NC Deals pour réinitialiser votre accès. Indiquez l'email de votre compte.</p>
+    <p style="color:#555; margin-bottom:18px; font-size:0.93rem;">Contactez l'administrateur NC Deals pour réinitialiser votre accès.</p>
     <div style="background:#e8f5e9; padding:15px; border-radius:10px; font-size:0.88rem; color:#1a6b3a; line-height:1.6;">
       📧 L'administrateur peut réinitialiser votre mot de passe depuis le panneau admin.
     </div>
@@ -192,9 +150,64 @@
       <button class="btn btn-secondary btn-sm" onclick="seDeconnecter()">Déconnexion</button>
     </div>
 
-    <!-- Créer une offre -->
     <div class="card">
       <h2>Publier une offre</h2>
+
+      <div class="form-group">
+        <label>Catégorie</label>
+        <select id="offre-categorie" onchange="toggleAutre()">
+          <optgroup label="🛒 Commerce & Alimentation">
+            <option value="🍽️ Alimentation & Restauration">🍽️ Alimentation & Restauration</option>
+            <option value="🛒 Commerce & Épicerie">🛒 Commerce & Épicerie</option>
+            <option value="🍷 Boissons & Alcools">🍷 Boissons & Alcools</option>
+          </optgroup>
+          <optgroup label="🏠 Immobilier & Logement">
+            <option value="🏠 Immobilier">🏠 Immobilier</option>
+            <option value="🔑 Location">🔑 Location</option>
+            <option value="🏗️ Bâtiment & Travaux">🏗️ Bâtiment & Travaux</option>
+            <option value="🌿 Jardin & Espaces verts">🌿 Jardin & Espaces verts</option>
+          </optgroup>
+          <optgroup label="🚗 Véhicules & Transport">
+            <option value="🚗 Automobiles">🚗 Automobiles</option>
+            <option value="🏍️ 2 Roues & Scooters">🏍️ 2 Roues & Scooters</option>
+            <option value="⚙️ Pièces & Accessoires Auto">⚙️ Pièces & Accessoires Auto</option>
+            <option value="🚢 Nautisme & Bateaux">🚢 Nautisme & Bateaux</option>
+          </optgroup>
+          <optgroup label="📱 Tech & Multimédia">
+            <option value="📱 Électronique & High-Tech">📱 Électronique & High-Tech</option>
+            <option value="💻 Informatique">💻 Informatique</option>
+            <option value="🎮 Jeux & Multimédia">🎮 Jeux & Multimédia</option>
+          </optgroup>
+          <optgroup label="👗 Mode & Beauté">
+            <option value="👗 Mode & Vêtements">👗 Mode & Vêtements</option>
+            <option value="💄 Beauté & Bien-être">💄 Beauté & Bien-être</option>
+            <option value="💊 Santé & Pharmacie">💊 Santé & Pharmacie</option>
+          </optgroup>
+          <optgroup label="🛋️ Maison & Loisirs">
+            <option value="🛋️ Mobilier & Décoration">🛋️ Mobilier & Décoration</option>
+            <option value="👶 Puériculture & Enfants">👶 Puériculture & Enfants</option>
+            <option value="🐾 Animaux">🐾 Animaux</option>
+            <option value="⚽ Sports & Loisirs">⚽ Sports & Loisirs</option>
+            <option value="🎨 Art & Culture">🎨 Art & Culture</option>
+          </optgroup>
+          <optgroup label="💼 Services & Pro">
+            <option value="🔧 Services & Artisanat">🔧 Services & Artisanat</option>
+            <option value="💼 Emploi & Formation">💼 Emploi & Formation</option>
+            <option value="🎓 Cours & Éducation">🎓 Cours & Éducation</option>
+            <option value="📦 Livraison & Logistique">📦 Livraison & Logistique</option>
+          </optgroup>
+          <optgroup label="✈️ Tourisme">
+            <option value="✈️ Voyages & Tourisme">✈️ Voyages & Tourisme</option>
+            <option value="🏖️ Activités & Excursions">🏖️ Activités & Excursions</option>
+            <option value="🏨 Hébergement">🏨 Hébergement</option>
+          </optgroup>
+          <optgroup label="📌 Autre">
+            <option value="__autre__">✏️ Autre — précisez</option>
+          </optgroup>
+        </select>
+        <input type="text" id="categorie-custom" class="champ-custom cache" placeholder="Nommez votre rubrique (ex: Drone, Événementiel...)">
+      </div>
+
       <div class="form-group">
         <label>Titre de l'offre</label>
         <input type="text" id="offre-titre" placeholder="Ex: Poulet rôti — 1500 XPF">
@@ -211,7 +224,6 @@
       <div id="offre-msg"></div>
     </div>
 
-    <!-- Section photos -->
     <div class="card cache" id="section-photos">
       <h2>Photos de l'offre</h2>
       <p style="color:#555; font-size:0.88rem; margin-bottom:14px;">Ajoutez une ou plusieurs photos. Chaque photo sera vérifiée par l'admin avant publication.</p>
@@ -235,15 +247,32 @@ var offreId = null;
 var token = null;
 var photosUploadees = [];
 
+function toggleAutre() {
+  var sel = document.getElementById('offre-categorie');
+  var custom = document.getElementById('categorie-custom');
+  if (sel.value === '__autre__') {
+    custom.classList.remove('cache');
+    custom.focus();
+  } else {
+    custom.classList.add('cache');
+    custom.value = '';
+  }
+}
+
+function getCategorie() {
+  var sel = document.getElementById('offre-categorie');
+  if (sel.value === '__autre__') {
+    var custom = document.getElementById('categorie-custom').value.trim();
+    return custom || 'Autre';
+  }
+  return sel.value;
+}
+
 function restaurerSession() {
   var t = localStorage.getItem('nc_token');
   var n = localStorage.getItem('nc_nom');
   var id = localStorage.getItem('nc_id');
-  if (t && n && id) {
-    token = t;
-    fournisseurId = id;
-    afficherDashboard(n);
-  }
+  if (t && n && id) { token = t; fournisseurId = id; afficherDashboard(n); }
 }
 
 function afficherSection(nom) {
@@ -272,23 +301,11 @@ function seConnecter() {
   var password = document.getElementById('login-password').value;
   var msg = document.getElementById('login-msg');
   if (!email || !password) { msg.innerHTML = '<p class="erreur">Remplissez email et mot de passe.</p>'; return; }
-  fetch(BACKEND + '/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email, password: password })
-  })
+  fetch(BACKEND + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, password: password }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
-    if (data.error) {
-      msg.innerHTML = '<p class="erreur">' + data.error + '</p>';
-    } else {
-      token = data.token;
-      fournisseurId = data.id;
-      localStorage.setItem('nc_token', data.token);
-      localStorage.setItem('nc_nom', data.nom);
-      localStorage.setItem('nc_id', data.id);
-      afficherDashboard(data.nom);
-    }
+    if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
+    else { token = data.token; fournisseurId = data.id; localStorage.setItem('nc_token', data.token); localStorage.setItem('nc_nom', data.nom); localStorage.setItem('nc_id', data.id); afficherDashboard(data.nom); }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
 }
@@ -301,32 +318,18 @@ function sInscrire() {
   var bic = document.getElementById('reg-bic').value.trim();
   var msg = document.getElementById('reg-msg');
   if (!nom || !email || !password) { msg.innerHTML = '<p class="erreur">Nom, email et mot de passe requis.</p>'; return; }
-  fetch(BACKEND + '/api/auth/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nom: nom, email: email, password: password, iban: iban || null, bic: bic || null })
-  })
+  fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nom: nom, email: email, password: password, iban: iban || null, bic: bic || null }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
-    if (data.error) {
-      msg.innerHTML = '<p class="erreur">' + data.error + '</p>';
-    } else {
-      token = data.token;
-      fournisseurId = data.id;
-      localStorage.setItem('nc_token', data.token);
-      localStorage.setItem('nc_nom', data.nom);
-      localStorage.setItem('nc_id', data.id);
-      afficherDashboard(data.nom);
-    }
+    if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
+    else { token = data.token; fournisseurId = data.id; localStorage.setItem('nc_token', data.token); localStorage.setItem('nc_nom', data.nom); localStorage.setItem('nc_id', data.id); afficherDashboard(data.nom); }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
 }
 
 function seDeconnecter() {
   token = null; fournisseurId = null; offreId = null; photosUploadees = [];
-  localStorage.removeItem('nc_token');
-  localStorage.removeItem('nc_nom');
-  localStorage.removeItem('nc_id');
+  localStorage.removeItem('nc_token'); localStorage.removeItem('nc_nom'); localStorage.removeItem('nc_id');
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('section-photos').classList.add('cache');
@@ -338,27 +341,25 @@ function creerOffre() {
   var titre = document.getElementById('offre-titre').value.trim();
   var description = document.getElementById('offre-description').value.trim();
   var prix = document.getElementById('offre-prix').value;
+  var categorie = getCategorie();
   var msg = document.getElementById('offre-msg');
   if (!titre) { msg.innerHTML = '<p class="erreur">Le titre est obligatoire.</p>'; return; }
-  fetch(BACKEND + '/api/offres', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: description, prix_xpf: parseInt(prix) || 0 })
-  })
+  if (categorie === 'Autre' && !document.getElementById('categorie-custom').value.trim()) {
+    msg.innerHTML = '<p class="erreur">Précisez votre catégorie.</p>'; return;
+  }
+  fetch(BACKEND + '/api/offres', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: description, prix_xpf: parseInt(prix) || 0, categorie: categorie }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
-    if (data.error) {
-      msg.innerHTML = '<p class="erreur">' + data.error + '</p>';
-    } else {
-      offreId = data.id;
-      photosUploadees = [];
+    if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
+    else {
+      offreId = data.id; photosUploadees = [];
       document.getElementById('galerie-photos').innerHTML = '';
       document.getElementById('upload-status').innerHTML = '';
       document.getElementById('offre-titre').value = '';
       document.getElementById('offre-description').value = '';
       document.getElementById('offre-prix').value = '';
       document.getElementById('section-photos').classList.remove('cache');
-      msg.innerHTML = '<p class="succes">Offre creee ! Ajoutez maintenant vos photos.</p>';
+      msg.innerHTML = '<p class="succes">Offre creee dans "' + categorie + '" ! Ajoutez vos photos.</p>';
     }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
@@ -374,11 +375,7 @@ function ajouterPhoto(input) {
   fetch('https://api.cloudinary.com/v1_1/dphws2zzq/image/upload', { method: 'POST', body: form })
   .then(function(r) { return r.json(); })
   .then(function(result) {
-    return fetch(BACKEND + '/api/photos/save', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ public_id: result.public_id, url: result.secure_url, offre_id: offreId })
-    }).then(function() { return result; });
+    return fetch(BACKEND + '/api/photos/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ public_id: result.public_id, url: result.secure_url, offre_id: offreId }) }).then(function() { return result; });
   })
   .then(function(result) {
     photosUploadees.push({ url: result.secure_url, id: result.public_id });
@@ -393,15 +390,11 @@ function ajouterPhoto(input) {
     document.getElementById('upload-status').innerHTML = '<p class="succes">Photo ajoutee ! (' + photosUploadees.length + ' photo(s))</p>';
     input.value = '';
   })
-  .catch(function() {
-    document.getElementById('upload-status').innerHTML = '<p class="erreur">Erreur lors de l\'upload.</p>';
-    input.value = '';
-  });
+  .catch(function() { document.getElementById('upload-status').innerHTML = '<p class="erreur">Erreur lors de l\'upload.</p>'; input.value = ''; });
 }
 
 function nouvelleOffre() {
-  offreId = null;
-  photosUploadees = [];
+  offreId = null; photosUploadees = [];
   document.getElementById('section-photos').classList.add('cache');
   document.getElementById('galerie-photos').innerHTML = '';
   document.getElementById('upload-status').innerHTML = '';
