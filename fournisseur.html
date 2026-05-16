@@ -4,81 +4,181 @@
   <meta charset="UTF-8">
   <title>Espace Fournisseur — NC Deals</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
-    header { background: #1a6b3a; color: white; padding: 16px 24px; }
-    header h1 { margin: 0; font-size: 1.4rem; }
-    nav { background: #145c30; padding: 10px 24px; }
-    nav a { color: #ccc; text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
-    .container { max-width: 600px; margin: 40px auto; background: white; padding: 32px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h2 { margin-top: 0; color: #1a6b3a; }
-    label { display: block; margin-top: 14px; font-size: 0.9rem; color: #444; }
-    input, textarea { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; }
-    button { margin-top: 20px; background: #1a6b3a; color: white; border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-    .lien { margin-top: 16px; font-size: 0.9rem; color: #555; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f0f4f0; }
+
+    .hero {
+      background: linear-gradient(135deg, #1a6b3a 0%, #0d4a2a 60%, #1a5c6b 100%);
+      color: white; padding: 40px 24px 30px; text-align: center; position: relative; overflow: hidden;
+    }
+    .hero-symboles {
+      font-size: 2rem; letter-spacing: 12px; margin-bottom: 12px; opacity: 0.85;
+    }
+    .hero h1 {
+      font-size: 3.2rem; font-weight: 900; letter-spacing: 3px;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.4); margin-bottom: 6px;
+    }
+    .hero .tagline {
+      font-size: 1rem; opacity: 0.9; margin-bottom: 6px; font-style: italic;
+    }
+    nav {
+      background: #0d4a2a; padding: 10px 24px; display: flex; gap: 24px; justify-content: center;
+    }
+    nav a { color: #aee8c0; text-decoration: none; font-size: 0.95rem; font-weight: bold; }
+    nav a:hover { color: white; }
+
+    .page { max-width: 640px; margin: 36px auto; padding: 0 16px; }
+
+    .accroche {
+      background: white; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px;
+      border-left: 5px solid #1a6b3a; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .accroche h3 { color: #1a6b3a; margin-bottom: 8px; font-size: 1rem; }
+    .accroche p { color: #555; font-size: 0.9rem; line-height: 1.6; }
+    .accroche ul { color: #555; font-size: 0.9rem; margin-top: 8px; padding-left: 18px; line-height: 1.8; }
+
+    .box {
+      background: white; border-radius: 10px; padding: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+    }
+    .box h2 { color: #1a6b3a; margin-bottom: 20px; font-size: 1.2rem; }
+    label { display: block; margin-top: 14px; font-size: 0.88rem; color: #444; font-weight: bold; }
+    input, textarea {
+      width: 100%; padding: 10px; margin-top: 4px; border: 1px solid #ccc;
+      border-radius: 6px; font-size: 0.95rem;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #1a6b3a; }
+    .btn {
+      margin-top: 18px; padding: 11px 26px; border: none; border-radius: 6px;
+      cursor: pointer; font-size: 0.95rem; font-weight: bold; color: white;
+    }
+    .btn-vert { background: #1a6b3a; }
+    .btn-vert:hover { background: #145c30; }
+    .btn-bleu { background: #1a5c6b; }
+    .btn-bleu:hover { background: #134a57; }
+    .btn-gris { background: #666; }
+    .erreur { color: #e74c3c; margin-top: 10px; font-size: 0.88rem; }
+    .lien { margin-top: 14px; font-size: 0.88rem; color: #555; }
     .lien a { color: #1a6b3a; cursor: pointer; text-decoration: underline; }
-    .erreur { color: #e74c3c; margin-top: 10px; font-size: 0.9rem; }
-    .bandeau { background: #eafaf1; border: 1px solid #a9dfbf; padding: 12px 16px; border-radius: 6px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
-    .btn-rouge { background: #e74c3c; padding: 6px 14px; font-size: 0.85rem; margin-top: 0; }
-    .btn-gris { background: #555; margin-top: 12px; }
+    .bandeau {
+      background: #eafaf1; border: 1px solid #a9dfbf; padding: 12px 18px;
+      border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .btn-deconnexion { background: #e74c3c; padding: 7px 16px; margin-top: 0; font-size: 0.85rem; }
+
+    /* Galerie photos */
+    .galerie { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .galerie-item { position: relative; }
+    .galerie-item img { width: 110px; height: 85px; object-fit: cover; border-radius: 6px; border: 2px solid #a9dfbf; }
+    .galerie-item .suppr {
+      position: absolute; top: -6px; right: -6px; background: #e74c3c; color: white;
+      border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .upload-zone {
+      border: 2px dashed #a9dfbf; border-radius: 8px; padding: 20px;
+      text-align: center; color: #888; margin-top: 14px; cursor: pointer;
+    }
+    .upload-zone:hover { background: #f0faf4; }
+    #photo-input { display: none; }
+    .succes { color: #27ae60; margin-top: 10px; font-size: 0.9rem; font-weight: bold; }
   </style>
 </head>
 <body>
-  <header><h1>NC Deals — Espace Fournisseur</h1></header>
+
+  <div class="hero">
+    <div class="hero-symboles">🌺 🌲 🦈 🐢 🐚 🦜</div>
+    <h1>NC Deals</h1>
+    <div class="tagline">La marketplace des bons plans de Nouvelle-Calédonie</div>
+  </div>
   <nav>
     <a href="index.html">Accueil</a>
     <a href="fournisseur.html">Espace fournisseur</a>
     <a href="admin.html">Admin</a>
   </nav>
 
-  <div class="container" id="section-login">
-    <h2>Connexion</h2>
-    <label>Email</label><input type="email" id="login-email" placeholder="votre@email.com">
-    <label>Mot de passe</label><input type="password" id="login-password" placeholder="••••••••">
-    <div class="erreur" id="login-erreur"></div>
-    <button onclick="seConnecter()">Se connecter</button>
-    <div class="lien"><a onclick="afficherOublie()">Mot de passe oublie ?</a></div>
-    <div class="lien">Pas encore de compte ? <a onclick="afficherInscription()">Creer un compte</a></div>
-  </div>
+  <div class="page">
 
-  <div class="container" id="section-oublie" style="display:none">
-    <h2>Mot de passe oublie</h2>
-    <p>Contactez l'administrateur avec votre email. Il reinitialisera votre mot de passe.</p>
-    <p><strong>Email admin :</strong> vie.renov@gmail.com</p>
-    <div class="lien"><a onclick="afficherConnexion()">Retour a la connexion</a></div>
-  </div>
-
-  <div class="container" id="section-register" style="display:none">
-    <h2>Creer un compte fournisseur</h2>
-    <label>Nom / Entreprise</label><input type="text" id="reg-nom" placeholder="Votre nom">
-    <label>Email</label><input type="email" id="reg-email" placeholder="votre@email.com">
-    <label>Mot de passe</label><input type="password" id="reg-password" placeholder="Choisissez un mot de passe">
-    <label>IBAN (optionnel)</label><input type="text" id="reg-iban" placeholder="NC00...">
-    <label>BIC (optionnel)</label><input type="text" id="reg-bic" placeholder="BPNCNCNX">
-    <div class="erreur" id="register-erreur"></div>
-    <button onclick="sInscrire()">Creer mon compte</button>
-    <div class="lien">Deja un compte ? <a onclick="afficherConnexion()">Se connecter</a></div>
-  </div>
-
-  <div class="container" id="section-dashboard" style="display:none">
-    <div class="bandeau">
-      <span>Bonjour <strong id="nom-fournisseur"></strong> !</span>
-      <button class="btn-rouge" onclick="seDeconnecter()">Deconnexion</button>
+    <!-- ACCROCHE (visible sur login/register) -->
+    <div class="accroche" id="bloc-accroche">
+      <h3>Pourquoi rejoindre NC Deals ?</h3>
+      <p>NC Deals connecte directement les fournisseurs calédoniens avec leurs clients. Publiez vos offres, promotions et bons plans pour :</p>
+      <ul>
+        <li>🎯 Diriger le flux de clients vers votre commerce</li>
+        <li>📸 Mettre en valeur vos produits avec des photos</li>
+        <li>💰 Recevoir vos paiements en XPF directement</li>
+        <li>📈 Booster votre visibilité en Nouvelle-Calédonie</li>
+      </ul>
     </div>
-    <div id="section-offre">
-      <h2>Publier une offre</h2>
-      <label>Titre</label><input type="text" id="offre-titre" placeholder="Ex : Reparation smartphone">
-      <label>Description</label><textarea id="offre-description" rows="3"></textarea>
-      <label>Prix (XPF)</label><input type="number" id="offre-prix" placeholder="Ex : 5000">
-      <div class="erreur" id="offre-erreur"></div>
-      <button onclick="publierOffre()">Valider et ajouter une photo</button>
+
+    <!-- CONNEXION -->
+    <div class="box" id="section-login">
+      <h2>Connexion fournisseur</h2>
+      <label>Email</label><input type="email" id="login-email" placeholder="votre@email.com">
+      <label>Mot de passe</label><input type="password" id="login-password" placeholder="••••••••">
+      <div class="erreur" id="login-erreur"></div>
+      <button class="btn btn-vert" onclick="seConnecter()">Se connecter</button>
+      <div class="lien"><a onclick="afficherOublie()">Mot de passe oublie ?</a></div>
+      <div class="lien">Pas encore de compte ? <a onclick="afficherInscription()">Creer un compte</a></div>
     </div>
-    <div id="section-upload" style="display:none">
-      <h2>Ajouter une photo</h2>
-      <input type="file" id="photo-input" accept="image/*" onchange="apercuPhoto(this)">
-      <div id="apercu"></div>
-      <button onclick="soumettrePhoto()">Envoyer la photo</button>
-      <div id="upload-status"></div>
-      <button class="btn-gris" onclick="nouvelleOffre()">Publier une autre offre</button>
+
+    <!-- MOT DE PASSE OUBLIE -->
+    <div class="box" id="section-oublie" style="display:none">
+      <h2>Mot de passe oublie</h2>
+      <p style="color:#555;font-size:0.9rem;line-height:1.6;">Contactez l'administrateur en indiquant votre email. Il reinitialisera votre acces rapidement.</p>
+      <p style="margin-top:12px;font-size:0.9rem;"><strong>Email admin :</strong> vie.renov@gmail.com</p>
+      <div class="lien"><a onclick="afficherConnexion()">← Retour</a></div>
+    </div>
+
+    <!-- INSCRIPTION -->
+    <div class="box" id="section-register" style="display:none">
+      <h2>Creer un compte fournisseur</h2>
+      <label>Nom / Entreprise</label><input type="text" id="reg-nom" placeholder="Votre nom ou entreprise">
+      <label>Email</label><input type="email" id="reg-email" placeholder="votre@email.com">
+      <label>Mot de passe</label><input type="password" id="reg-password" placeholder="Choisissez un mot de passe">
+      <label>IBAN (optionnel)</label><input type="text" id="reg-iban" placeholder="NC00 0000 0000 0000 0000">
+      <label>BIC (optionnel)</label><input type="text" id="reg-bic" placeholder="BPNCNCNX">
+      <div class="erreur" id="register-erreur"></div>
+      <button class="btn btn-vert" onclick="sInscrire()">Creer mon compte</button>
+      <div class="lien">Deja un compte ? <a onclick="afficherConnexion()">Se connecter</a></div>
+    </div>
+
+    <!-- TABLEAU DE BORD -->
+    <div id="section-dashboard" style="display:none">
+      <div class="bandeau">
+        <span>Bonjour <strong id="nom-fournisseur"></strong> 👋</span>
+        <button class="btn btn-deconnexion" onclick="seDeconnecter()">Deconnexion</button>
+      </div>
+
+      <!-- Formulaire offre -->
+      <div class="box" id="section-offre">
+        <h2>Publier une nouvelle offre</h2>
+        <label>Titre de l'offre</label><input type="text" id="offre-titre" placeholder="Ex : Reparation smartphone">
+        <label>Description</label><textarea id="offre-description" rows="3" placeholder="Decrivez votre offre, les avantages, la promo..."></textarea>
+        <label>Prix (XPF)</label><input type="number" id="offre-prix" placeholder="Ex : 5000">
+        <div class="erreur" id="offre-erreur"></div>
+        <button class="btn btn-vert" onclick="publierOffre()">Valider et ajouter des photos →</button>
+      </div>
+
+      <!-- Upload photos -->
+      <div class="box" id="section-upload" style="display:none">
+        <h2>Photos de l'offre <span id="offre-titre-recap" style="color:#1a6b3a;font-size:1rem;"></span></h2>
+        <p style="color:#555;font-size:0.88rem;margin-bottom:4px;">Ajoutez plusieurs photos pour mettre en valeur votre produit ou service.</p>
+
+        <div class="galerie" id="galerie-photos"></div>
+
+        <div class="upload-zone" onclick="document.getElementById('photo-input').click()">
+          <div style="font-size:2rem;">📷</div>
+          <div style="margin-top:6px;font-size:0.9rem;">Cliquez pour ajouter une photo</div>
+          <div style="font-size:0.8rem;color:#aaa;">JPG, PNG, WEBP acceptes</div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" onchange="ajouterPhoto(this)">
+
+        <div id="upload-status"></div>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-bleu" onclick="nouvelleOffre()">+ Publier une autre offre</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -86,56 +186,38 @@
     var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
     var fournisseurId = null;
     var offreId = null;
+    var photosUploadees = [];
 
     var id = localStorage.getItem('nc_id');
     var nom = localStorage.getItem('nc_nom');
-    if (id && nom) {
-      fournisseurId = parseInt(id);
-      afficherDashboard(nom);
-    }
+    if (id && nom) { fournisseurId = parseInt(id); afficherDashboard(nom); }
 
     function afficherOublie() {
       document.getElementById('section-login').style.display = 'none';
       document.getElementById('section-oublie').style.display = 'block';
     }
-
     function afficherInscription() {
       document.getElementById('section-login').style.display = 'none';
       document.getElementById('section-register').style.display = 'block';
     }
-
     function afficherConnexion() {
       document.getElementById('section-register').style.display = 'none';
       document.getElementById('section-oublie').style.display = 'none';
       document.getElementById('section-login').style.display = 'block';
     }
-
     function afficherDashboard(nom) {
       document.getElementById('section-login').style.display = 'none';
       document.getElementById('section-register').style.display = 'none';
       document.getElementById('section-oublie').style.display = 'none';
+      document.getElementById('bloc-accroche').style.display = 'none';
       document.getElementById('section-dashboard').style.display = 'block';
       document.getElementById('nom-fournisseur').textContent = nom;
     }
-
     function seDeconnecter() {
       localStorage.removeItem('nc_token');
       localStorage.removeItem('nc_nom');
       localStorage.removeItem('nc_id');
       location.reload();
-    }
-
-    function apercuPhoto(input) {
-      var apercu = document.getElementById('apercu');
-      apercu.innerHTML = '';
-      if (input.files[0]) {
-        var img = document.createElement('img');
-        img.src = URL.createObjectURL(input.files[0]);
-        img.style.maxWidth = '200px';
-        img.style.marginTop = '10px';
-        img.style.borderRadius = '6px';
-        apercu.appendChild(img);
-      }
     }
 
     async function seConnecter() {
@@ -188,14 +270,19 @@
       var data = await res.json();
       if (!res.ok) { document.getElementById('offre-erreur').textContent = 'Erreur : ' + data.error; return; }
       offreId = data.id;
+      photosUploadees = [];
+      document.getElementById('galerie-photos').innerHTML = '';
+      document.getElementById('upload-status').innerHTML = '';
+      document.getElementById('offre-titre-recap').textContent = '"' + titre + '"';
       document.getElementById('section-offre').style.display = 'none';
       document.getElementById('section-upload').style.display = 'block';
     }
 
-    async function soumettrePhoto() {
-      var fichier = document.getElementById('photo-input').files[0];
-      if (!fichier) { alert('Choisissez une photo.'); return; }
-      document.getElementById('upload-status').textContent = 'Upload en cours...';
+    async function ajouterPhoto(input) {
+      var fichier = input.files[0];
+      if (!fichier) return;
+      var status = document.getElementById('upload-status');
+      status.innerHTML = '<p style="color:#888;font-size:0.88rem;">Upload en cours...</p>';
       var form = new FormData();
       form.append('file', fichier);
       form.append('upload_preset', 'nc-deals-offres');
@@ -205,16 +292,24 @@
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ public_id: result.public_id, url: result.secure_url, offre_id: offreId })
       });
-      document.getElementById('upload-status').textContent = 'Photo envoyee ! En attente de moderation.';
-      document.getElementById('photo-input').value = '';
-      document.getElementById('apercu').innerHTML = '';
+      photosUploadees.push({ url: result.secure_url, id: result.public_id });
+      var galerie = document.getElementById('galerie-photos');
+      var item = document.createElement('div');
+      item.className = 'galerie-item';
+      item.innerHTML = '<img src="' + result.secure_url + '" alt="photo">';
+      galerie.appendChild(item);
+      status.innerHTML = '<p class="succes">✓ Photo ajoutee ! (' + photosUploadees.length + ' photo(s) pour cette offre)</p>';
+      input.value = '';
     }
 
     function nouvelleOffre() {
       offreId = null;
+      photosUploadees = [];
       document.getElementById('offre-titre').value = '';
       document.getElementById('offre-description').value = '';
       document.getElementById('offre-prix').value = '';
+      document.getElementById('galerie-photos').innerHTML = '';
+      document.getElementById('upload-status').innerHTML = '';
       document.getElementById('section-upload').style.display = 'none';
       document.getElementById('section-offre').style.display = 'block';
     }
