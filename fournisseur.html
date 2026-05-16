@@ -2,167 +2,235 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Espace Fournisseur — NC Deals</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #f5f5f5; }
-    header { background: #00843D; color: white; padding: 20px; text-align: center; }
-    nav { background: #006830; padding: 10px; text-align: center; }
-    nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; }
-    .container { max-width: 700px; margin: 30px auto; padding: 0 20px; }
-    .card { background: white; border-radius: 10px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h2 { color: #00843D; margin-bottom: 20px; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-    input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; font-size: 1rem; }
-    button { background: #00843D; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-    button:hover { background: #006830; }
-    .upload-zone { border: 2px dashed #00843D; border-radius: 10px; padding: 30px; text-align: center; cursor: pointer; margin-bottom: 15px; }
-    .upload-zone:hover { background: #f0fff4; }
-    .preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-    .preview-grid img { width: 100%; height: 100px; object-fit: cover; border-radius: 6px; }
-    .msg { padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
-    .msg.ok { background: #d4edda; color: #155724; display: block; }
-    .msg.err { background: #f8d7da; color: #721c24; display: block; }
-    .progress { height: 8px; background: #ddd; border-radius: 4px; margin-top: 10px; display: none; }
-    .progress-bar { height: 100%; background: #00843D; border-radius: 4px; width: 0%; transition: width 0.3s; }
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
+    header { background: #1a6b3a; color: white; padding: 16px 24px; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    nav { background: #145c30; padding: 10px 24px; }
+    nav a { color: #ccc; text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
+    nav a:hover { color: white; }
+    .container { max-width: 600px; margin: 40px auto; background: white; padding: 32px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h2 { margin-top: 0; color: #1a6b3a; }
+    label { display: block; margin-top: 14px; font-size: 0.9rem; color: #444; }
+    input, textarea { width: 100%; padding: 9px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; box-sizing: border-box; }
+    button { margin-top: 20px; background: #1a6b3a; color: white; border: none; padding: 10px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    button:hover { background: #145c30; }
+    .lien { margin-top: 16px; font-size: 0.9rem; color: #555; }
+    .lien a { color: #1a6b3a; cursor: pointer; text-decoration: underline; }
+    .erreur { color: #e74c3c; margin-top: 10px; font-size: 0.9rem; }
+    .succes { color: #27ae60; margin-top: 10px; font-size: 0.9rem; }
+    .bandeau { background: #eafaf1; border: 1px solid #a9dfbf; padding: 12px 16px; border-radius: 6px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .btn-deconnexion { background: #e74c3c; padding: 6px 14px; font-size: 0.85rem; margin-top: 0; }
+    .btn-deconnexion:hover { background: #c0392b; }
   </style>
 </head>
 <body>
-  <header><h1>Espace Fournisseur</h1></header>
+  <header><h1>NC Deals — Espace Fournisseur</h1></header>
   <nav>
     <a href="index.html">Accueil</a>
     <a href="fournisseur.html">Espace fournisseur</a>
     <a href="admin.html">Admin</a>
   </nav>
-  <div class="container">
 
-    <div class="card">
-      <h2>Mon profil fournisseur</h2>
-      <label>Nom / Entreprise</label>
-      <input type="text" id="nom" placeholder="Ex: Boucherie Dupont">
-      <label>Email</label>
-      <input type="email" id="email" placeholder="contact@monentreprise.nc">
-      <label>IBAN</label>
-      <input type="text" id="iban" placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX">
-      <label>BIC</label>
-      <input type="text" id="bic" placeholder="BNPAFRPP">
-      <button onclick="sauvegarderProfil()">Enregistrer mon profil</button>
-      <div class="msg" id="msg-profil"></div>
-    </div>
-
-    <div class="card" id="section-offre" style="display:none">
-      <h2>Ajouter une offre</h2>
-      <label>Titre de l'offre</label>
-      <input type="text" id="titre" placeholder="Ex: Paella geante pour 10 personnes">
-      <label>Description</label>
-      <textarea id="description" rows="3" placeholder="Decrivez votre offre..."></textarea>
-      <label>Prix (XPF)</label>
-      <input type="number" id="prix" placeholder="Ex: 3500">
-      <label>Photos de l'offre</label>
-      <div class="upload-zone" onclick="document.getElementById('photos-input').click()">
-        Cliquez ici pour ajouter des photos
-      </div>
-      <input type="file" id="photos-input" multiple accept="image/*" style="display:none" onchange="apercuPhotos(this)">
-      <div class="preview-grid" id="apercu"></div>
-      <div class="progress" id="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
-      <br>
-      <button onclick="publierOffre()">Publier l'offre</button>
-      <div class="msg" id="msg-offre"></div>
-    </div>
-
+  <!-- ECRAN CONNEXION -->
+  <div class="container" id="section-login">
+    <h2>Connexion</h2>
+    <label>Email</label>
+    <input type="email" id="login-email" placeholder="votre@email.com">
+    <label>Mot de passe</label>
+    <input type="password" id="login-password" placeholder="••••••••">
+    <div class="erreur" id="login-erreur"></div>
+    <button onclick="seConnecter()">Se connecter</button>
+    <div class="lien">Pas encore de compte ? <a onclick="afficherInscription()">Créer un compte</a></div>
   </div>
+
+  <!-- ECRAN INSCRIPTION -->
+  <div class="container" id="section-register" style="display:none">
+    <h2>Créer un compte fournisseur</h2>
+    <label>Nom / Entreprise</label>
+    <input type="text" id="reg-nom" placeholder="Votre nom ou entreprise">
+    <label>Email</label>
+    <input type="email" id="reg-email" placeholder="votre@email.com">
+    <label>Mot de passe</label>
+    <input type="password" id="reg-password" placeholder="Choisissez un mot de passe">
+    <label>IBAN (optionnel)</label>
+    <input type="text" id="reg-iban" placeholder="NC00 0000 0000 0000 0000">
+    <label>BIC (optionnel)</label>
+    <input type="text" id="reg-bic" placeholder="BPNCNCNX">
+    <div class="erreur" id="register-erreur"></div>
+    <button onclick="sInscrire()">Créer mon compte</button>
+    <div class="lien">Déjà un compte ? <a onclick="afficherConnexion()">Se connecter</a></div>
+  </div>
+
+  <!-- TABLEAU DE BORD -->
+  <div class="container" id="section-dashboard" style="display:none">
+    <div class="bandeau">
+      <span>Bonjour <strong id="nom-fournisseur"></strong> !</span>
+      <button class="btn-deconnexion" onclick="seDeconnecter()">Déconnexion</button>
+    </div>
+
+    <!-- Formulaire offre -->
+    <div id="section-offre">
+      <h2>Publier une offre</h2>
+      <label>Titre de l'offre</label>
+      <input type="text" id="offre-titre" placeholder="Ex : Réparation smartphone">
+      <label>Description</label>
+      <textarea id="offre-description" rows="3" placeholder="Décrivez votre offre..."></textarea>
+      <label>Prix (XPF)</label>
+      <input type="number" id="offre-prix" placeholder="Ex : 5000">
+      <div class="erreur" id="offre-erreur"></div>
+      <button onclick="publierOffre()">Valider l'offre et ajouter une photo</button>
+    </div>
+
+    <!-- Upload photo -->
+    <div id="section-upload" style="display:none">
+      <h2>Ajouter une photo</h2>
+      <input type="file" id="photo-input" accept="image/*">
+      <div id="apercu"></div>
+      <button onclick="soumettrePhoto()">Envoyer la photo</button>
+      <div id="upload-status"></div>
+      <button onclick="nouvelleOffre()" style="background:#555; margin-top:12px;">Publier une autre offre</button>
+    </div>
+  </div>
+
   <script>
     const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
     let fournisseurId = null;
-    let fichiers = [];
+    let offreId = null;
 
-    function afficherMsg(id, texte, type) {
-      const el = document.getElementById(id);
-      el.textContent = texte;
-      el.className = 'msg ' + type;
-    }
-
-    async function sauvegarderProfil() {
-      const nom = document.getElementById('nom').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const iban = document.getElementById('iban').value.trim();
-      const bic = document.getElementById('bic').value.trim();
-      if (!nom || !email) { afficherMsg('msg-profil', 'Nom et email obligatoires.', 'err'); return; }
-      try {
-        const res = await fetch(BACKEND + '/api/fournisseurs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nom, email, iban, bic })
-        });
-        const data = await res.json();
-        fournisseurId = data.id;
-        afficherMsg('msg-profil', 'Profil enregistre ! Vous pouvez maintenant ajouter une offre.', 'ok');
-        document.getElementById('section-offre').style.display = 'block';
-      } catch(e) {
-        afficherMsg('msg-profil', 'Erreur de connexion.', 'err');
+    window.onload = function () {
+      const id = localStorage.getItem('nc_id');
+      const nom = localStorage.getItem('nc_nom');
+      if (id && nom) {
+        fournisseurId = parseInt(id);
+        afficherDashboard(nom);
       }
+    };
+
+    function afficherInscription() {
+      document.getElementById('section-login').style.display = 'none';
+      document.getElementById('section-register').style.display = 'block';
     }
 
-    function apercuPhotos(input) {
-      fichiers = Array.from(input.files);
-      const apercu = document.getElementById('apercu');
-      apercu.innerHTML = '';
-      fichiers.forEach(function(f) {
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(f);
-        apercu.appendChild(img);
-      });
+    function afficherConnexion() {
+      document.getElementById('section-register').style.display = 'none';
+      document.getElementById('section-login').style.display = 'block';
     }
 
-        async function uploaderPhoto(fichier) {
-      const form = new FormData();
-      form.append('file', fichier);
-      form.append('upload_preset', 'nc-deals-offres');
-      const upRes = await fetch('https://api.cloudinary.com/v1_1/dphws2zzq/image/upload', {
+    function afficherDashboard(nom) {
+      document.getElementById('section-login').style.display = 'none';
+      document.getElementById('section-register').style.display = 'none';
+      document.getElementById('section-dashboard').style.display = 'block';
+      document.getElementById('nom-fournisseur').textContent = nom;
+    }
+
+    function seDeconnecter() {
+      localStorage.removeItem('nc_token');
+      localStorage.removeItem('nc_nom');
+      localStorage.removeItem('nc_id');
+      location.reload();
+    }
+
+    async function seConnecter() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      document.getElementById('login-erreur').textContent = '';
+      const res = await fetch(BACKEND + '/api/auth/login', {
         method: 'POST',
-        body: form
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       });
-      return await upRes.json();
+      const data = await res.json();
+      if (!res.ok) { document.getElementById('login-erreur').textContent = data.error; return; }
+      localStorage.setItem('nc_token', data.token);
+      localStorage.setItem('nc_nom', data.nom);
+      localStorage.setItem('nc_id', data.id);
+      fournisseurId = data.id;
+      afficherDashboard(data.nom);
+    }
+
+    async function sInscrire() {
+      const nom = document.getElementById('reg-nom').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+      const iban = document.getElementById('reg-iban').value;
+      const bic = document.getElementById('reg-bic').value;
+      document.getElementById('register-erreur').textContent = '';
+      const res = await fetch(BACKEND + '/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nom, email, password, iban, bic })
+      });
+      const data = await res.json();
+      if (!res.ok) { document.getElementById('register-erreur').textContent = data.error; return; }
+      localStorage.setItem('nc_token', data.token);
+      localStorage.setItem('nc_nom', data.nom);
+      localStorage.setItem('nc_id', data.id);
+      fournisseurId = data.id;
+      afficherDashboard(data.nom);
     }
 
     async function publierOffre() {
-      if (!fournisseurId) { afficherMsg('msg-offre', 'Enregistrez dabord votre profil.', 'err'); return; }
-      const titre = document.getElementById('titre').value.trim();
-      if (!titre) { afficherMsg('msg-offre', 'Le titre est obligatoire.', 'err'); return; }
-      try {
-        const offreRes = await fetch(BACKEND + '/api/offres', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            fournisseur_id: fournisseurId,
-            titre: titre,
-            description: document.getElementById('description').value,
-            prix_xpf: document.getElementById('prix').value || null
-          })
-        });
-        const offre = await offreRes.json();
-               if (fichiers.length > 0) {
-          document.getElementById('progress-bar-wrap').style.display = 'block';
-          for (let i = 0; i < fichiers.length; i++) {
-            document.getElementById('progress-bar').style.width = ((i+1)/fichiers.length*100) + '%';
-            const uploaded = await uploaderPhoto(fichiers[i]);
-            await fetch(BACKEND + '/api/photos/save', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                public_id: uploaded.public_id,
-                url: uploaded.secure_url,
-                offre_id: offre.id
-              })
-            });
+      const titre = document.getElementById('offre-titre').value;
+      const description = document.getElementById('offre-description').value;
+      const prix = parseInt(document.getElementById('offre-prix').value);
+      document.getElementById('offre-erreur').textContent = '';
+      if (!titre || !prix) { document.getElementById('offre-erreur').textContent = 'Titre et prix obligatoires.'; return; }
+      const res = await fetch(BACKEND + '/api/offres', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titre, description, prix_xpf: prix, fournisseur_id: fournisseurId })
+      });
+      const data = await res.json();
+      if (!res.ok) { document.getElementById('offre-erreur').textContent = 'Erreur : ' + data.error; return; }
+      offreId = data.id;
+      document.getElementById('section-offre').style.display = 'none';
+      document.getElementById('section-upload').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.getElementById('photo-input');
+      if (input) {
+        input.addEventListener('change', function () {
+          const apercu = document.getElementById('apercu');
+          apercu.innerHTML = '';
+          if (this.files[0]) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(this.files[0]);
+            img.style = 'max-width:200px; margin-top:10px; border-radius:6px;';
+            apercu.appendChild(img);
           }
-        }
-        afficherMsg('msg-offre', 'Offre publiee ! Les photos sont en attente de moderation.', 'ok');
-        document.getElementById('progress-bar-wrap').style.display = 'none';
-      } catch(e) {
-        afficherMsg('msg-offre', 'Erreur lors de la publication.', 'err');
+        });
       }
+    });
+
+    async function soumettrePhoto() {
+      const fichier = document.getElementById('photo-input').files[0];
+      if (!fichier) { alert('Choisissez une photo.'); return; }
+      document.getElementById('upload-status').textContent = 'Upload en cours...';
+      const form = new FormData();
+      form.append('file', fichier);
+      form.append('upload_preset', 'nc-deals-offres');
+      const upRes = await fetch('https://api.cloudinary.com/v1_1/dphws2zzq/image/upload', { method: 'POST', body: form });
+      const result = await upRes.json();
+      await fetch(BACKEND + '/api/photos/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ public_id: result.public_id, url: result.secure_url, offre_id: offreId })
+      });
+      document.getElementById('upload-status').textContent = 'Photo envoyee ! En attente de moderation admin.';
+      document.getElementById('photo-input').value = '';
+      document.getElementById('apercu').innerHTML = '';
+    }
+
+    function nouvelleOffre() {
+      offreId = null;
+      document.getElementById('offre-titre').value = '';
+      document.getElementById('offre-description').value = '';
+      document.getElementById('offre-prix').value = '';
+      document.getElementById('section-upload').style.display = 'none';
+      document.getElementById('section-offre').style.display = 'block';
     }
   </script>
 </body>
