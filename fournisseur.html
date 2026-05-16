@@ -11,53 +11,19 @@
     /* HERO */
     .hero {
       background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%);
-      padding: 50px 20px 40px;
+      padding: 60px 20px 50px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background-image:
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 22px),
-        repeating-linear-gradient(-45deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 22px);
-      pointer-events: none;
-    }
-    .hero-symboles {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 55px;
-      margin-bottom: 30px;
-      position: relative;
-      z-index: 1;
-    }
-    .symbole-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 9px;
-    }
-    .symbole-label {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.58rem;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      font-weight: 600;
     }
     .hero h1 {
-      position: relative; z-index: 1;
-      font-size: 3.8rem;
+      font-size: 4rem;
       font-weight: 900;
       color: white;
       letter-spacing: 5px;
       text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .hero h1 .deals { color: #7ee8a2; }
     .hero .tagline {
-      position: relative; z-index: 1;
       color: rgba(255,255,255,0.78);
       font-size: 1rem;
       font-style: italic;
@@ -132,8 +98,7 @@
     .cache { display: none; }
 
     @media (max-width: 480px) {
-      .hero h1 { font-size: 2.6rem; }
-      .hero-symboles { gap: 20px; }
+      .hero h1 { font-size: 2.8rem; }
       .card { padding: 22px 18px; }
     }
   </style>
@@ -142,78 +107,6 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-symboles">
-
-    <!-- Pin colonnaire (Araucaria columnaris) -->
-    <div class="symbole-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 58 115" width="46" height="92">
-        <!-- tronc -->
-        <rect x="25" y="93" width="8" height="19" rx="2" fill="white"/>
-        <!-- couronne par niveaux croissants vers le bas -->
-        <polygon points="29,5 6,42 17,38 9,60 21,55 13,76 25,71 18,93 40,93 33,71 45,76 37,55 49,60 41,38 52,42" fill="white"/>
-      </svg>
-      <span class="symbole-label">Pin colonnaire</span>
-    </div>
-
-    <!-- Cagou (oiseau emblème de la NC) -->
-    <div class="symbole-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 138 105" width="118" height="90">
-        <!-- corps -->
-        <ellipse cx="82" cy="70" rx="34" ry="23" fill="white"/>
-        <!-- queue pointue -->
-        <path d="M111 62 Q130 54 126 72 Q122 85 108 78" fill="white"/>
-        <!-- cou -->
-        <ellipse cx="54" cy="64" rx="11" ry="15" fill="white"/>
-        <!-- tete ronde -->
-        <circle cx="38" cy="51" r="20" fill="white"/>
-        <!-- aigrette (3 plumes caracteristiques du cagou) -->
-        <path d="M29 32 Q18 9 33 21" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M39 27 Q37 7 51 19" stroke="white" stroke-width="5" fill="none" stroke-linecap="round"/>
-        <path d="M50 32 Q54 12 64 25" stroke="white" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-        <!-- bec long -->
-        <path d="M18 53 L3 56 L18 60" fill="white"/>
-        <!-- oeil -->
-        <circle cx="31" cy="50" r="5" fill="#0a2e18"/>
-        <circle cx="30" cy="49" r="2" fill="rgba(255,255,255,0.8)"/>
-        <!-- stries des plumes d'aile -->
-        <path d="M59 64 Q82 53 107 64" stroke="rgba(0,50,20,0.3)" stroke-width="2.5" fill="none"/>
-        <path d="M59 70 Q82 59 105 70" stroke="rgba(0,50,20,0.25)" stroke-width="2" fill="none"/>
-        <!-- pattes -->
-        <rect x="72" y="91" width="7" height="17" rx="3.5" fill="white"/>
-        <rect x="89" y="91" width="7" height="17" rx="3.5" fill="white"/>
-        <!-- doigts -->
-        <path d="M72 108 L61 112 M72 108 L72 113" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-        <path d="M96 108 L107 112 M96 108 L96 113" stroke="white" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-      </svg>
-      <span class="symbole-label">Cagou</span>
-    </div>
-
-    <!-- Nautile (embleme NC) -->
-    <div class="symbole-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 110" width="90" height="88">
-        <!-- corps principal blanc -->
-        <path d="M56 4 C85 2 108 24 109 55 C110 85 88 107 58 108 C30 109 6 89 4 61 C2 33 19 6 48 3 Z" fill="white"/>
-        <!-- spirale exterieure (cloisons des loges) -->
-        <path d="M56 57 Q60 26 78 20 Q100 20 106 51 Q110 80 88 96 Q65 106 42 93 Q19 79 19 55 Q19 30 40 22 Q57 17 63 36" fill="none" stroke="#0a2e18" stroke-width="3.5" stroke-linecap="round"/>
-        <!-- spirale interieure -->
-        <path d="M56 57 Q60 43 68 41 Q79 39 81 54 Q81 68 66 70 Q51 72 49 59" fill="none" stroke="#0a2e18" stroke-width="2.8" stroke-linecap="round"/>
-        <!-- centre (ombilic) -->
-        <circle cx="56" cy="57" r="9" fill="#0a2e18"/>
-        <circle cx="56" cy="57" r="4.5" fill="white"/>
-        <!-- cotes radiales (nervures de la coquille) -->
-        <line x1="56" y1="57" x2="56" y2="4" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="109" y2="55" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="83" y2="7" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="106" y2="80" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="38" y2="105" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="10" y2="36" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="7" y2="74" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-        <line x1="56" y1="57" x2="21" y2="97" stroke="#0a2e18" stroke-width="1.3" opacity="0.25"/>
-      </svg>
-      <span class="symbole-label">Nautile</span>
-    </div>
-
-  </div>
   <h1>NC <span class="deals">Deals</span></h1>
   <div class="tagline">La marketplace des bons plans de Nouvelle-Calédonie</div>
 </div>
