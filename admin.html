@@ -64,8 +64,28 @@
       }
     }
 
-    async function moderer(publicId, action, cardId) {
-      await fetch(BACKEND + '/api/upload/moderate/' + publicId, {
+async function moderer(publicId, action, cardId) {
+    try {
+        const res = await fetch(BACKEND + '/api/upload/moderate/' + encodeURIComponent(publicId), {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action })
+        });
+        if (!res.ok) {
+            const err = await res.text();
+            alert('Erreur serveur : ' + err);
+            return;
+        }
+        document.getElementById('card-' + cardId).remove();
+        const restant = document.querySelectorAll('.photo-card').length;
+        document.getElementById('compteur').textContent = restant;
+        if (restant === 0) {
+            document.getElementById('photos-container').innerHTML = '<div class="vide">Aucune photo en attente.</div>';
+        }
+    } catch (e) {
+        alert('Erreur réseau : ' + e.message);
+    }
+}
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action })
