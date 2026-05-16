@@ -34,10 +34,43 @@
     <h2>Photos en attente de modération <span id="compteur">0</span></h2>
     <div id="photos-container"><p id="chargement">Chargement...</p></div>
   </div>
-
+  <!-- GESTION FOURNISSEURS -->
+  <div class="container-admin" id="section-fournisseurs" style="max-width:1000px;margin:30px auto;padding:0 16px;display:none">
+    <h2 style="font-size:1.2rem;margin-bottom:16px;">Comptes fournisseurs</h2>
+    <div id="liste-fournisseurs"></div>
+  </div>
   <script>
     const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+    const ADMIN_KEY = prompt('Clé admin :') || '';
 
+    async function chargerFournisseurs() {
+      const res = await fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY));
+      if (!res.ok) { alert('Cle admin incorrecte.'); return; }
+      const fournisseurs = await res.json();
+      const container = document.getElementById('liste-fournisseurs');
+      if (fournisseurs.length === 0) { container.innerHTML = '<p>Aucun fournisseur.</p>'; return; }
+      container.innerHTML = fournisseurs.map(f => `
+        <div style="background:white;padding:16px;margin-bottom:12px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,0.1);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <strong>${f.nom}</strong> — ${f.email}<br>
+            <small style="color:#888">IBAN: ${f.iban || 'non renseigne'} | Inscrit le: ${new Date(f.cree_le).toLocaleDateString('fr-FR')}</small>
+          </div>
+          <div>
+            <span style="background:${f.actif ? '#27ae60' : '#e74c3c'};color:white;padding:4px 10px;border-radius:12px;font-size:0.85rem;margin-right:10px">${f.actif ? 'Actif' : 'Inactif'}</span>
+            <button onclick="toggleFournisseur(${f.id}, ${f.actif})" style="background:${f.actif ? '#e74c3c' : '#27ae60'};color:white;border:none;padding:6px 14px;border-radius:6px;cursor:pointer">${f.actif ? 'Desactiver' : 'Activer'}</button>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('section-fournisseurs').style.display = 'block';
+    }
+
+    async function toggleFournisseur(id, actifActuel) {
+      await fetch(BACKEND + '/api/admin/fournisseurs/' + id + '/statut', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin_key: ADMIN_KEY, actif: !actifActuel })
+      });
+      chargerFournisseurs();
+    }
     async function chargerPhotos() {
       try {
         const res = await fetch(BACKEND + '/api/admin/photos');
@@ -96,6 +129,7 @@
     }
 
     chargerPhotos();
+    chargerFournisseurs(); 
   </script>
 </body>
 </html>
