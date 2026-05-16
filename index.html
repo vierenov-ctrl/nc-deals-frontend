@@ -9,165 +9,64 @@
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
 
     /* HERO */
-    .hero {
-      background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%);
-      padding: 50px 20px 40px;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: 4rem;
-      font-weight: 900;
-      color: white;
-      letter-spacing: 5px;
-      text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
-      margin-bottom: 10px;
-    }
+    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 50px 20px 40px; text-align: center; }
+    .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 10px; }
     .hero h1 .deals { color: #7ee8a2; }
-    .hero .tagline {
-      color: rgba(255,255,255,0.78);
-      font-size: 1rem;
-      font-style: italic;
-      margin-bottom: 25px;
-    }
-    .hero-lien {
-      display: inline-block;
-      padding: 11px 28px;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.4);
-      border-radius: 30px;
-      color: white;
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-    }
+    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; margin-bottom: 25px; }
+    .hero-lien { display: inline-block; padding: 11px 28px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); border-radius: 30px; color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s; }
     .hero-lien:hover { background: rgba(255,255,255,0.25); }
 
     /* BARRE RECHERCHE */
-    .barre {
-      max-width: 700px;
-      margin: 25px auto 0;
-      padding: 0 20px;
+    .barre { max-width: 700px; margin: 25px auto 0; padding: 0 20px; }
+    .barre input { width: 100%; padding: 14px 20px; border: none; border-radius: 50px; font-size: 1rem; font-family: inherit; box-shadow: 0 4px 20px rgba(0,0,0,0.15); outline: none; color: #1a3a1a; }
+
+    /* FILTRES CATÉGORIES */
+    .filtres-wrap { max-width: 1100px; margin: 0 auto; padding: 22px 20px 0; }
+    .filtres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .barre input {
-      width: 100%;
-      padding: 14px 20px;
-      border: none;
-      border-radius: 50px;
-      font-size: 1rem;
+    .filtre-btn {
+      padding: 7px 16px;
+      border: 2px solid #d0e8d0;
+      border-radius: 30px;
+      background: white;
+      color: #1a6b3a;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
       font-family: inherit;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      outline: none;
-      color: #1a3a1a;
+      white-space: nowrap;
     }
+    .filtre-btn:hover { border-color: #1a6b3a; background: #e8f5e9; }
+    .filtre-btn.actif { background: #1a6b3a; color: white; border-color: #1a6b3a; }
 
     /* SECTION OFFRES */
-    .section {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 30px 20px 50px;
-    }
-    .section-titre {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #1a6b3a;
-      margin-bottom: 20px;
-    }
+    .section { max-width: 1100px; margin: 0 auto; padding: 20px 20px 50px; }
+    .section-titre { font-size: 1rem; font-weight: 600; color: #555; margin-bottom: 18px; }
 
     /* GRILLE */
-    .grille {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 22px;
-    }
+    .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 22px; }
 
-    /* CARTE OFFRE */
-    .carte {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: default;
-    }
-    .carte:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.13);
-    }
-    .carte-photo {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-      background: #e8f5e9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .carte-photo img {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-    }
-    .carte-photo-vide {
-      width: 100%;
-      height: 190px;
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.5rem;
-      color: #aaa;
-    }
-    .carte-corps {
-      padding: 18px 20px 20px;
-    }
-    .carte-titre {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a3a1a;
-      margin-bottom: 6px;
-      line-height: 1.4;
-    }
-    .carte-description {
-      font-size: 0.85rem;
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 12px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .carte-pied {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .carte-prix {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #1a6b3a;
-    }
-    .carte-fournisseur {
-      font-size: 0.78rem;
-      color: #888;
-    }
+    /* CARTE */
+    .carte { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+    .carte:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.13); }
+    .carte-photo img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .carte-photo-vide { width: 100%; height: 190px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+    .carte-corps { padding: 16px 18px 18px; }
+    .carte-categorie { display: inline-block; font-size: 0.72rem; font-weight: 700; color: #1a6b3a; background: #e8f5e9; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+    .carte-titre { font-size: 1rem; font-weight: 700; color: #1a3a1a; margin-bottom: 6px; line-height: 1.4; }
+    .carte-description { font-size: 0.83rem; color: #666; line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .carte-pied { display: flex; justify-content: space-between; align-items: center; }
+    .carte-prix { font-size: 1.12rem; font-weight: 800; color: #1a6b3a; }
+    .carte-fournisseur { font-size: 0.77rem; color: #999; }
 
     /* ÉTATS */
-    .chargement {
-      text-align: center;
-      padding: 60px 20px;
-      color: #888;
-      font-size: 1rem;
-    }
-    .vide {
-      text-align: center;
-      padding: 60px 20px;
-      color: #888;
-    }
+    .chargement { text-align: center; padding: 60px 20px; color: #888; }
+    .vide { text-align: center; padding: 60px 20px; color: #888; }
     .vide p { font-size: 1rem; margin-bottom: 8px; }
-    .vide small { font-size: 0.85rem; }
 
     @media (max-width: 480px) {
       .hero h1 { font-size: 2.8rem; }
@@ -177,21 +76,23 @@
 </head>
 <body>
 
-<!-- HERO -->
 <div class="hero">
   <h1>NC <span class="deals">Deals</span></h1>
   <div class="tagline">Les meilleurs bons plans de Nouvelle-Calédonie</div>
   <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
 </div>
 
-<!-- BARRE DE RECHERCHE -->
 <div class="barre">
-  <input type="text" id="recherche" placeholder="🔍 Rechercher une offre..." oninput="filtrer()">
+  <input type="text" id="recherche" placeholder="🔍 Rechercher une offre..." oninput="appliquerFiltres()">
 </div>
 
-<!-- OFFRES -->
+<!-- FILTRES CATÉGORIES -->
+<div class="filtres-wrap">
+  <div class="filtres" id="filtres"></div>
+</div>
+
 <div class="section">
-  <div class="section-titre" id="compteur">Chargement des offres...</div>
+  <div class="section-titre" id="compteur">Chargement...</div>
   <div class="grille" id="grille-offres">
     <div class="chargement">Chargement en cours...</div>
   </div>
@@ -200,18 +101,64 @@
 <script>
 var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
 var toutesLesOffres = [];
+var categorieActive = 'Toutes';
 
 function chargerOffres() {
   fetch(BACKEND + '/api/offres')
   .then(function(r) { return r.json(); })
   .then(function(offres) {
     toutesLesOffres = offres;
-    afficherOffres(offres);
+    construireFiltres(offres);
+    appliquerFiltres();
   })
   .catch(function() {
-    document.getElementById('grille-offres').innerHTML = '<div class="chargement">Impossible de charger les offres. Vérifiez votre connexion.</div>';
+    document.getElementById('grille-offres').innerHTML = '<div class="chargement">Impossible de charger les offres.</div>';
     document.getElementById('compteur').textContent = '';
   });
+}
+
+function construireFiltres(offres) {
+  var cats = ['Toutes'];
+  for (var i = 0; i < offres.length; i++) {
+    if (offres[i].categorie && cats.indexOf(offres[i].categorie) === -1) {
+      cats.push(offres[i].categorie);
+    }
+  }
+  var container = document.getElementById('filtres');
+  container.innerHTML = '';
+  for (var j = 0; j < cats.length; j++) {
+    var btn = document.createElement('button');
+    btn.className = 'filtre-btn' + (cats[j] === 'Toutes' ? ' actif' : '');
+    btn.textContent = cats[j];
+    btn.setAttribute('data-cat', cats[j]);
+    btn.onclick = (function(cat) {
+      return function() { selectionnerCategorie(cat); };
+    })(cats[j]);
+    container.appendChild(btn);
+  }
+}
+
+function selectionnerCategorie(cat) {
+  categorieActive = cat;
+  var btns = document.querySelectorAll('.filtre-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('actif', btns[i].getAttribute('data-cat') === cat);
+  }
+  appliquerFiltres();
+}
+
+function appliquerFiltres() {
+  var terme = document.getElementById('recherche').value.toLowerCase().trim();
+  var filtrees = toutesLesOffres.filter(function(o) {
+    var matchCat = categorieActive === 'Toutes' || o.categorie === categorieActive;
+    var matchRecherche = !terme ||
+      (o.titre && o.titre.toLowerCase().indexOf(terme) !== -1) ||
+      (o.description && o.description.toLowerCase().indexOf(terme) !== -1) ||
+      (o.fournisseur_nom && o.fournisseur_nom.toLowerCase().indexOf(terme) !== -1) ||
+      (o.categorie && o.categorie.toLowerCase().indexOf(terme) !== -1);
+    return matchCat && matchRecherche;
+  });
+  afficherOffres(filtrees);
 }
 
 function afficherOffres(offres) {
@@ -220,49 +167,74 @@ function afficherOffres(offres) {
 
   if (!offres.length) {
     compteur.textContent = '';
-    grille.innerHTML = '<div class="vide"><p>Aucune offre disponible pour le moment.</p><small>Revenez bientôt !</small></div>';
+    grille.innerHTML = '<div class="vide"><p>Aucune offre dans cette catégorie.</p></div>';
     return;
   }
 
   compteur.textContent = offres.length + ' offre' + (offres.length > 1 ? 's' : '') + ' disponible' + (offres.length > 1 ? 's' : '');
+  grille.innerHTML = '';
 
-  var html = '';
   for (var i = 0; i < offres.length; i++) {
     var o = offres[i];
-    var photo = '';
-    if (o.photo_url) {
-      photo = '<img src="' + o.photo_url + '" alt="' + o.titre + '" onerror="this.parentNode.innerHTML=\'<div class=carte-photo-vide>🛍️</div>\'">';
-    } else {
-      photo = '<div class="carte-photo-vide">🛍️</div>';
-    }
-    var prix = o.prix_xpf ? o.prix_xpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
-    var desc = o.description ? o.description : '';
-    html += '<div class="carte">';
-    html += '<div class="carte-photo">' + photo + '</div>';
-    html += '<div class="carte-corps">';
-    html += '<div class="carte-titre">' + o.titre + '</div>';
-    if (desc) html += '<div class="carte-description">' + desc + '</div>';
-    html += '<div class="carte-pied">';
-    html += '<span class="carte-prix">' + prix + '</span>';
-    html += '<span class="carte-fournisseur">' + (o.fournisseur_nom || '') + '</span>';
-    html += '</div>';
-    html += '</div></div>';
-  }
-  grille.innerHTML = html;
-}
+    var carte = document.createElement('a');
+    carte.className = 'carte';
+    carte.href = 'offre.html?id=' + o.id;
 
-function filtrer() {
-  var terme = document.getElementById('recherche').value.toLowerCase().trim();
-  if (!terme) {
-    afficherOffres(toutesLesOffres);
-    return;
+    var photoDiv = document.createElement('div');
+    photoDiv.className = 'carte-photo';
+    if (o.photo_url) {
+      var img = document.createElement('img');
+      img.src = o.photo_url;
+      img.alt = o.titre;
+      img.onerror = function() { this.parentNode.innerHTML = '<div class="carte-photo-vide">🛍️</div>'; };
+      photoDiv.appendChild(img);
+    } else {
+      photoDiv.innerHTML = '<div class="carte-photo-vide">🛍️</div>';
+    }
+
+    var corps = document.createElement('div');
+    corps.className = 'carte-corps';
+
+    var cat = document.createElement('span');
+    cat.className = 'carte-categorie';
+    cat.textContent = o.categorie || 'Autres';
+
+    var titre = document.createElement('div');
+    titre.className = 'carte-titre';
+    titre.textContent = o.titre;
+
+    var pied = document.createElement('div');
+    pied.className = 'carte-pied';
+
+    var prix = document.createElement('span');
+    prix.className = 'carte-prix';
+    prix.textContent = o.prix_xpf ? o.prix_xpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
+
+    var fourn = document.createElement('span');
+    fourn.className = 'carte-fournisseur';
+    fourn.textContent = o.fournisseur_nom || '';
+
+    pied.appendChild(prix);
+    pied.appendChild(fourn);
+
+    if (o.description) {
+      var desc = document.createElement('div');
+      desc.className = 'carte-description';
+      desc.textContent = o.description;
+      corps.appendChild(cat);
+      corps.appendChild(titre);
+      corps.appendChild(desc);
+      corps.appendChild(pied);
+    } else {
+      corps.appendChild(cat);
+      corps.appendChild(titre);
+      corps.appendChild(pied);
+    }
+
+    carte.appendChild(photoDiv);
+    carte.appendChild(corps);
+    grille.appendChild(carte);
   }
-  var filtrees = toutesLesOffres.filter(function(o) {
-    return (o.titre && o.titre.toLowerCase().indexOf(terme) !== -1) ||
-           (o.description && o.description.toLowerCase().indexOf(terme) !== -1) ||
-           (o.fournisseur_nom && o.fournisseur_nom.toLowerCase().indexOf(terme) !== -1);
-  });
-  afficherOffres(filtrees);
 }
 
 chargerOffres();
