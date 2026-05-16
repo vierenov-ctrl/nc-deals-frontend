@@ -3,70 +3,270 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NC Deals</title>
+  <title>NC Deals — Bons plans Nouvelle-Calédonie</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Arial, sans-serif; background: #f5f5f5; }
-    header { background: #00843D; color: white; padding: 20px; text-align: center; }
-    header h1 { font-size: 2rem; }
-    header p { margin-top: 5px; opacity: 0.9; }
-    nav { background: #006830; padding: 10px; text-align: center; }
-    nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; }
-    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-    .offres-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .offre-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .offre-card img { width: 100%; height: 180px; object-fit: cover; background: #ddd; }
-    .offre-card .info { padding: 15px; }
-    .offre-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
-    .offre-card .prix { color: #00843D; font-size: 1.3rem; font-weight: bold; }
-    .badge { background: #FF6B00; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; display: inline-block; margin-bottom: 8px; }
-    footer { text-align: center; padding: 20px; color: #666; margin-top: 40px; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%);
+      padding: 50px 20px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      color: white;
+      letter-spacing: 5px;
+      text-shadow: 2px 4px 20px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
+    }
+    .hero h1 .deals { color: #7ee8a2; }
+    .hero .tagline {
+      color: rgba(255,255,255,0.78);
+      font-size: 1rem;
+      font-style: italic;
+      margin-bottom: 25px;
+    }
+    .hero-lien {
+      display: inline-block;
+      padding: 11px 28px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 30px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+    .hero-lien:hover { background: rgba(255,255,255,0.25); }
+
+    /* BARRE RECHERCHE */
+    .barre {
+      max-width: 700px;
+      margin: 25px auto 0;
+      padding: 0 20px;
+    }
+    .barre input {
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: inherit;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      outline: none;
+      color: #1a3a1a;
+    }
+
+    /* SECTION OFFRES */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px 50px;
+    }
+    .section-titre {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a6b3a;
+      margin-bottom: 20px;
+    }
+
+    /* GRILLE */
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 22px;
+    }
+
+    /* CARTE OFFRE */
+    .carte {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .carte:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.13);
+    }
+    .carte-photo {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: #e8f5e9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carte-photo img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+    .carte-photo-vide {
+      width: 100%;
+      height: 190px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #aaa;
+    }
+    .carte-corps {
+      padding: 18px 20px 20px;
+    }
+    .carte-titre {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a3a1a;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    .carte-description {
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .carte-pied {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .carte-prix {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #1a6b3a;
+    }
+    .carte-fournisseur {
+      font-size: 0.78rem;
+      color: #888;
+    }
+
+    /* ÉTATS */
+    .chargement {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+      font-size: 1rem;
+    }
+    .vide {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+    }
+    .vide p { font-size: 1rem; margin-bottom: 8px; }
+    .vide small { font-size: 0.85rem; }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.8rem; }
+      .grille { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>NC Deals</h1>
-    <p>Les meilleures offres de Nouvelle-Calédonie</p>
-  </header>
-  <nav>
-    <a href="index.html">Accueil</a>
-    <a href="fournisseur.html">Espace fournisseur</a>
-    <a href="admin.html">Admin</a>
-  </nav>
-  <div class="container">
-    <h2 style="margin: 20px 0;">Offres du moment</h2>
-    <div class="offres-grid" id="offres-container">
-      <p>Chargement des offres...</p>
-    </div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>NC <span class="deals">Deals</span></h1>
+  <div class="tagline">Les meilleurs bons plans de Nouvelle-Calédonie</div>
+  <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
+</div>
+
+<!-- BARRE DE RECHERCHE -->
+<div class="barre">
+  <input type="text" id="recherche" placeholder="🔍 Rechercher une offre..." oninput="filtrer()">
+</div>
+
+<!-- OFFRES -->
+<div class="section">
+  <div class="section-titre" id="compteur">Chargement des offres...</div>
+  <div class="grille" id="grille-offres">
+    <div class="chargement">Chargement en cours...</div>
   </div>
-  <footer>NC Deals &copy; 2026 — Nouvelle-Calédonie</footer>
-  <script>
-    const BACKEND = 'https://nc-deals-backend-production.up.railway.app';
-    async function chargerOffres() {
-      try {
-        const res = await fetch(BACKEND + '/api/offres');
-        const offres = await res.json();
-        const container = document.getElementById('offres-container');
-        if (offres.length === 0) {
-          container.innerHTML = '<p>Aucune offre disponible pour le moment.</p>';
-          return;
-        }
-        container.innerHTML = offres.map(o => `
-          <div class="offre-card">
-            <img src="${o.photo_url || ''}" alt="${o.titre}" onerror="this.style.display='none'">
-            <div class="info">
-              <span class="badge">Deal</span>
-              <h3>${o.titre}</h3>
-              <p style="color:#666;margin-bottom:10px">${o.description || ''}</p>
-              <div class="prix">${o.prix_xpf ? o.prix_xpf.toLocaleString() + ' XPF' : 'Prix sur demande'}</div>
-            </div>
-          </div>
-        `).join('');
-      } catch(e) {
-        document.getElementById('offres-container').innerHTML = '<p>Erreur de chargement.</p>';
-      }
+</div>
+
+<script>
+var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+var toutesLesOffres = [];
+
+function chargerOffres() {
+  fetch(BACKEND + '/api/offres')
+  .then(function(r) { return r.json(); })
+  .then(function(offres) {
+    toutesLesOffres = offres;
+    afficherOffres(offres);
+  })
+  .catch(function() {
+    document.getElementById('grille-offres').innerHTML = '<div class="chargement">Impossible de charger les offres. Vérifiez votre connexion.</div>';
+    document.getElementById('compteur').textContent = '';
+  });
+}
+
+function afficherOffres(offres) {
+  var compteur = document.getElementById('compteur');
+  var grille = document.getElementById('grille-offres');
+
+  if (!offres.length) {
+    compteur.textContent = '';
+    grille.innerHTML = '<div class="vide"><p>Aucune offre disponible pour le moment.</p><small>Revenez bientôt !</small></div>';
+    return;
+  }
+
+  compteur.textContent = offres.length + ' offre' + (offres.length > 1 ? 's' : '') + ' disponible' + (offres.length > 1 ? 's' : '');
+
+  var html = '';
+  for (var i = 0; i < offres.length; i++) {
+    var o = offres[i];
+    var photo = '';
+    if (o.photo_url) {
+      photo = '<img src="' + o.photo_url + '" alt="' + o.titre + '" onerror="this.parentNode.innerHTML=\'<div class=carte-photo-vide>🛍️</div>\'">';
+    } else {
+      photo = '<div class="carte-photo-vide">🛍️</div>';
     }
-    chargerOffres();
-  </script>
+    var prix = o.prix_xpf ? o.prix_xpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
+    var desc = o.description ? o.description : '';
+    html += '<div class="carte">';
+    html += '<div class="carte-photo">' + photo + '</div>';
+    html += '<div class="carte-corps">';
+    html += '<div class="carte-titre">' + o.titre + '</div>';
+    if (desc) html += '<div class="carte-description">' + desc + '</div>';
+    html += '<div class="carte-pied">';
+    html += '<span class="carte-prix">' + prix + '</span>';
+    html += '<span class="carte-fournisseur">' + (o.fournisseur_nom || '') + '</span>';
+    html += '</div>';
+    html += '</div></div>';
+  }
+  grille.innerHTML = html;
+}
+
+function filtrer() {
+  var terme = document.getElementById('recherche').value.toLowerCase().trim();
+  if (!terme) {
+    afficherOffres(toutesLesOffres);
+    return;
+  }
+  var filtrees = toutesLesOffres.filter(function(o) {
+    return (o.titre && o.titre.toLowerCase().indexOf(terme) !== -1) ||
+           (o.description && o.description.toLowerCase().indexOf(terme) !== -1) ||
+           (o.fournisseur_nom && o.fournisseur_nom.toLowerCase().indexOf(terme) !== -1);
+  });
+  afficherOffres(filtrees);
+}
+
+chargerOffres();
+</script>
+
 </body>
 </html>
