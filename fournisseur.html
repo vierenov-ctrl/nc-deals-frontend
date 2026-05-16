@@ -19,7 +19,6 @@
     .lien { margin-top: 16px; font-size: 0.9rem; color: #555; }
     .lien a { color: #1a6b3a; cursor: pointer; text-decoration: underline; }
     .erreur { color: #e74c3c; margin-top: 10px; font-size: 0.9rem; }
-    .succes { color: #27ae60; margin-top: 10px; font-size: 0.9rem; }
     .bandeau { background: #eafaf1; border: 1px solid #a9dfbf; padding: 12px 16px; border-radius: 6px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
     .btn-deconnexion { background: #e74c3c; padding: 6px 14px; font-size: 0.85rem; margin-top: 0; }
     .btn-deconnexion:hover { background: #c0392b; }
@@ -33,7 +32,7 @@
     <a href="admin.html">Admin</a>
   </nav>
 
-  <!-- ECRAN CONNEXION -->
+  <!-- CONNEXION -->
   <div class="container" id="section-login">
     <h2>Connexion</h2>
     <label>Email</label>
@@ -42,10 +41,19 @@
     <input type="password" id="login-password" placeholder="••••••••">
     <div class="erreur" id="login-erreur"></div>
     <button onclick="seConnecter()">Se connecter</button>
+    <div class="lien"><a onclick="afficherMotDePasseOublie()">Mot de passe oublié ?</a></div>
     <div class="lien">Pas encore de compte ? <a onclick="afficherInscription()">Créer un compte</a></div>
   </div>
 
-  <!-- ECRAN INSCRIPTION -->
+  <!-- MOT DE PASSE OUBLIE -->
+  <div class="container" id="section-oublie" style="display:none">
+    <h2>Mot de passe oublié</h2>
+    <p style="color:#555; font-size:0.9rem;">Contactez l'administrateur en indiquant votre email. Il réinitialisera votre mot de passe dans les plus brefs délais.</p>
+    <p style="font-size:0.9rem;"><strong>Email admin :</strong> vie.renov@gmail.com</p>
+    <div class="lien"><a onclick="afficherConnexion()">← Retour à la connexion</a></div>
+  </div>
+
+  <!-- INSCRIPTION -->
   <div class="container" id="section-register" style="display:none">
     <h2>Créer un compte fournisseur</h2>
     <label>Nom / Entreprise</label>
@@ -70,7 +78,6 @@
       <button class="btn-deconnexion" onclick="seDeconnecter()">Déconnexion</button>
     </div>
 
-    <!-- Formulaire offre -->
     <div id="section-offre">
       <h2>Publier une offre</h2>
       <label>Titre de l'offre</label>
@@ -83,7 +90,6 @@
       <button onclick="publierOffre()">Valider l'offre et ajouter une photo</button>
     </div>
 
-    <!-- Upload photo -->
     <div id="section-upload" style="display:none">
       <h2>Ajouter une photo</h2>
       <input type="file" id="photo-input" accept="image/*">
@@ -102,94 +108,7 @@
     window.onload = function () {
       const id = localStorage.getItem('nc_id');
       const nom = localStorage.getItem('nc_nom');
-      if (id && nom) {
-        fournisseurId = parseInt(id);
-        afficherDashboard(nom);
-      }
-    };
-
-    function afficherInscription() {
-      document.getElementById('section-login').style.display = 'none';
-      document.getElementById('section-register').style.display = 'block';
-    }
-
-    function afficherConnexion() {
-      document.getElementById('section-register').style.display = 'none';
-      document.getElementById('section-login').style.display = 'block';
-    }
-
-    function afficherDashboard(nom) {
-      document.getElementById('section-login').style.display = 'none';
-      document.getElementById('section-register').style.display = 'none';
-      document.getElementById('section-dashboard').style.display = 'block';
-      document.getElementById('nom-fournisseur').textContent = nom;
-    }
-
-    function seDeconnecter() {
-      localStorage.removeItem('nc_token');
-      localStorage.removeItem('nc_nom');
-      localStorage.removeItem('nc_id');
-      location.reload();
-    }
-
-    async function seConnecter() {
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      document.getElementById('login-erreur').textContent = '';
-      const res = await fetch(BACKEND + '/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) { document.getElementById('login-erreur').textContent = data.error; return; }
-      localStorage.setItem('nc_token', data.token);
-      localStorage.setItem('nc_nom', data.nom);
-      localStorage.setItem('nc_id', data.id);
-      fournisseurId = data.id;
-      afficherDashboard(data.nom);
-    }
-
-    async function sInscrire() {
-      const nom = document.getElementById('reg-nom').value;
-      const email = document.getElementById('reg-email').value;
-      const password = document.getElementById('reg-password').value;
-      const iban = document.getElementById('reg-iban').value;
-      const bic = document.getElementById('reg-bic').value;
-      document.getElementById('register-erreur').textContent = '';
-      const res = await fetch(BACKEND + '/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nom, email, password, iban, bic })
-      });
-      const data = await res.json();
-      if (!res.ok) { document.getElementById('register-erreur').textContent = data.error; return; }
-      localStorage.setItem('nc_token', data.token);
-      localStorage.setItem('nc_nom', data.nom);
-      localStorage.setItem('nc_id', data.id);
-      fournisseurId = data.id;
-      afficherDashboard(data.nom);
-    }
-
-    async function publierOffre() {
-      const titre = document.getElementById('offre-titre').value;
-      const description = document.getElementById('offre-description').value;
-      const prix = parseInt(document.getElementById('offre-prix').value);
-      document.getElementById('offre-erreur').textContent = '';
-      if (!titre || !prix) { document.getElementById('offre-erreur').textContent = 'Titre et prix obligatoires.'; return; }
-      const res = await fetch(BACKEND + '/api/offres', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titre, description, prix_xpf: prix, fournisseur_id: fournisseurId })
-      });
-      const data = await res.json();
-      if (!res.ok) { document.getElementById('offre-erreur').textContent = 'Erreur : ' + data.error; return; }
-      offreId = data.id;
-      document.getElementById('section-offre').style.display = 'none';
-      document.getElementById('section-upload').style.display = 'block';
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
+      if (id && nom) { fournisseurId = parseInt(id); afficherDashboard(nom); }
       const input = document.getElementById('photo-input');
       if (input) {
         input.addEventListener('change', function () {
@@ -203,35 +122,39 @@
           }
         });
       }
-    });
+    };
 
-    async function soumettrePhoto() {
-      const fichier = document.getElementById('photo-input').files[0];
-      if (!fichier) { alert('Choisissez une photo.'); return; }
-      document.getElementById('upload-status').textContent = 'Upload en cours...';
-      const form = new FormData();
-      form.append('file', fichier);
-      form.append('upload_preset', 'nc-deals-offres');
-      const upRes = await fetch('https://api.cloudinary.com/v1_1/dphws2zzq/image/upload', { method: 'POST', body: form });
-      const result = await upRes.json();
-      await fetch(BACKEND + '/api/photos/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ public_id: result.public_id, url: result.secure_url, offre_id: offreId })
-      });
-      document.getElementById('upload-status').textContent = 'Photo envoyee ! En attente de moderation admin.';
-      document.getElementById('photo-input').value = '';
-      document.getElementById('apercu').innerHTML = '';
+    function afficherMotDePasseOublie() {
+      document.getElementById('section-login').style.display = 'none';
+      document.getElementById('section-oublie').style.display = 'block';
     }
 
-    function nouvelleOffre() {
-      offreId = null;
-      document.getElementById('offre-titre').value = '';
-      document.getElementById('offre-description').value = '';
-      document.getElementById('offre-prix').value = '';
-      document.getElementById('section-upload').style.display = 'none';
-      document.getElementById('section-offre').style.display = 'block';
+    function afficherInscription() {
+      document.getElementById('section-login').style.display = 'none';
+      document.getElementById('section-oublie').style.display = 'none';
+      document.getElementById('section-register').style.display = 'block';
     }
-  </script>
-</body>
-</html>
+
+    function afficherConnexion() {
+      document.getElementById('section-register').style.display = 'none';
+      document.getElementById('section-oublie').style.display = 'none';
+      document.getElementById('section-login').style.display = 'block';
+    }
+
+    function afficherDashboard(nom) {
+      document.getElementById('section-login').style.display = 'none';
+      document.getElementById('section-register').style.display = 'none';
+      document.getElementById('section-oublie').style.display = 'none';
+      document.getElementById('section-dashboard').style.display = 'block';
+      document.getElementById('nom-fournisseur').textContent = nom;
+    }
+
+    function seDeconnecter() {
+      localStorage.removeItem('nc_token');
+      localStorage.removeItem('nc_nom');
+      localStorage.removeItem('nc_id');
+      location.reload();
+    }
+
+    async function seConnecter() {
+      const ema
