@@ -142,15 +142,19 @@
           })
         });
         const offre = await offreRes.json();
-        if (fichiers.length > 0) {
+               if (fichiers.length > 0) {
           document.getElementById('progress-bar-wrap').style.display = 'block';
           for (let i = 0; i < fichiers.length; i++) {
             document.getElementById('progress-bar').style.width = ((i+1)/fichiers.length*100) + '%';
             const uploaded = await uploaderPhoto(fichiers[i]);
-            await fetch(BACKEND + '/api/photos/' + uploaded.public_id.replace(/\//g,'_') + '/offre', {
-              method: 'PATCH',
+            await fetch(BACKEND + '/api/photos/save', {
+              method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ offre_id: offre.id })
+              body: JSON.stringify({
+                public_id: uploaded.public_id,
+                url: uploaded.secure_url,
+                offre_id: offre.id
+              })
             });
           }
         }
