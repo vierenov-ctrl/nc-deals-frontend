@@ -2,171 +2,337 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Admin — NC Deals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NC Deals — Admin</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; }
-    header { background: #1a1a2e; color: white; padding: 16px 24px; }
-    header h1 { margin: 0; font-size: 1.4rem; }
-    nav { background: #16213e; padding: 10px 24px; }
-    nav a { color: #ccc; text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
-    .section { max-width: 1000px; margin: 30px auto; padding: 0 16px; }
-    h2 { font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #ddd; padding-bottom: 6px; }
-    .card { background: white; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-    .photo-card { display: flex; gap: 16px; align-items: flex-start; }
-    .photo-card img { width: 160px; height: 120px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-    .offre-card { display: flex; gap: 16px; align-items: center; }
-    .offre-card img { width: 80px; height: 60px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
-    .fourn-card { display: flex; justify-content: space-between; align-items: center; }
-    .info { flex: 1; }
-    .info p { margin: 3px 0; font-size: 0.9rem; color: #555; }
-    .actions { display: flex; flex-direction: column; gap: 6px; }
-    .btn { border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.85rem; }
-    .btn-vert { background: #27ae60; }
-    .btn-rouge { background: #e74c3c; }
-    .btn-gris { background: #888; }
-    .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; color: white; font-size: 0.8rem; margin-top: 4px; }
-    .vide { color: #888; font-style: italic; }
-    #compteur { background: #f0a500; color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.9rem; margin-left: 8px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; }
+
+    .header { background: linear-gradient(150deg, #0a2e18, #1a6b3a); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { color: white; font-size: 1.3rem; font-weight: 800; letter-spacing: 2px; }
+    .header h1 span { color: #7ee8a2; }
+    .header small { color: rgba(255,255,255,0.6); font-size: 0.78rem; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 25px 20px 60px; }
+
+    .card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 24px; }
+    .card h2 { color: #1a6b3a; font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e8f5e9; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #2a5a2a; margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; border: 2px solid #d0e8d0; border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: #1a3a1a; background: #fafffe; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #1a6b3a; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+
+    .btn { padding: 10px 22px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-primary { background: #1a6b3a; color: white; }
+    .btn-primary:hover { background: #0d4a2a; }
+    .btn-approuver { background: #e8f5e9; color: #1a6b3a; border: 1.5px solid #a5d6a7; }
+    .btn-approuver:hover { background: #c8e6c9; }
+    .btn-refuser { background: #ffebee; color: #c62828; border: 1.5px solid #ef9a9a; }
+    .btn-refuser:hover { background: #ffcdd2; }
+    .btn-activer { background: #e8f5e9; color: #1a6b3a; border: 1.5px solid #a5d6a7; font-size: 0.82rem; padding: 6px 14px; }
+    .btn-desactiver { background: #fff3e0; color: #e65100; border: 1.5px solid #ffcc80; font-size: 0.82rem; padding: 6px 14px; }
+
+    .offre-ligne, .fourn-ligne, .paiement-ligne { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+    .offre-ligne:last-child, .fourn-ligne:last-child, .paiement-ligne:last-child { border-bottom: none; }
+
+    .offre-photo { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; background: #e8f5e9; flex-shrink: 0; }
+    .offre-info { flex: 1; min-width: 180px; }
+    .offre-titre { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .offre-meta { font-size: 0.78rem; color: #888; margin-bottom: 8px; }
+    .statut-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-bottom: 8px; }
+    .statut-en_attente { background: #fff3e0; color: #e65100; }
+    .statut-approuvee { background: #e8f5e9; color: #1a6b3a; }
+    .statut-refusee { background: #ffebee; color: #c62828; }
+
+    .photo-card { border: 1px solid #eee; border-radius: 12px; padding: 14px; margin-bottom: 12px; display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+    .photo-thumb { width: 90px; height: 90px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .photo-info { flex: 1; min-width: 150px; }
+    .photo-id { font-size: 0.72rem; color: #aaa; word-break: break-all; margin-bottom: 8px; }
+
+    .fourn-nom { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
+    .fourn-detail { font-size: 0.8rem; color: #666; margin-bottom: 6px; }
+    .fourn-iban { font-size: 0.78rem; color: #888; font-family: monospace; }
+    .badge-actif { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 2px 10px; border-radius: 20px; margin-bottom: 6px; }
+    .badge-actif.oui { background: #e8f5e9; color: #1a6b3a; }
+    .badge-actif.non { background: #ffebee; color: #c62828; }
+
+    .paiement-montant { font-size: 1.05rem; font-weight: 800; color: #1a6b3a; white-space: nowrap; }
+    .paiement-detail { font-size: 0.8rem; color: #888; }
+
+    .total-barre { display: flex; justify-content: space-between; font-weight: 700; color: #1a6b3a; padding: 12px 0 0; margin-top: 12px; border-top: 2px solid #e8f5e9; font-size: 1rem; }
+
+    .vide { color: #aaa; font-size: 0.9rem; padding: 10px 0; }
+    .succes { color: #1a6b3a; background: #e8f5e9; padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 0.88rem; }
+    .erreur { color: #c62828; background: #ffebee; padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 0.88rem; }
+
+    .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .form-row .form-group { flex: 1; min-width: 140px; }
   </style>
 </head>
 <body>
-  <header><h1>Panneau Admin — NC Deals</h1></header>
-  <nav>
-    <a href="index.html">Accueil</a>
-    <a href="fournisseur.html">Espace fournisseur</a>
-    <a href="admin.html">Admin</a>
-  </nav>
 
-  <div class="section">
-    <h2>Moderation des offres</h2>
-    <div id="liste-offres"><p class="vide">Chargement...</p></div>
+<div class="header">
+  <div>
+    <h1>NC <span>Deals</span> — Admin</h1>
+    <small>Panneau d'administration</small>
+  </div>
+  <a href="index.html" style="color:rgba(255,255,255,0.7);font-size:0.85rem;text-decoration:none;">← Retour au site</a>
+</div>
+
+<div class="container">
+
+  <!-- OFFRES -->
+  <div class="card">
+    <h2>📋 Modération des offres</h2>
+    <div id="liste-offres"><div class="vide">Chargement...</div></div>
   </div>
 
-  <div class="section">
-    <h2>Photos en attente de moderation <span id="compteur">0</span></h2>
-    <div id="photos-container"><p class="vide">Chargement...</p></div>
+  <!-- PHOTOS -->
+  <div class="card">
+    <h2>🖼️ Photos en attente</h2>
+    <div id="liste-photos"><div class="vide">Chargement...</div></div>
   </div>
 
-  <div class="section">
-    <h2>Comptes fournisseurs</h2>
-    <div id="liste-fournisseurs"><p class="vide">Chargement...</p></div>
+  <!-- FOURNISSEURS -->
+  <div class="card">
+    <h2>👤 Gestion des fournisseurs</h2>
+    <div id="liste-fournisseurs"><div class="vide">Chargement...</div></div>
   </div>
 
-  <script>
-    var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
-    var ADMIN_KEY = prompt('Cle admin :') || '';
+  <!-- PAIEMENTS -->
+  <div class="card">
+    <h2>💰 Enregistrer un virement</h2>
+    <div class="form-row">
+      <div class="form-group" style="flex:2;min-width:200px;">
+        <label>Fournisseur</label>
+        <select id="paiement-fourn">
+          <option value="">Chargement...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Montant (XPF)</label>
+        <input type="number" id="paiement-montant" placeholder="Ex: 15000" min="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Référence virement <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+        <input type="text" id="paiement-ref" placeholder="Ex: VIR-2026-001">
+      </div>
+      <div class="form-group">
+        <label>Note <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+        <input type="text" id="paiement-note" placeholder="Ex: Commission mai 2026">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="enregistrerPaiement()">Enregistrer le virement</button>
+    <div id="paiement-msg"></div>
+  </div>
 
-    // OFFRES
-    function chargerOffres() {
-      fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY))
-        .then(function(r) { return r.json(); })
-        .then(function(offres) {
-          var c = document.getElementById('liste-offres');
-          if (!offres || offres.error) { c.innerHTML = '<p class="vide">Acces refuse ou erreur.</p>'; return; }
-          if (offres.length === 0) { c.innerHTML = '<p class="vide">Aucune offre.</p>'; return; }
-          c.innerHTML = '';
-          offres.forEach(function(o) {
-            var couleur = o.statut === 'approuvee' ? '#27ae60' : o.statut === 'refusee' ? '#e74c3c' : '#f0a500';
-            var d = document.createElement('div');
-            d.className = 'card offre-card';
-            var imgHtml = o.photo_url ? '<img src="' + o.photo_url + '">' : '<div style="width:80px;height:60px;background:#eee;border-radius:6px;flex-shrink:0;"></div>';
-            d.innerHTML = imgHtml +
-              '<div class="info"><strong>' + o.titre + '</strong><p>' + (o.fournisseur_nom || '') + ' — ' + (o.prix_xpf || 0) + ' XPF</p>' +
-              '<span class="badge" style="background:' + couleur + '">' + o.statut + '</span></div>' +
-              '<div class="actions">' +
-              '<button class="btn btn-vert" onclick="statutOffre(' + o.id + ',\'approuvee\')">Approuver</button>' +
-              '<button class="btn btn-rouge" onclick="statutOffre(' + o.id + ',\'refusee\')">Refuser</button>' +
-              '<button class="btn btn-gris" onclick="statutOffre(' + o.id + ',\'en_attente\')">En attente</button>' +
-              '</div>';
-            c.appendChild(d);
-          });
-        }).catch(function(e) {
-          document.getElementById('liste-offres').innerHTML = '<p class="vide">Erreur : ' + e.message + '</p>';
-        });
+  <!-- HISTORIQUE PAIEMENTS -->
+  <div class="card">
+    <h2>📜 Historique des virements</h2>
+    <div id="liste-paiements"><div class="vide">Chargement...</div></div>
+  </div>
+
+</div>
+
+<script>
+var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+var ADMIN_KEY = prompt('Clé admin :') || '';
+
+/* ── OFFRES ── */
+function chargerOffres() {
+  fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(offres) {
+    var container = document.getElementById('liste-offres');
+    if (!offres.length) { container.innerHTML = '<div class="vide">Aucune offre.</div>'; return; }
+    var html = '';
+    for (var i = 0; i < offres.length; i++) {
+      var o = offres[i];
+      var statutClass = 'statut-' + (o.statut || 'en_attente');
+      var statutLabel = o.statut === 'approuvee' ? '✅ Approuvée' : o.statut === 'refusee' ? '❌ Refusée' : '⏳ En attente';
+      html += '<div class="offre-ligne" id="offre-' + o.id + '">';
+      if (o.photo_url) html += '<img class="offre-photo" src="' + o.photo_url + '" onerror="this.style.display=\'none\'">';
+      html += '<div class="offre-info">';
+      html += '<div class="offre-titre">' + o.titre + '</div>';
+      html += '<div class="offre-meta">' + (o.fournisseur_nom || '—') + ' · ' + (o.prix_xpf || 0).toLocaleString('fr-FR') + ' XPF · ' + (o.categorie || '') + '</div>';
+      html += '<div class="statut-badge ' + statutClass + '">' + statutLabel + '</div><br>';
+      html += '<button class="btn btn-approuver" onclick="statutOffre(' + o.id + ',\'approuvee\')">✅ Approuver</button> ';
+      html += '<button class="btn btn-refuser" onclick="statutOffre(' + o.id + ',\'refusee\')">❌ Refuser</button> ';
+      html += '<button class="btn" style="background:#f5f5f5;color:#555;border:1.5px solid #ddd;font-size:0.82rem;padding:6px 14px;" onclick="statutOffre(' + o.id + ',\'en_attente\')">↩ Remettre en attente</button>';
+      html += '</div></div>';
     }
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-offres').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
 
-    function statutOffre(id, statut) {
-      fetch(BACKEND + '/api/admin/offres/' + id + '/statut', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ admin_key: ADMIN_KEY, statut: statut })
-      }).then(function() { chargerOffres(); });
+function statutOffre(id, statut) {
+  fetch(BACKEND + '/api/admin/offres/' + id + '/statut', {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ admin_key: ADMIN_KEY, statut: statut })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() { chargerOffres(); })
+  .catch(function() { alert('Erreur lors de la mise à jour.'); });
+}
+
+/* ── PHOTOS ── */
+function chargerPhotos() {
+  fetch(BACKEND + '/api/admin/photos?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(photos) {
+    var container = document.getElementById('liste-photos');
+    if (!photos.length) { container.innerHTML = '<div class="vide">Aucune photo en attente.</div>'; return; }
+    var html = '';
+    for (var i = 0; i < photos.length; i++) {
+      var p = photos[i];
+      html += '<div class="photo-card" id="card-' + i + '">';
+      html += '<img class="photo-thumb" src="' + p.url + '" alt="photo">';
+      html += '<div class="photo-info">';
+      html += '<div class="photo-id">ID: ' + p.public_id + '</div>';
+      html += '<button class="btn btn-approuver" onclick="moderer(\'' + p.public_id.replace(/'/g, "\\'") + '\',\'approuver\',\'card-' + i + '\')">✅ Approuver</button> ';
+      html += '<button class="btn btn-refuser" onclick="moderer(\'' + p.public_id.replace(/'/g, "\\'") + '\',\'refuser\',\'card-' + i + '\')">❌ Refuser</button>';
+      html += '</div></div>';
     }
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-photos').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
 
-    // PHOTOS
-    function chargerPhotos() {
-      fetch(BACKEND + '/api/admin/photos')
-        .then(function(r) { return r.json(); })
-        .then(function(photos) {
-          document.getElementById('compteur').textContent = photos.length;
-          var c = document.getElementById('photos-container');
-          if (photos.length === 0) { c.innerHTML = '<p class="vide">Aucune photo en attente.</p>'; return; }
-          c.innerHTML = '';
-          photos.forEach(function(p) {
-            var d = document.createElement('div');
-            d.className = 'card photo-card';
-            d.id = 'card-' + p.id;
-            d.innerHTML = '<img src="' + p.url + '" alt="Photo">' +
-              '<div class="info"><p><strong>ID :</strong> ' + p.id + '</p><p><strong>Offre :</strong> ' + (p.offre_id || 'Non liee') + '</p>' +
-              '<p><strong>Date :</strong> ' + new Date(p.cree_le).toLocaleString('fr-FR') + '</p>' +
-              '<div style="margin-top:10px;display:flex;gap:8px;">' +
-              '<button class="btn btn-vert" onclick="moderer(\'' + p.public_id + '\',\'approuver\',' + p.id + ')">Approuver</button>' +
-              '<button class="btn btn-rouge" onclick="moderer(\'' + p.public_id + '\',\'refuser\',' + p.id + ')">Refuser</button>' +
-              '</div></div>';
-            c.appendChild(d);
-          });
-        });
+function moderer(publicId, action, cardId) {
+  fetch(BACKEND + '/api/upload/moderate/' + encodeURIComponent(publicId), {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: action, admin_key: ADMIN_KEY })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() {
+    var card = document.getElementById(cardId);
+    if (card) card.style.opacity = '0.4';
+    setTimeout(function() { chargerPhotos(); }, 600);
+  })
+  .catch(function() { alert('Erreur lors de la modération.'); });
+}
+
+/* ── FOURNISSEURS ── */
+function chargerFournisseurs() {
+  fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(fourns) {
+    var container = document.getElementById('liste-fournisseurs');
+    if (!fourns.length) { container.innerHTML = '<div class="vide">Aucun fournisseur.</div>'; return; }
+    var html = '';
+    for (var i = 0; i < fourns.length; i++) {
+      var f = fourns[i];
+      html += '<div class="fourn-ligne">';
+      html += '<div style="flex:1;min-width:200px;">';
+      html += '<div class="fourn-nom">' + f.nom + '</div>';
+      html += '<div class="fourn-detail">' + f.email + '</div>';
+      html += '<div class="fourn-iban">IBAN: ' + (f.iban || '—') + '</div>';
+      html += '</div>';
+      html += '<div>';
+      html += '<div class="badge-actif ' + (f.actif ? 'oui' : 'non') + '">' + (f.actif ? '✅ Actif' : '🚫 Désactivé') + '</div><br>';
+      if (f.actif) {
+        html += '<button class="btn btn-desactiver" onclick="toggleFourn(' + f.id + ', false)">Désactiver</button>';
+      } else {
+        html += '<button class="btn btn-activer" onclick="toggleFourn(' + f.id + ', true)">Activer</button>';
+      }
+      html += '</div></div>';
     }
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-fournisseurs').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
 
-    function moderer(publicId, action, cardId) {
-      fetch(BACKEND + '/api/upload/moderate/' + encodeURIComponent(publicId), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: action })
-      }).then(function(r) {
-        if (!r.ok) { alert('Erreur serveur'); return; }
-        var card = document.getElementById('card-' + cardId);
-        if (card) card.remove();
-        var restant = document.querySelectorAll('.photo-card').length;
-        document.getElementById('compteur').textContent = restant;
-        if (restant === 0) document.getElementById('photos-container').innerHTML = '<p class="vide">Aucune photo en attente.</p>';
-      });
+function toggleFourn(id, actif) {
+  fetch(BACKEND + '/api/admin/fournisseurs/' + id + '/statut', {
+    method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ admin_key: ADMIN_KEY, actif: actif })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() { chargerFournisseurs(); })
+  .catch(function() { alert('Erreur.'); });
+}
+
+/* ── PAIEMENTS ── */
+function chargerFournsForPaiement() {
+  fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(fourns) {
+    var sel = document.getElementById('paiement-fourn');
+    sel.innerHTML = '<option value="">— Choisir un fournisseur —</option>';
+    for (var i = 0; i < fourns.length; i++) {
+      var f = fourns[i];
+      var opt = document.createElement('option');
+      opt.value = f.id;
+      opt.textContent = f.nom + (f.iban ? ' — ' + f.iban : ' — IBAN manquant');
+      sel.appendChild(opt);
     }
+  });
+}
 
-    // FOURNISSEURS
-    function chargerFournisseurs() {
-      fetch(BACKEND + '/api/admin/fournisseurs?admin_key=' + encodeURIComponent(ADMIN_KEY))
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var c = document.getElementById('liste-fournisseurs');
-          if (!data || data.error) { c.innerHTML = '<p class="vide">Acces refuse.</p>'; return; }
-          if (data.length === 0) { c.innerHTML = '<p class="vide">Aucun fournisseur.</p>'; return; }
-          c.innerHTML = '';
-          data.forEach(function(f) {
-            var d = document.createElement('div');
-            d.className = 'card fourn-card';
-            d.innerHTML = '<div class="info"><strong>' + f.nom + '</strong> — ' + f.email +
-              '<p>IBAN: ' + (f.iban || 'non renseigne') + ' | Inscrit le: ' + new Date(f.cree_le).toLocaleDateString('fr-FR') + '</p></div>' +
-              '<div style="display:flex;gap:8px;align-items:center;">' +
-              '<span class="badge" style="background:' + (f.actif ? '#27ae60' : '#e74c3c') + '">' + (f.actif ? 'Actif' : 'Inactif') + '</span>' +
-              '<button class="btn ' + (f.actif ? 'btn-rouge' : 'btn-vert') + '" onclick="toggleFourn(' + f.id + ',' + f.actif + ')">' + (f.actif ? 'Desactiver' : 'Activer') + '</button>' +
-              '</div>';
-            c.appendChild(d);
-          });
-        });
+function enregistrerPaiement() {
+  var fournisseur_id = document.getElementById('paiement-fourn').value;
+  var montant = document.getElementById('paiement-montant').value;
+  var reference = document.getElementById('paiement-ref').value.trim();
+  var note = document.getElementById('paiement-note').value.trim();
+  var msg = document.getElementById('paiement-msg');
+  if (!fournisseur_id) { msg.innerHTML = '<div class="erreur">Choisissez un fournisseur.</div>'; return; }
+  if (!montant || parseInt(montant) <= 0) { msg.innerHTML = '<div class="erreur">Saisissez un montant valide.</div>'; return; }
+  fetch(BACKEND + '/api/admin/paiements', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ admin_key: ADMIN_KEY, fournisseur_id: parseInt(fournisseur_id), montant_xpf: parseInt(montant), reference: reference || null, note: note || null })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { msg.innerHTML = '<div class="erreur">' + data.error + '</div>'; }
+    else {
+      msg.innerHTML = '<div class="succes">✅ Virement enregistré !</div>';
+      document.getElementById('paiement-montant').value = '';
+      document.getElementById('paiement-ref').value = '';
+      document.getElementById('paiement-note').value = '';
+      chargerPaiements();
     }
+  })
+  .catch(function() { msg.innerHTML = '<div class="erreur">Erreur reseau.</div>'; });
+}
 
-    function toggleFourn(id, actif) {
-      fetch(BACKEND + '/api/admin/fournisseurs/' + id + '/statut', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ admin_key: ADMIN_KEY, actif: !actif })
-      }).then(function() { chargerFournisseurs(); });
+function chargerPaiements() {
+  fetch(BACKEND + '/api/admin/paiements?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(paiements) {
+    var container = document.getElementById('liste-paiements');
+    if (!paiements.length) { container.innerHTML = '<div class="vide">Aucun virement enregistré.</div>'; return; }
+    var total = 0;
+    var html = '';
+    for (var i = 0; i < paiements.length; i++) {
+      var p = paiements[i];
+      total += p.montant_xpf;
+      var date = new Date(p.cree_le).toLocaleDateString('fr-FR');
+      html += '<div class="paiement-ligne">';
+      html += '<div style="flex:1;">';
+      html += '<div style="font-weight:700;font-size:0.95rem;">' + (p.fournisseur_nom || '—') + '</div>';
+      html += '<div class="paiement-detail">' + (p.iban || '') + '</div>';
+      html += '<div class="paiement-detail">' + date + (p.reference ? ' · ' + p.reference : '') + (p.note ? ' · ' + p.note : '') + '</div>';
+      html += '</div>';
+      html += '<div class="paiement-montant">' + p.montant_xpf.toLocaleString('fr-FR') + ' XPF</div>';
+      html += '</div>';
     }
+    html += '<div class="total-barre"><span>Total versé</span><span>' + total.toLocaleString('fr-FR') + ' XPF</span></div>';
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-paiements').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
 
-    chargerOffres();
-    chargerPhotos();
-    chargerFournisseurs();
-  </script>
+chargerOffres();
+chargerPhotos();
+chargerFournisseurs();
+chargerFournsForPaiement();
+chargerPaiements();
+</script>
+
 </body>
 </html>
