@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NC Deals — Détail de l'offre</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
+
+    /* HEADER */
+    .header { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .header-logo { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: 3px; text-decoration: none; }
+    .header-logo span { color: #7ee8a2; }
+    .btn-retour { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.35); border-radius: 30px; color: white; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
+    .btn-retour:hover { background: rgba(255,255,255,0.25); }
+
+    /* CONTENU */
+    .container { max-width: 800px; margin: 0 auto; padding: 30px 20px 60px; }
+
+    /* GALERIE */
+    .galerie-principale { width: 100%; border-radius: 18px; overflow: hidden; background: #e8f5e9; margin-bottom: 24px; position: relative; }
+    .galerie-principale img { width: 100%; max-height: 420px; object-fit: cover; display: block; }
+    .photo-vide { width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; font-size: 5rem; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+
+    .galerie-miniatures { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+    .miniature { width: 72px; height: 72px; border-radius: 10px; overflow: hidden; cursor: pointer; border: 3px solid transparent; transition: border-color 0.2s; flex-shrink: 0; }
+    .miniature.active { border-color: #1a6b3a; }
+    .miniature img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* FICHE */
+    .fiche { background: white; border-radius: 18px; padding: 30px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .fiche-categorie { display: inline-block; font-size: 0.75rem; font-weight: 700; color: #1a6b3a; background: #e8f5e9; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+    .fiche-titre { font-size: 1.7rem; font-weight: 900; color: #1a3a1a; line-height: 1.3; margin-bottom: 16px; }
+    .fiche-prix { font-size: 2rem; font-weight: 900; color: #1a6b3a; margin-bottom: 20px; }
+    .fiche-separateur { border: none; border-top: 2px solid #e8f5e9; margin: 20px 0; }
+    .fiche-label { font-size: 0.75rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .fiche-description { font-size: 0.97rem; color: #444; line-height: 1.7; margin-bottom: 20px; white-space: pre-line; }
+    .fiche-fournisseur { display: flex; align-items: center; gap: 10px; background: #f0faf0; border-radius: 12px; padding: 14px 18px; }
+    .fournisseur-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #1a6b3a, #0d4a6b); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
+    .fournisseur-nom { font-weight: 700; font-size: 0.95rem; color: #1a3a1a; }
+    .fournisseur-label { font-size: 0.75rem; color: #888; }
+
+    /* ÉTATS */
+    .chargement { text-align: center; padding: 80px 20px; color: #888; font-size: 1rem; }
+    .erreur-bloc { text-align: center; padding: 80px 20px; }
+    .erreur-bloc p { color: #c62828; margin-bottom: 16px; }
+
+    @media (max-width: 480px) {
+      .fiche-titre { font-size: 1.35rem; }
+      .fiche-prix { font-size: 1.6rem; }
+      .fiche { padding: 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="header-logo">NC <span>Deals</span></a>
+  <a href="index.html" class="btn-retour">← Retour aux offres</a>
+</div>
+
+<div class="container">
+  <div id="contenu">
+    <div class="chargement">Chargement de l'offre...</div>
+  </div>
+</div>
+
+<script>
+var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+
+function getIdDepuisUrl() {
+  var params = new URLSearchParams(window.location.search);
+  return params.get('id');
+}
+
+function initGalerie(photos) {
+  if (!photos || photos.length === 0) return;
+  var principale = document.getElementById('photo-principale');
+  var miniatures = document.getElementById('galerie-miniatures');
+  if (!principale || !miniatures) return;
+
+  if (photos.length <= 1) return;
+
+  miniatures.innerHTML = '';
+  for (var i = 0; i < photos.length; i++) {
+    var mini = document.createElement('div');
+    mini.className = 'miniature' + (i === 0 ? ' active' : '');
+    mini.setAttribute('data-url', photos[i]);
+    var img = document.createElement('img');
+    img.src = photos[i];
+    img.alt = 'photo ' + (i + 1);
+    mini.appendChild(img);
+    mini.onclick = (function(url, el) {
+      return function() {
+        principale.src = url;
+        var tous = document.querySelectorAll('.miniature');
+        for (var j = 0; j < tous.length; j++) tous[j].classList.remove('active');
+        el.classList.add('active');
+      };
+    })(photos[i], mini);
+    miniatures.appendChild(mini);
+  }
+  miniatures.style.display = 'flex';
+}
+
+function afficherOffre(offre) {
+  var photos = offre.photos || [];
+  var premierePhoto = photos.length > 0 ? photos[0] : null;
+
+  var photoHtml = premierePhoto
+    ? '<img id="photo-principale" src="' + premierePhoto + '" alt="' + offre.titre + '" onerror="this.parentNode.innerHTML=\'<div class=\\\'photo-vide\\\'>🛍️</div>\'">'
+    : '<div class="photo-vide">🛍️</div>';
+
+  var miniHtml = photos.length > 1 ? '<div class="galerie-miniatures" id="galerie-miniatures" style="display:none"></div>' : '';
+
+  var prixHtml = offre.prix_xpf
+    ? offre.prix_xpf.toLocaleString('fr-FR') + ' XPF'
+    : 'Prix sur demande';
+
+  var descriptionHtml = offre.description
+    ? '<div class="fiche-label">Description</div><div class="fiche-description">' + offre.description + '</div><hr class="fiche-separateur">'
+    : '';
+
+  var initiale = offre.fournisseur_nom ? offre.fournisseur_nom.charAt(0).toUpperCase() : '?';
+
+  document.getElementById('contenu').innerHTML =
+    '<div class="galerie-principale">' + photoHtml + '</div>' +
+    miniHtml +
+    '<div class="fiche">' +
+      '<span class="fiche-categorie">' + (offre.categorie || 'Autres') + '</span>' +
+      '<div class="fiche-titre">' + offre.titre + '</div>' +
+      '<div class="fiche-prix">' + prixHtml + '</div>' +
+      '<hr class="fiche-separateur">' +
+      descriptionHtml +
+      '<div class="fiche-label">Proposé par</div>' +
+      '<div class="fiche-fournisseur">' +
+        '<div class="fournisseur-avatar">' + initiale + '</div>' +
+        '<div>' +
+          '<div class="fournisseur-nom">' + (offre.fournisseur_nom || '—') + '</div>' +
+          '<div class="fournisseur-label">Fournisseur NC Deals</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.title = 'NC Deals — ' + offre.titre;
+
+  if (photos.length > 1) {
+    initGalerie(photos);
+  }
+}
+
+function charger() {
+  var id = getIdDepuisUrl();
+  if (!id) {
+    document.getElementById('contenu').innerHTML =
+      '<div class="erreur-bloc"><p>Aucune offre sélectionnée.</p><a href="index.html" class="btn-retour" style="display:inline-block;background:#1a6b3a;color:white;border-color:#1a6b3a;">← Voir les offres</a></div>';
+    return;
+  }
+
+  fetch(BACKEND + '/api/offres/' + id)
+  .then(function(r) {
+    if (!r.ok) throw new Error('not found');
+    return r.json();
+  })
+  .then(function(offre) {
+    if (offre.error) throw new Error(offre.error);
+    afficherOffre(offre);
+  })
+  .catch(function() {
+    document.getElementById('contenu').innerHTML =
+      '<div class="erreur-bloc"><p>Offre introuvable ou plus disponible.</p><a href="index.html" class="btn-retour" style="display:inline-block;background:#1a6b3a;color:white;border-color:#1a6b3a;">← Voir les offres</a></div>';
+  });
+}
+
+charger();
+</script>
+
+</body>
+</html>
