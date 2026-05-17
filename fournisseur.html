@@ -24,11 +24,7 @@
 
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 0.83rem; font-weight: 600; color: #2a5a2a; margin-bottom: 5px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 11px 14px; border: 2px solid #d0e8d0;
-      border-radius: 9px; font-size: 0.97rem; font-family: inherit;
-      transition: border-color 0.2s; color: #1a3a1a; background: #fafffe;
-    }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 14px; border: 2px solid #d0e8d0; border-radius: 9px; font-size: 0.97rem; font-family: inherit; transition: border-color 0.2s; color: #1a3a1a; background: #fafffe; }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #1a6b3a; }
     .form-group textarea { resize: vertical; min-height: 78px; }
     .form-group select { cursor: pointer; }
@@ -47,6 +43,15 @@
 
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
     .dash-header h2 { color: #1a6b3a; font-size: 1.4rem; }
+
+    .iban-info { background: #f0faf0; border: 1.5px solid #c8e6c9; border-radius: 10px; padding: 12px 16px; font-size: 0.85rem; color: #2a5a2a; margin-bottom: 20px; }
+    .iban-info strong { display: block; margin-bottom: 3px; font-size: 0.78rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .paiement-ligne { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #eee; gap: 10px; }
+    .paiement-ligne:last-child { border-bottom: none; }
+    .paiement-montant { font-size: 1.1rem; font-weight: 800; color: #1a6b3a; white-space: nowrap; }
+    .paiement-detail { font-size: 0.82rem; color: #888; }
+    .paiement-ref { font-size: 0.85rem; color: #333; }
 
     .galerie { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
     .galerie-item { width: 95px; height: 95px; border-radius: 10px; overflow: hidden; border: 3px solid #1a6b3a; }
@@ -117,8 +122,8 @@
       <input type="password" id="reg-password" placeholder="Choisissez un mot de passe">
     </div>
     <div class="form-group">
-      <label>IBAN <span style="font-weight:400;color:#888;">(optionnel)</span></label>
-      <input type="text" id="reg-iban" placeholder="Pour recevoir vos paiements">
+      <label>IBAN <span style="color:#c62828;font-size:0.8rem;">— obligatoire pour recevoir vos paiements</span></label>
+      <input type="text" id="reg-iban" placeholder="Ex: FR76 1234 5678 9012 3456 7890 123">
     </div>
     <div class="form-group">
       <label>BIC <span style="font-weight:400;color:#888;">(optionnel)</span></label>
@@ -150,9 +155,15 @@
       <button class="btn btn-secondary btn-sm" onclick="seDeconnecter()">Déconnexion</button>
     </div>
 
+    <!-- IBAN affiché -->
+    <div class="iban-info" id="iban-affiché">
+      <strong>IBAN de paiement</strong>
+      <span id="iban-valeur">—</span>
+    </div>
+
+    <!-- Créer une offre -->
     <div class="card">
       <h2>Publier une offre</h2>
-
       <div class="form-group">
         <label>Catégorie</label>
         <select id="offre-categorie" onchange="toggleAutre()">
@@ -205,9 +216,8 @@
             <option value="__autre__">✏️ Autre — précisez</option>
           </optgroup>
         </select>
-        <input type="text" id="categorie-custom" class="champ-custom cache" placeholder="Nommez votre rubrique (ex: Drone, Événementiel...)">
+        <input type="text" id="categorie-custom" class="champ-custom cache" placeholder="Nommez votre rubrique...">
       </div>
-
       <div class="form-group">
         <label>Titre de l'offre</label>
         <input type="text" id="offre-titre" placeholder="Ex: Poulet rôti — 1500 XPF">
@@ -224,17 +234,22 @@
       <div id="offre-msg"></div>
     </div>
 
+    <!-- Photos -->
     <div class="card cache" id="section-photos">
       <h2>Photos de l'offre</h2>
       <p style="color:#555; font-size:0.88rem; margin-bottom:14px;">Ajoutez une ou plusieurs photos. Chaque photo sera vérifiée par l'admin avant publication.</p>
       <div class="galerie" id="galerie-photos"></div>
-      <div class="upload-zone" onclick="document.getElementById('photo-input').click()">
-        📷 Cliquez pour ajouter une photo
-      </div>
+      <div class="upload-zone" onclick="document.getElementById('photo-input').click()">📷 Cliquez pour ajouter une photo</div>
       <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="ajouterPhoto(this)">
       <div id="upload-status"></div>
       <hr class="sep">
       <button class="btn btn-secondary btn-sm" onclick="nouvelleOffre()">+ Publier une autre offre</button>
+    </div>
+
+    <!-- Mes paiements -->
+    <div class="card">
+      <h2>💰 Mes paiements reçus</h2>
+      <div id="liste-paiements">Chargement...</div>
     </div>
 
   </div>
@@ -250,21 +265,13 @@ var photosUploadees = [];
 function toggleAutre() {
   var sel = document.getElementById('offre-categorie');
   var custom = document.getElementById('categorie-custom');
-  if (sel.value === '__autre__') {
-    custom.classList.remove('cache');
-    custom.focus();
-  } else {
-    custom.classList.add('cache');
-    custom.value = '';
-  }
+  if (sel.value === '__autre__') { custom.classList.remove('cache'); custom.focus(); }
+  else { custom.classList.add('cache'); custom.value = ''; }
 }
 
 function getCategorie() {
   var sel = document.getElementById('offre-categorie');
-  if (sel.value === '__autre__') {
-    var custom = document.getElementById('categorie-custom').value.trim();
-    return custom || 'Autre';
-  }
+  if (sel.value === '__autre__') { var c = document.getElementById('categorie-custom').value.trim(); return c || 'Autre'; }
   return sel.value;
 }
 
@@ -272,7 +279,8 @@ function restaurerSession() {
   var t = localStorage.getItem('nc_token');
   var n = localStorage.getItem('nc_nom');
   var id = localStorage.getItem('nc_id');
-  if (t && n && id) { token = t; fournisseurId = id; afficherDashboard(n); }
+  var iban = localStorage.getItem('nc_iban');
+  if (t && n && id) { token = t; fournisseurId = id; afficherDashboard(n, iban); }
 }
 
 function afficherSection(nom) {
@@ -284,16 +292,15 @@ function afficherSection(nom) {
   var cible = document.getElementById('section-' + nom);
   if (cible) cible.classList.remove('cache');
   var accroche = document.getElementById('bloc-accroche');
-  if (nom === 'dashboard') {
-    if (accroche) accroche.classList.add('cache');
-  } else {
-    if (accroche) accroche.classList.remove('cache');
-  }
+  if (nom === 'dashboard') { if (accroche) accroche.classList.add('cache'); }
+  else { if (accroche) accroche.classList.remove('cache'); }
 }
 
-function afficherDashboard(nom) {
+function afficherDashboard(nom, iban) {
   afficherSection('dashboard');
   document.getElementById('bienvenue-nom').textContent = 'Bonjour, ' + nom + ' !';
+  document.getElementById('iban-valeur').textContent = iban || 'Non renseigné';
+  chargerMesPaiements();
 }
 
 function seConnecter() {
@@ -305,7 +312,14 @@ function seConnecter() {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
-    else { token = data.token; fournisseurId = data.id; localStorage.setItem('nc_token', data.token); localStorage.setItem('nc_nom', data.nom); localStorage.setItem('nc_id', data.id); afficherDashboard(data.nom); }
+    else {
+      token = data.token; fournisseurId = data.id;
+      localStorage.setItem('nc_token', data.token);
+      localStorage.setItem('nc_nom', data.nom);
+      localStorage.setItem('nc_id', data.id);
+      localStorage.setItem('nc_iban', data.iban || '');
+      afficherDashboard(data.nom, data.iban);
+    }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
 }
@@ -318,18 +332,27 @@ function sInscrire() {
   var bic = document.getElementById('reg-bic').value.trim();
   var msg = document.getElementById('reg-msg');
   if (!nom || !email || !password) { msg.innerHTML = '<p class="erreur">Nom, email et mot de passe requis.</p>'; return; }
-  fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nom: nom, email: email, password: password, iban: iban || null, bic: bic || null }) })
+  if (!iban) { msg.innerHTML = '<p class="erreur">L\'IBAN est obligatoire pour recevoir vos paiements.</p>'; return; }
+  fetch(BACKEND + '/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nom: nom, email: email, password: password, iban: iban, bic: bic || null }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
     if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
-    else { token = data.token; fournisseurId = data.id; localStorage.setItem('nc_token', data.token); localStorage.setItem('nc_nom', data.nom); localStorage.setItem('nc_id', data.id); afficherDashboard(data.nom); }
+    else {
+      token = data.token; fournisseurId = data.id;
+      localStorage.setItem('nc_token', data.token);
+      localStorage.setItem('nc_nom', data.nom);
+      localStorage.setItem('nc_id', data.id);
+      localStorage.setItem('nc_iban', iban);
+      afficherDashboard(data.nom, iban);
+    }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
 }
 
 function seDeconnecter() {
   token = null; fournisseurId = null; offreId = null; photosUploadees = [];
-  localStorage.removeItem('nc_token'); localStorage.removeItem('nc_nom'); localStorage.removeItem('nc_id');
+  localStorage.removeItem('nc_token'); localStorage.removeItem('nc_nom');
+  localStorage.removeItem('nc_id'); localStorage.removeItem('nc_iban');
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('section-photos').classList.add('cache');
@@ -344,9 +367,6 @@ function creerOffre() {
   var categorie = getCategorie();
   var msg = document.getElementById('offre-msg');
   if (!titre) { msg.innerHTML = '<p class="erreur">Le titre est obligatoire.</p>'; return; }
-  if (categorie === 'Autre' && !document.getElementById('categorie-custom').value.trim()) {
-    msg.innerHTML = '<p class="erreur">Précisez votre catégorie.</p>'; return;
-  }
   fetch(BACKEND + '/api/offres', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: description, prix_xpf: parseInt(prix) || 0, categorie: categorie }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -380,17 +400,13 @@ function ajouterPhoto(input) {
   .then(function(result) {
     photosUploadees.push({ url: result.secure_url, id: result.public_id });
     var galerie = document.getElementById('galerie-photos');
-    var item = document.createElement('div');
-    item.className = 'galerie-item';
-    var img = document.createElement('img');
-    img.src = result.secure_url;
-    img.alt = 'photo';
-    item.appendChild(img);
-    galerie.appendChild(item);
+    var item = document.createElement('div'); item.className = 'galerie-item';
+    var img = document.createElement('img'); img.src = result.secure_url; img.alt = 'photo';
+    item.appendChild(img); galerie.appendChild(item);
     document.getElementById('upload-status').innerHTML = '<p class="succes">Photo ajoutee ! (' + photosUploadees.length + ' photo(s))</p>';
     input.value = '';
   })
-  .catch(function() { document.getElementById('upload-status').innerHTML = '<p class="erreur">Erreur lors de l\'upload.</p>'; input.value = ''; });
+  .catch(function() { document.getElementById('upload-status').innerHTML = '<p class="erreur">Erreur upload.</p>'; input.value = ''; });
 }
 
 function nouvelleOffre() {
@@ -400,6 +416,35 @@ function nouvelleOffre() {
   document.getElementById('upload-status').innerHTML = '';
   document.getElementById('offre-msg').innerHTML = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function chargerMesPaiements() {
+  if (!fournisseurId) return;
+  var container = document.getElementById('liste-paiements');
+  fetch(BACKEND + '/api/fournisseurs/' + fournisseurId + '/paiements')
+  .then(function(r) { return r.json(); })
+  .then(function(paiements) {
+    if (!paiements.length) {
+      container.innerHTML = '<p style="color:#888;font-size:0.9rem;">Aucun paiement enregistré pour l\'instant.</p>';
+      return;
+    }
+    var total = 0;
+    var html = '';
+    for (var i = 0; i < paiements.length; i++) {
+      var p = paiements[i];
+      total += p.montant_xpf;
+      var date = new Date(p.cree_le).toLocaleDateString('fr-FR');
+      html += '<div class="paiement-ligne">';
+      html += '<div><div class="paiement-ref">' + (p.reference ? p.reference : 'Virement') + '</div>';
+      html += '<div class="paiement-detail">' + date + (p.note ? ' — ' + p.note : '') + '</div></div>';
+      html += '<div class="paiement-montant">+' + p.montant_xpf.toLocaleString('fr-FR') + ' XPF</div>';
+      html += '</div>';
+    }
+    html += '<div style="margin-top:14px; padding-top:14px; border-top:2px solid #1a6b3a; display:flex; justify-content:space-between; font-weight:700; color:#1a6b3a;">';
+    html += '<span>Total reçu</span><span>' + total.toLocaleString('fr-FR') + ' XPF</span></div>';
+    container.innerHTML = html;
+  })
+  .catch(function() { container.innerHTML = '<p style="color:#888;">Impossible de charger les paiements.</p>'; });
 }
 
 restaurerSession();
