@@ -8,18 +8,15 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
 
-    /* HEADER */
     .header { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; }
     .header-logo { font-size: 1.4rem; font-weight: 900; color: white; letter-spacing: 3px; text-decoration: none; }
     .header-logo span { color: #7ee8a2; }
     .btn-retour { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.35); border-radius: 30px; color: white; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
     .btn-retour:hover { background: rgba(255,255,255,0.25); }
 
-    /* CONTENU */
     .container { max-width: 800px; margin: 0 auto; padding: 30px 20px 60px; }
 
-    /* GALERIE */
-    .galerie-principale { width: 100%; border-radius: 18px; overflow: hidden; background: #e8f5e9; margin-bottom: 24px; position: relative; }
+    .galerie-principale { width: 100%; border-radius: 18px; overflow: hidden; background: #e8f5e9; margin-bottom: 24px; }
     .galerie-principale img { width: 100%; max-height: 420px; object-fit: cover; display: block; }
     .photo-vide { width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; font-size: 5rem; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
 
@@ -28,21 +25,39 @@
     .miniature.active { border-color: #1a6b3a; }
     .miniature img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* FICHE */
     .fiche { background: white; border-radius: 18px; padding: 30px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
     .fiche-categorie { display: inline-block; font-size: 0.75rem; font-weight: 700; color: #1a6b3a; background: #e8f5e9; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
     .fiche-titre { font-size: 1.7rem; font-weight: 900; color: #1a3a1a; line-height: 1.3; margin-bottom: 16px; }
-    .fiche-prix { font-size: 2rem; font-weight: 900; color: #1a6b3a; margin-bottom: 20px; }
+    .fiche-prix { font-size: 2rem; font-weight: 900; color: #1a6b3a; margin-bottom: 24px; }
     .fiche-separateur { border: none; border-top: 2px solid #e8f5e9; margin: 20px 0; }
     .fiche-label { font-size: 0.75rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
     .fiche-description { font-size: 0.97rem; color: #444; line-height: 1.7; margin-bottom: 20px; white-space: pre-line; }
+
+    /* BLOC PAIEMENT */
+    .bloc-paiement { background: #f0faf0; border: 2px solid #c8e6c9; border-radius: 14px; padding: 22px; margin-bottom: 24px; }
+    .bloc-paiement .fiche-label { margin-bottom: 12px; }
+    .email-group { margin-bottom: 14px; }
+    .email-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #2a5a2a; margin-bottom: 5px; }
+    .email-group input { width: 100%; padding: 11px 14px; border: 2px solid #d0e8d0; border-radius: 9px; font-size: 0.95rem; font-family: inherit; color: #1a3a1a; background: white; transition: border-color 0.2s; }
+    .email-group input:focus { outline: none; border-color: #1a6b3a; }
+
+    .btn-payer { width: 100%; padding: 16px; background: #1a6b3a; color: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-payer:hover { background: #0d4a2a; transform: translateY(-1px); }
+    .btn-payer:disabled { background: #aaa; cursor: not-allowed; transform: none; }
+    .stripe-mention { text-align: center; margin-top: 10px; font-size: 0.75rem; color: #999; }
+
+    .recap-prix { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; font-size: 0.88rem; }
+    .recap-ligne { display: flex; justify-content: space-between; color: #555; }
+    .recap-ligne.total { font-weight: 800; font-size: 1rem; color: #1a6b3a; border-top: 1px solid #c8e6c9; padding-top: 8px; margin-top: 4px; }
+
     .fiche-fournisseur { display: flex; align-items: center; gap: 10px; background: #f0faf0; border-radius: 12px; padding: 14px 18px; }
     .fournisseur-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #1a6b3a, #0d4a6b); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
     .fournisseur-nom { font-weight: 700; font-size: 0.95rem; color: #1a3a1a; }
     .fournisseur-label { font-size: 0.75rem; color: #888; }
 
-    /* ÉTATS */
-    .chargement { text-align: center; padding: 80px 20px; color: #888; font-size: 1rem; }
+    .msg-erreur { color: #c62828; background: #ffebee; padding: 10px 14px; border-radius: 8px; margin-top: 10px; font-size: 0.88rem; }
+
+    .chargement { text-align: center; padding: 80px 20px; color: #888; }
     .erreur-bloc { text-align: center; padding: 80px 20px; }
     .erreur-bloc p { color: #c62828; margin-bottom: 16px; }
 
@@ -75,18 +90,14 @@ function getIdDepuisUrl() {
 }
 
 function initGalerie(photos) {
-  if (!photos || photos.length === 0) return;
+  if (!photos || photos.length <= 1) return;
   var principale = document.getElementById('photo-principale');
   var miniatures = document.getElementById('galerie-miniatures');
   if (!principale || !miniatures) return;
-
-  if (photos.length <= 1) return;
-
   miniatures.innerHTML = '';
   for (var i = 0; i < photos.length; i++) {
     var mini = document.createElement('div');
     mini.className = 'miniature' + (i === 0 ? ' active' : '');
-    mini.setAttribute('data-url', photos[i]);
     var img = document.createElement('img');
     img.src = photos[i];
     img.alt = 'photo ' + (i + 1);
@@ -104,6 +115,42 @@ function initGalerie(photos) {
   miniatures.style.display = 'flex';
 }
 
+function lancerPaiement(offreId, prixXpf) {
+  var email = document.getElementById('client-email').value.trim();
+  var msgEl = document.getElementById('paiement-msg');
+  var btn = document.getElementById('btn-payer');
+
+  if (!email || !email.includes('@')) {
+    msgEl.innerHTML = '<div class="msg-erreur">Entrez un email valide pour recevoir votre confirmation.</div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Redirection vers le paiement...';
+  msgEl.innerHTML = '';
+
+  fetch(BACKEND + '/api/creer-paiement', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ offre_id: offreId, client_email: email })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      msgEl.innerHTML = '<div class="msg-erreur">' + data.error + '</div>';
+      btn.disabled = false;
+      btn.textContent = '💳 Payer maintenant';
+    } else {
+      window.location.href = data.url;
+    }
+  })
+  .catch(function() {
+    msgEl.innerHTML = '<div class="msg-erreur">Erreur réseau. Réessayez.</div>';
+    btn.disabled = false;
+    btn.textContent = '💳 Payer maintenant';
+  });
+}
+
 function afficherOffre(offre) {
   var photos = offre.photos || [];
   var premierePhoto = photos.length > 0 ? photos[0] : null;
@@ -114,9 +161,12 @@ function afficherOffre(offre) {
 
   var miniHtml = photos.length > 1 ? '<div class="galerie-miniatures" id="galerie-miniatures" style="display:none"></div>' : '';
 
-  var prixHtml = offre.prix_xpf
-    ? offre.prix_xpf.toLocaleString('fr-FR') + ' XPF'
-    : 'Prix sur demande';
+  var prixXpf = offre.prix_xpf || 0;
+  var prixEur = (prixXpf / 119.33174).toFixed(2);
+  var commission = Math.round(prixXpf * 0.04);
+  var netFournisseur = prixXpf - commission;
+
+  var prixAffiche = prixXpf ? prixXpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
 
   var descriptionHtml = offre.description
     ? '<div class="fiche-label">Description</div><div class="fiche-description">' + offre.description + '</div><hr class="fiche-separateur">'
@@ -130,9 +180,28 @@ function afficherOffre(offre) {
     '<div class="fiche">' +
       '<span class="fiche-categorie">' + (offre.categorie || 'Autres') + '</span>' +
       '<div class="fiche-titre">' + offre.titre + '</div>' +
-      '<div class="fiche-prix">' + prixHtml + '</div>' +
+      '<div class="fiche-prix">' + prixAffiche + '</div>' +
       '<hr class="fiche-separateur">' +
       descriptionHtml +
+
+      (prixXpf ? (
+        '<div class="bloc-paiement">' +
+          '<div class="fiche-label">Paiement sécurisé</div>' +
+          '<div class="recap-prix">' +
+            '<div class="recap-ligne"><span>Prix de l\'offre</span><span>' + prixXpf.toLocaleString('fr-FR') + ' XPF</span></div>' +
+            '<div class="recap-ligne"><span>Équivalent en euros</span><span>≈ ' + prixEur + ' €</span></div>' +
+            '<div class="recap-ligne total"><span>Total à payer</span><span>' + prixXpf.toLocaleString('fr-FR') + ' XPF</span></div>' +
+          '</div>' +
+          '<div class="email-group">' +
+            '<label>Votre email (reçu envoyé ici)</label>' +
+            '<input type="email" id="client-email" placeholder="votre@email.com">' +
+          '</div>' +
+          '<button class="btn-payer" id="btn-payer" onclick="lancerPaiement(' + offre.id + ',' + prixXpf + ')">💳 Payer maintenant</button>' +
+          '<div class="stripe-mention">🔒 Paiement sécurisé par Stripe</div>' +
+          '<div id="paiement-msg"></div>' +
+        '</div>'
+      ) : '') +
+
       '<div class="fiche-label">Proposé par</div>' +
       '<div class="fiche-fournisseur">' +
         '<div class="fournisseur-avatar">' + initiale + '</div>' +
@@ -144,10 +213,7 @@ function afficherOffre(offre) {
     '</div>';
 
   document.title = 'NC Deals — ' + offre.titre;
-
-  if (photos.length > 1) {
-    initGalerie(photos);
-  }
+  if (photos.length > 1) initGalerie(photos);
 }
 
 function charger() {
@@ -157,16 +223,9 @@ function charger() {
       '<div class="erreur-bloc"><p>Aucune offre sélectionnée.</p><a href="index.html" class="btn-retour" style="display:inline-block;background:#1a6b3a;color:white;border-color:#1a6b3a;">← Voir les offres</a></div>';
     return;
   }
-
   fetch(BACKEND + '/api/offres/' + id)
-  .then(function(r) {
-    if (!r.ok) throw new Error('not found');
-    return r.json();
-  })
-  .then(function(offre) {
-    if (offre.error) throw new Error(offre.error);
-    afficherOffre(offre);
-  })
+  .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
+  .then(function(offre) { if (offre.error) throw new Error(offre.error); afficherOffre(offre); })
   .catch(function() {
     document.getElementById('contenu').innerHTML =
       '<div class="erreur-bloc"><p>Offre introuvable ou plus disponible.</p><a href="index.html" class="btn-retour" style="display:inline-block;background:#1a6b3a;color:white;border-color:#1a6b3a;">← Voir les offres</a></div>';
