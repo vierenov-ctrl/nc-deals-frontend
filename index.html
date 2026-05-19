@@ -22,26 +22,17 @@
 
     /* FILTRES CATÉGORIES */
     .filtres-wrap { max-width: 1100px; margin: 0 auto; padding: 22px 20px 0; }
-    .filtres {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .filtre-btn {
-      padding: 7px 16px;
-      border: 2px solid #d0e8d0;
-      border-radius: 30px;
-      background: white;
-      color: #1a6b3a;
-      font-size: 0.83rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.18s;
-      font-family: inherit;
-      white-space: nowrap;
-    }
+    .filtres { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filtre-btn { padding: 7px 16px; border: 2px solid #d0e8d0; border-radius: 30px; background: white; color: #1a6b3a; font-size: 0.83rem; font-weight: 600; cursor: pointer; transition: all 0.18s; font-family: inherit; white-space: nowrap; }
     .filtre-btn:hover { border-color: #1a6b3a; background: #e8f5e9; }
     .filtre-btn.actif { background: #1a6b3a; color: white; border-color: #1a6b3a; }
+
+    /* BANDEAU PUB */
+    .pub-wrap { max-width: 1100px; margin: 18px auto 0; padding: 0 20px; }
+    .pub-bandeau { width: 100%; border-radius: 14px; overflow: hidden; position: relative; display: none; }
+    .pub-bandeau a { display: block; }
+    .pub-bandeau img { width: 100%; max-height: 120px; object-fit: cover; display: block; border-radius: 14px; }
+    .pub-label { position: absolute; top: 8px; right: 10px; background: rgba(0,0,0,0.45); color: white; font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px; }
 
     /* SECTION OFFRES */
     .section { max-width: 1100px; margin: 0 auto; padding: 20px 20px 50px; }
@@ -86,9 +77,15 @@
   <input type="text" id="recherche" placeholder="🔍 Rechercher une offre..." oninput="appliquerFiltres()">
 </div>
 
-<!-- FILTRES CATÉGORIES -->
 <div class="filtres-wrap">
   <div class="filtres" id="filtres"></div>
+</div>
+
+<!-- BANDEAU PUB -->
+<div class="pub-wrap">
+  <div class="pub-bandeau" id="pub-bandeau">
+    <span class="pub-label">Publicité</span>
+  </div>
 </div>
 
 <div class="section">
@@ -115,6 +112,22 @@ function chargerOffres() {
     document.getElementById('grille-offres').innerHTML = '<div class="chargement">Impossible de charger les offres.</div>';
     document.getElementById('compteur').textContent = '';
   });
+}
+
+function chargerPub() {
+  fetch(BACKEND + '/api/publicites/actives')
+  .then(function(r) { return r.json(); })
+  .then(function(pubs) {
+    if (!pubs.length) return;
+    var pub = pubs[Math.floor(Math.random() * pubs.length)];
+    var bandeau = document.getElementById('pub-bandeau');
+    var contenu = pub.lien_url
+      ? '<a href="' + pub.lien_url + '" target="_blank" rel="noopener"><img src="' + pub.image_url + '" alt="' + (pub.titre || 'Publicité') + '"></a>'
+      : '<img src="' + pub.image_url + '" alt="' + (pub.titre || 'Publicité') + '">';
+    bandeau.innerHTML = '<span class="pub-label">Publicité</span>' + contenu;
+    bandeau.style.display = 'block';
+  })
+  .catch(function() {});
 }
 
 function construireFiltres(offres) {
@@ -238,6 +251,7 @@ function afficherOffres(offres) {
 }
 
 chargerOffres();
+chargerPub();
 </script>
 
 </body>
