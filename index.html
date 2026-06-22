@@ -9,12 +9,19 @@
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
 
     /* HERO */
-    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 50px 20px 40px; text-align: center; }
+    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 50px 20px 35px; text-align: center; }
     .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 10px; }
     .hero h1 .deals { color: #7ee8a2; }
-    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; margin-bottom: 25px; }
+    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; margin-bottom: 20px; }
     .hero-lien { display: inline-block; padding: 11px 28px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); border-radius: 30px; color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s; }
     .hero-lien:hover { background: rgba(255,255,255,0.25); }
+
+    /* VITRINES CATÉGORIES HERO */
+    .hero-vitrines { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 28px; padding: 0 10px; }
+    .vitrine { background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22); border-radius: 14px; padding: 12px 14px; text-align: center; min-width: 80px; cursor: pointer; transition: all 0.2s; text-decoration: none; display: block; }
+    .vitrine:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+    .vitrine-ico { font-size: 1.9rem; display: block; margin-bottom: 4px; }
+    .vitrine-label { font-size: 0.68rem; color: rgba(255,255,255,0.92); font-weight: 600; white-space: nowrap; display: block; }
 
     /* BARRE RECHERCHE */
     .barre { max-width: 700px; margin: 25px auto 0; padding: 0 20px; }
@@ -33,6 +40,10 @@
     .pub-bandeau a { display: block; }
     .pub-bandeau img { width: 100%; max-height: 120px; object-fit: cover; display: block; border-radius: 14px; }
     .pub-label { position: absolute; top: 8px; right: 10px; background: rgba(0,0,0,0.45); color: white; font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px; }
+    .pub-placeholder { background: linear-gradient(135deg, #1a6b3a 0%, #0d4a6b 100%); border-radius: 14px; padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .pub-placeholder-text { color: white; font-size: 0.95rem; font-weight: 600; }
+    .pub-placeholder-text span { display: block; font-size: 0.78rem; font-weight: 400; opacity: 0.8; margin-top: 2px; }
+    .pub-placeholder-btn { background: white; color: #1a6b3a; padding: 9px 20px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
 
     /* SECTION OFFRES */
     .section { max-width: 1100px; margin: 0 auto; padding: 20px 20px 50px; }
@@ -44,15 +55,21 @@
     /* CARTE */
     .carte { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
     .carte:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.13); }
+    .carte-photo { position: relative; }
     .carte-photo img { width: 100%; height: 190px; object-fit: cover; display: block; }
     .carte-photo-vide { width: 100%; height: 190px; background: linear-gradient(135deg, #e8f5e9, #c8e6c9); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
-    .carte-corps { padding: 16px 18px 18px; }
-    .carte-categorie { display: inline-block; font-size: 0.72rem; font-weight: 700; color: #1a6b3a; background: #e8f5e9; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+    .carte-promo { position: absolute; top: 10px; left: 10px; background: #e53935; color: white; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+    .carte-corps { padding: 14px 16px 16px; }
+    .carte-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 4px; }
+    .carte-categorie { display: inline-block; font-size: 0.72rem; font-weight: 700; color: #1a6b3a; background: #e8f5e9; padding: 3px 10px; border-radius: 20px; }
+    .carte-ville { font-size: 0.7rem; color: #888; }
     .carte-titre { font-size: 1rem; font-weight: 700; color: #1a3a1a; margin-bottom: 6px; line-height: 1.4; }
     .carte-description { font-size: 0.83rem; color: #666; line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .carte-pied { display: flex; justify-content: space-between; align-items: center; }
+    .carte-pied { display: flex; justify-content: space-between; align-items: flex-end; }
+    .carte-prix-bloc { display: flex; flex-direction: column; }
     .carte-prix { font-size: 1.12rem; font-weight: 800; color: #1a6b3a; }
-    .carte-fournisseur { font-size: 0.77rem; color: #999; }
+    .carte-prix-barre { font-size: 0.8rem; color: #bbb; text-decoration: line-through; }
+    .carte-fournisseur { font-size: 0.77rem; color: #999; text-align: right; }
 
     /* ÉTATS */
     .chargement { text-align: center; padding: 60px 20px; color: #888; }
@@ -62,6 +79,8 @@
     @media (max-width: 480px) {
       .hero h1 { font-size: 2.8rem; }
       .grille { grid-template-columns: 1fr; }
+      .hero-vitrines { gap: 8px; }
+      .vitrine { min-width: 70px; padding: 10px 10px; }
     }
   </style>
 </head>
@@ -71,6 +90,17 @@
   <h1>NC <span class="deals">Deals</span></h1>
   <div class="tagline">Les meilleurs bons plans de Nouvelle-Calédonie</div>
   <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
+
+  <div class="hero-vitrines">
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🏨')"><span class="vitrine-ico">🏨</span><span class="vitrine-label">Hôtels</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('💄')"><span class="vitrine-ico">💄</span><span class="vitrine-label">Beauté</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🍽️')"><span class="vitrine-ico">🍽️</span><span class="vitrine-label">Restaurants</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('✂️')"><span class="vitrine-ico">✂️</span><span class="vitrine-label">Coiffeur</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🏖️')"><span class="vitrine-ico">🏖️</span><span class="vitrine-label">Loisirs</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🛍️')"><span class="vitrine-ico">🛍️</span><span class="vitrine-label">Shopping</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🚗')"><span class="vitrine-ico">🚗</span><span class="vitrine-label">Auto</span></a>
+    <a class="vitrine" href="#" onclick="filtrerVitrine('🔧')"><span class="vitrine-ico">🔧</span><span class="vitrine-label">Services</span></a>
+  </div>
 </div>
 
 <div class="barre">
@@ -118,9 +148,13 @@ function chargerPub() {
   fetch(BACKEND + '/api/publicites/actives')
   .then(function(r) { return r.json(); })
   .then(function(pubs) {
-    if (!pubs.length) return;
-    var pub = pubs[Math.floor(Math.random() * pubs.length)];
     var bandeau = document.getElementById('pub-bandeau');
+    if (!pubs.length) {
+      bandeau.innerHTML = '<div class="pub-placeholder"><div class="pub-placeholder-text">📢 Réservez votre espace publicitaire<span>Touchez des milliers de Calédoniens — contactez-nous</span></div><a href="fournisseur.html" class="pub-placeholder-btn">Je suis intéressé →</a></div>';
+      bandeau.style.display = 'block';
+      return;
+    }
+    var pub = pubs[Math.floor(Math.random() * pubs.length)];
     var contenu = pub.lien_url
       ? '<a href="' + pub.lien_url + '" target="_blank" rel="noopener"><img src="' + pub.image_url + '" alt="' + (pub.titre || 'Publicité') + '"></a>'
       : '<img src="' + pub.image_url + '" alt="' + (pub.titre || 'Publicité') + '">';
@@ -128,6 +162,18 @@ function chargerPub() {
     bandeau.style.display = 'block';
   })
   .catch(function() {});
+}
+
+function filtrerVitrine(emoji) {
+  var offre = toutesLesOffres.find(function(o) { return o.categorie && o.categorie.indexOf(emoji) !== -1; });
+  if (offre) {
+    selectionnerCategorie(offre.categorie);
+  } else {
+    document.getElementById('recherche').value = emoji;
+    appliquerFiltres();
+  }
+  document.querySelector('.barre').scrollIntoView({ behavior: 'smooth' });
+  return false;
 }
 
 function construireFiltres(offres) {
@@ -189,6 +235,19 @@ function afficherOffres(offres) {
 
   for (var i = 0; i < offres.length; i++) {
     var o = offres[i];
+
+    var descBrute = o.description || '';
+    var villeMatch = descBrute.match(/📍\s*([^\n·]+)/);
+    var ville = villeMatch ? villeMatch[1].trim() : null;
+    var prixNormalMatch = descBrute.match(/Prix normal\s*:\s*([\d\s]+)\s*XPF/);
+    var prixNormal = prixNormalMatch ? parseInt(prixNormalMatch[1].replace(/\s/g, '')) : null;
+    var descPropre = descBrute.split('\n\n')[0];
+
+    var reduction = null;
+    if (prixNormal && o.prix_xpf && prixNormal > o.prix_xpf) {
+      reduction = Math.round((1 - o.prix_xpf / prixNormal) * 100);
+    }
+
     var carte = document.createElement('a');
     carte.className = 'carte';
     carte.href = 'offre.html?id=' + o.id;
@@ -202,15 +261,31 @@ function afficherOffres(offres) {
       img.onerror = function() { this.parentNode.innerHTML = '<div class="carte-photo-vide">🛍️</div>'; };
       photoDiv.appendChild(img);
     } else {
-      photoDiv.innerHTML = '<div class="carte-photo-vide">🛍️</div>';
+      var emojiCat = o.categorie ? o.categorie.match(/^\S+/)[0] : '🛍️';
+      photoDiv.innerHTML = '<div class="carte-photo-vide">' + emojiCat + '</div>';
+    }
+    if (reduction) {
+      var badge = document.createElement('div');
+      badge.className = 'carte-promo';
+      badge.textContent = '-' + reduction + '%';
+      photoDiv.appendChild(badge);
     }
 
     var corps = document.createElement('div');
     corps.className = 'carte-corps';
 
+    var topDiv = document.createElement('div');
+    topDiv.className = 'carte-top';
     var cat = document.createElement('span');
     cat.className = 'carte-categorie';
     cat.textContent = o.categorie || 'Autres';
+    topDiv.appendChild(cat);
+    if (ville) {
+      var villeSpan = document.createElement('span');
+      villeSpan.className = 'carte-ville';
+      villeSpan.textContent = '📍 ' + ville;
+      topDiv.appendChild(villeSpan);
+    }
 
     var titre = document.createElement('div');
     titre.className = 'carte-titre';
@@ -219,30 +294,35 @@ function afficherOffres(offres) {
     var pied = document.createElement('div');
     pied.className = 'carte-pied';
 
+    var prixBloc = document.createElement('div');
+    prixBloc.className = 'carte-prix-bloc';
     var prix = document.createElement('span');
     prix.className = 'carte-prix';
     prix.textContent = o.prix_xpf ? o.prix_xpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
+    prixBloc.appendChild(prix);
+    if (prixNormal) {
+      var prixBarre = document.createElement('span');
+      prixBarre.className = 'carte-prix-barre';
+      prixBarre.textContent = prixNormal.toLocaleString('fr-FR') + ' XPF';
+      prixBloc.appendChild(prixBarre);
+    }
 
     var fourn = document.createElement('span');
     fourn.className = 'carte-fournisseur';
     fourn.textContent = o.fournisseur_nom || '';
 
-    pied.appendChild(prix);
+    pied.appendChild(prixBloc);
     pied.appendChild(fourn);
 
-    if (o.description) {
+    corps.appendChild(topDiv);
+    corps.appendChild(titre);
+    if (descPropre) {
       var desc = document.createElement('div');
       desc.className = 'carte-description';
-      desc.textContent = o.description;
-      corps.appendChild(cat);
-      corps.appendChild(titre);
+      desc.textContent = descPropre;
       corps.appendChild(desc);
-      corps.appendChild(pied);
-    } else {
-      corps.appendChild(cat);
-      corps.appendChild(titre);
-      corps.appendChild(pied);
     }
+    corps.appendChild(pied);
 
     carte.appendChild(photoDiv);
     carte.appendChild(corps);
