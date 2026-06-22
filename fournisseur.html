@@ -63,9 +63,26 @@
     hr.sep { border: none; border-top: 2px solid #e8e8e8; margin: 22px 0; }
     .cache { display: none; }
 
+    .offre-card-header { background: linear-gradient(135deg, #1a6b3a 0%, #0d4a6b 100%); margin: -32px -32px 24px -32px; border-radius: 14px 14px 0 0; padding: 20px 24px; color: white; }
+    .offre-card-header h2 { color: white; margin: 0 0 4px 0; font-size: 1.2rem; }
+    .offre-card-header p { font-size: 0.82rem; opacity: 0.85; margin: 0; }
+
+    .field-label { display: flex; align-items: center; gap: 6px; font-size: 0.83rem; font-weight: 600; color: #2a5a2a; margin-bottom: 5px; }
+    .field-label .ico { font-size: 1rem; }
+
+    .prix-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .prix-row .form-group { margin-bottom: 0; }
+    .prix-barre-hint { font-size: 0.75rem; color: #888; margin-top: 3px; }
+
+    .btn-publish { background: linear-gradient(135deg, #1a6b3a 0%, #0d7a50 100%); color: white; width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; letter-spacing: 0.3px; box-shadow: 0 4px 15px rgba(26,107,58,0.35); }
+    .btn-publish:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,107,58,0.45); }
+    .motivation-text { text-align: center; font-size: 0.78rem; color: #888; margin-top: 10px; }
+
     @media (max-width: 480px) {
       .hero h1 { font-size: 2.8rem; }
       .card { padding: 22px 18px; }
+      .offre-card-header { margin: -22px -18px 20px -18px; }
+      .prix-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -164,9 +181,12 @@
 
     <!-- Créer une offre -->
     <div class="card">
-      <h2>Publier une offre</h2>
+      <div class="offre-card-header">
+        <h2>✨ Publier une offre</h2>
+        <p>Votre offre sera visible par des milliers de Calédoniens gratuitement</p>
+      </div>
       <div class="form-group">
-        <label>Catégorie</label>
+        <label class="field-label"><span class="ico">📂</span> Catégorie</label>
         <input type="text" id="offre-categorie" list="categories-list" placeholder="Ex: Beauté & Bien-être, Restaurant, Auto..." autocomplete="off">
         <datalist id="categories-list">
           <option value="🍽️ Alimentation & Restauration">
@@ -188,18 +208,34 @@
         <div class="categorie-hint">💡 Tapez votre catégorie ou choisissez dans la liste — vous pouvez en créer une nouvelle</div>
       </div>
       <div class="form-group">
-        <label>Titre de l'offre</label>
-        <input type="text" id="offre-titre" placeholder="Ex: Poulet rôti — 1500 XPF">
+        <label class="field-label"><span class="ico">📍</span> Ville / Localisation</label>
+        <input type="text" id="offre-ville" placeholder="Ex: Nouméa, Dumbéa, Bourail...">
       </div>
       <div class="form-group">
-        <label>Description</label>
-        <textarea id="offre-description" placeholder="Décrivez votre offre..."></textarea>
+        <label class="field-label"><span class="ico">✏️</span> Titre de l'offre</label>
+        <input type="text" id="offre-titre" placeholder="Ex: Massage relaxant 1h — profitez-en !">
       </div>
       <div class="form-group">
-        <label>Prix (XPF)</label>
-        <input type="number" id="offre-prix" placeholder="Ex: 1500" min="0">
+        <label class="field-label"><span class="ico">📝</span> Description</label>
+        <textarea id="offre-description" placeholder="Décrivez votre offre avec émotion — donnez envie ! Ex: Laissez-vous porter par un moment de détente absolue..."></textarea>
       </div>
-      <button class="btn btn-primary" onclick="creerOffre()">Créer l'offre</button>
+      <div class="prix-row">
+        <div class="form-group">
+          <label class="field-label"><span class="ico">💰</span> Prix promotionnel (XPF)</label>
+          <input type="number" id="offre-prix" placeholder="Ex: 3 000" min="0">
+        </div>
+        <div class="form-group">
+          <label class="field-label"><span class="ico">🏷️</span> Prix normal (XPF)</label>
+          <input type="number" id="offre-prix-normal" placeholder="Ex: 5 000" min="0">
+          <div class="prix-barre-hint">Affiché barré pour montrer l'économie</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="field-label"><span class="ico">⚠️</span> Conditions <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+        <input type="text" id="offre-conditions" placeholder="Ex: Sur réservation — Hors boissons — Valable pour 2 pers.">
+      </div>
+      <button class="btn-publish" onclick="creerOffre()">🚀 Publier mon offre</button>
+      <div class="motivation-text">✅ Gratuit pour vous · Visible immédiatement après validation</div>
       <div id="offre-msg"></div>
     </div>
 
@@ -347,10 +383,19 @@ function creerOffre() {
   var titre = document.getElementById('offre-titre').value.trim();
   var description = document.getElementById('offre-description').value.trim();
   var prix = document.getElementById('offre-prix').value;
+  var prixNormal = document.getElementById('offre-prix-normal').value;
+  var ville = document.getElementById('offre-ville').value.trim();
+  var conditions = document.getElementById('offre-conditions').value.trim();
   var categorie = getCategorie();
   var msg = document.getElementById('offre-msg');
   if (!titre) { msg.innerHTML = '<p class="erreur">Le titre est obligatoire.</p>'; return; }
-  fetch(BACKEND + '/api/offres', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: description, prix_xpf: parseInt(prix) || 0, categorie: categorie }) })
+  if (!categorie || categorie === 'Autre') { msg.innerHTML = '<p class="erreur">Précisez une catégorie.</p>'; return; }
+  var extras = [];
+  if (ville) extras.push('📍 ' + ville);
+  if (prixNormal) extras.push('Prix normal : ' + parseInt(prixNormal).toLocaleString('fr-FR') + ' XPF');
+  if (conditions) extras.push('⚠️ ' + conditions);
+  var descFinale = description + (extras.length ? '\n\n' + extras.join(' · ') : '');
+  fetch(BACKEND + '/api/offres', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: descFinale, prix_xpf: parseInt(prix) || 0, categorie: categorie }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
     if (data.error) { msg.innerHTML = '<p class="erreur">' + data.error + '</p>'; }
@@ -361,8 +406,11 @@ function creerOffre() {
       document.getElementById('offre-titre').value = '';
       document.getElementById('offre-description').value = '';
       document.getElementById('offre-prix').value = '';
+      document.getElementById('offre-prix-normal').value = '';
+      document.getElementById('offre-ville').value = '';
+      document.getElementById('offre-conditions').value = '';
       document.getElementById('section-photos').classList.remove('cache');
-      msg.innerHTML = '<p class="succes">Offre creee dans "' + categorie + '" ! Ajoutez vos photos.</p>';
+      msg.innerHTML = '<p class="succes">🎉 Offre publiée dans "' + categorie + '" ! Ajoutez vos photos.</p>';
     }
   })
   .catch(function() { msg.innerHTML = '<p class="erreur">Erreur reseau. Reessayez.</p>'; });
