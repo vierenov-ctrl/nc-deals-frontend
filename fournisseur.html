@@ -28,7 +28,8 @@
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #1a6b3a; }
     .form-group textarea { resize: vertical; min-height: 78px; }
     .form-group select { cursor: pointer; }
-    .champ-custom { margin-top: 8px; }
+    #offre-categorie[list] { background-image: none; }
+    .categorie-hint { font-size: 0.78rem; color: #888; margin-top: 4px; }
 
     .btn { display: inline-block; padding: 12px 26px; border: none; border-radius: 9px; font-size: 0.97rem; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
     .btn-primary { background: #1a6b3a; color: white; width: 100%; }
@@ -166,57 +167,25 @@
       <h2>Publier une offre</h2>
       <div class="form-group">
         <label>Catégorie</label>
-        <select id="offre-categorie" onchange="toggleAutre()">
-          <optgroup label="🛒 Commerce & Alimentation">
-            <option value="🍽️ Alimentation & Restauration">🍽️ Alimentation & Restauration</option>
-            <option value="🛒 Commerce & Épicerie">🛒 Commerce & Épicerie</option>
-            <option value="🍷 Boissons & Alcools">🍷 Boissons & Alcools</option>
-          </optgroup>
-          <optgroup label="🏠 Immobilier & Logement">
-            <option value="🏠 Immobilier">🏠 Immobilier</option>
-            <option value="🔑 Location">🔑 Location</option>
-            <option value="🏗️ Bâtiment & Travaux">🏗️ Bâtiment & Travaux</option>
-            <option value="🌿 Jardin & Espaces verts">🌿 Jardin & Espaces verts</option>
-          </optgroup>
-          <optgroup label="🚗 Véhicules & Transport">
-            <option value="🚗 Automobiles">🚗 Automobiles</option>
-            <option value="🏍️ 2 Roues & Scooters">🏍️ 2 Roues & Scooters</option>
-            <option value="⚙️ Pièces & Accessoires Auto">⚙️ Pièces & Accessoires Auto</option>
-            <option value="🚢 Nautisme & Bateaux">🚢 Nautisme & Bateaux</option>
-          </optgroup>
-          <optgroup label="📱 Tech & Multimédia">
-            <option value="📱 Électronique & High-Tech">📱 Électronique & High-Tech</option>
-            <option value="💻 Informatique">💻 Informatique</option>
-            <option value="🎮 Jeux & Multimédia">🎮 Jeux & Multimédia</option>
-          </optgroup>
-          <optgroup label="👗 Mode & Beauté">
-            <option value="👗 Mode & Vêtements">👗 Mode & Vêtements</option>
-            <option value="💄 Beauté & Bien-être">💄 Beauté & Bien-être</option>
-            <option value="💊 Santé & Pharmacie">💊 Santé & Pharmacie</option>
-          </optgroup>
-          <optgroup label="🛋️ Maison & Loisirs">
-            <option value="🛋️ Mobilier & Décoration">🛋️ Mobilier & Décoration</option>
-            <option value="👶 Puériculture & Enfants">👶 Puériculture & Enfants</option>
-            <option value="🐾 Animaux">🐾 Animaux</option>
-            <option value="⚽ Sports & Loisirs">⚽ Sports & Loisirs</option>
-            <option value="🎨 Art & Culture">🎨 Art & Culture</option>
-          </optgroup>
-          <optgroup label="💼 Services & Pro">
-            <option value="🔧 Services & Artisanat">🔧 Services & Artisanat</option>
-            <option value="💼 Emploi & Formation">💼 Emploi & Formation</option>
-            <option value="🎓 Cours & Éducation">🎓 Cours & Éducation</option>
-            <option value="📦 Livraison & Logistique">📦 Livraison & Logistique</option>
-          </optgroup>
-          <optgroup label="✈️ Tourisme">
-            <option value="✈️ Voyages & Tourisme">✈️ Voyages & Tourisme</option>
-            <option value="🏖️ Activités & Excursions">🏖️ Activités & Excursions</option>
-            <option value="🏨 Hébergement">🏨 Hébergement</option>
-          </optgroup>
-          <optgroup label="📌 Autre">
-            <option value="__autre__">✏️ Autre — précisez</option>
-          </optgroup>
-        </select>
-        <input type="text" id="categorie-custom" class="champ-custom cache" placeholder="Nommez votre rubrique...">
+        <input type="text" id="offre-categorie" list="categories-list" placeholder="Ex: Beauté & Bien-être, Restaurant, Auto..." autocomplete="off">
+        <datalist id="categories-list">
+          <option value="🍽️ Alimentation & Restauration">
+          <option value="🛒 Commerce & Épicerie">
+          <option value="💄 Beauté & Bien-être">
+          <option value="💊 Santé & Pharmacie">
+          <option value="🏖️ Activités & Excursions">
+          <option value="✈️ Voyages & Tourisme">
+          <option value="🏨 Hébergement">
+          <option value="🚗 Automobiles">
+          <option value="🔧 Services & Artisanat">
+          <option value="📱 Électronique & High-Tech">
+          <option value="👗 Mode & Vêtements">
+          <option value="🛋️ Mobilier & Décoration">
+          <option value="⚽ Sports & Loisirs">
+          <option value="🏗️ Bâtiment & Travaux">
+          <option value="🎓 Cours & Éducation">
+        </datalist>
+        <div class="categorie-hint">💡 Tapez votre catégorie ou choisissez dans la liste — vous pouvez en créer une nouvelle</div>
       </div>
       <div class="form-group">
         <label>Titre de l'offre</label>
@@ -262,17 +231,30 @@ var offreId = null;
 var token = null;
 var photosUploadees = [];
 
-function toggleAutre() {
-  var sel = document.getElementById('offre-categorie');
-  var custom = document.getElementById('categorie-custom');
-  if (sel.value === '__autre__') { custom.classList.remove('cache'); custom.focus(); }
-  else { custom.classList.add('cache'); custom.value = ''; }
+function getCategorie() {
+  return document.getElementById('offre-categorie').value.trim() || 'Autre';
 }
 
-function getCategorie() {
-  var sel = document.getElementById('offre-categorie');
-  if (sel.value === '__autre__') { var c = document.getElementById('categorie-custom').value.trim(); return c || 'Autre'; }
-  return sel.value;
+function chargerCategories() {
+  fetch(BACKEND + '/api/offres')
+  .then(function(r) { return r.json(); })
+  .then(function(offres) {
+    var vues = {};
+    var datalist = document.getElementById('categories-list');
+    for (var i = 0; i < offres.length; i++) {
+      var cat = offres[i].categorie;
+      if (cat && !vues[cat]) {
+        vues[cat] = true;
+        var exists = datalist.querySelector('option[value="' + cat.replace(/"/g, '\\"') + '"]');
+        if (!exists) {
+          var opt = document.createElement('option');
+          opt.value = cat;
+          datalist.appendChild(opt);
+        }
+      }
+    }
+  })
+  .catch(function() {});
 }
 
 function restaurerSession() {
@@ -301,6 +283,7 @@ function afficherDashboard(nom, iban) {
   document.getElementById('bienvenue-nom').textContent = 'Bonjour, ' + nom + ' !';
   document.getElementById('iban-valeur').textContent = iban || 'Non renseigné';
   chargerMesPaiements();
+  chargerCategories();
 }
 
 function seConnecter() {
