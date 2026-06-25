@@ -6,9 +6,14 @@
   <title>NC Deals — Espace Fournisseur</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a3a1a; min-height: 100vh; position: relative; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: url('https://res.cloudinary.com/dphws2zzq/image/upload/nc-background.jpg'); background-size: cover; background-position: center; filter: blur(5px) brightness(0.9); z-index: -2; transform: scale(1.08); }
-    body::after { content: ''; position: fixed; inset: 0; background: rgba(220, 242, 228, 0.55); z-index: -1; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8f5ee; color: #1a3a1a; min-height: 100vh; position: relative; overflow-x: hidden; }
+
+    .blob { position: fixed; border-radius: 50%; filter: blur(70px); z-index: -1; animation: flotte 8s ease-in-out infinite; }
+    .blob-1 { width: 500px; height: 500px; background: rgba(126, 232, 162, 0.35); top: -100px; left: -150px; animation-delay: 0s; }
+    .blob-2 { width: 400px; height: 400px; background: rgba(13, 74, 107, 0.2); top: 200px; right: -100px; animation-delay: 2s; }
+    .blob-3 { width: 350px; height: 350px; background: rgba(26, 107, 58, 0.25); bottom: 100px; left: 50px; animation-delay: 4s; }
+    .blob-4 { width: 300px; height: 300px; background: rgba(0, 188, 212, 0.18); bottom: -80px; right: 150px; animation-delay: 1s; }
+    @keyframes flotte { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-30px) scale(1.05); } }
 
     .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 60px 20px 50px; text-align: center; }
     .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 12px; }
@@ -89,6 +94,11 @@
   </style>
 </head>
 <body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="blob blob-4"></div>
 
 <div class="hero">
   <h1>NC <span class="deals">Deals</span></h1>
