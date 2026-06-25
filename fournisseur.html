@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NC Deals — Espace Fournisseur</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8f5ee; color: #1a3a1a; min-height: 100vh; position: relative; overflow-x: hidden; }
@@ -24,6 +25,23 @@
     .hero-accent { width: 70px; height: 4px; background: linear-gradient(90deg, #7ee8a2, rgba(126,232,162,0.2)); border-radius: 2px; margin: 14px auto 16px; }
     .hero .tagline { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-style: italic; }
     .hero-wave { position: absolute; bottom: 0; left: 0; width: 100%; line-height: 0; }
+    .hero-bg-icons { position: absolute; top: 0; bottom: 0; width: 160px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 18px 0; pointer-events: none; }
+    .hero-bg-icons.left { left: 8px; }
+    .hero-bg-icons.right { right: 8px; }
+    .hero-bg-icons i { color: rgba(255,255,255,0.14); font-size: 2rem; }
+    .hero-bg-icons.left i:nth-child(1) { font-size: 2.3rem; transform: rotate(-7deg); color: rgba(255,255,255,0.18); }
+    .hero-bg-icons.left i:nth-child(2) { font-size: 1.8rem; transform: rotate(5deg); color: rgba(255,255,255,0.11); }
+    .hero-bg-icons.left i:nth-child(3) { font-size: 2.5rem; transform: rotate(-4deg); color: rgba(255,255,255,0.16); }
+    .hero-bg-icons.left i:nth-child(4) { font-size: 1.9rem; transform: rotate(8deg); color: rgba(255,255,255,0.12); }
+    .hero-bg-icons.left i:nth-child(5) { font-size: 2.1rem; transform: rotate(-6deg); color: rgba(255,255,255,0.15); }
+    .hero-bg-icons.left i:nth-child(6) { font-size: 2.4rem; transform: rotate(3deg); color: rgba(255,255,255,0.13); }
+    .hero-bg-icons.right i:nth-child(1) { font-size: 2rem; transform: rotate(6deg); color: rgba(255,255,255,0.13); }
+    .hero-bg-icons.right i:nth-child(2) { font-size: 2.4rem; transform: rotate(-5deg); color: rgba(255,255,255,0.17); }
+    .hero-bg-icons.right i:nth-child(3) { font-size: 1.8rem; transform: rotate(7deg); color: rgba(255,255,255,0.11); }
+    .hero-bg-icons.right i:nth-child(4) { font-size: 2.3rem; transform: rotate(-8deg); color: rgba(255,255,255,0.16); }
+    .hero-bg-icons.right i:nth-child(5) { font-size: 2rem; transform: rotate(4deg); color: rgba(255,255,255,0.13); }
+    .hero-bg-icons.right i:nth-child(6) { font-size: 2.5rem; transform: rotate(-3deg); color: rgba(255,255,255,0.18); }
+    @media (max-width: 768px) { .hero-bg-icons { display: none; } }
 
     .accroche { background: white; border-left: 5px solid #1a6b3a; margin: 25px auto; max-width: 580px; padding: 25px 30px; border-radius: 0 12px 12px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
     .accroche h3 { color: #1a6b3a; font-size: 1.1rem; margin-bottom: 14px; }
@@ -106,6 +124,22 @@
 <div class="blob blob-4"></div>
 
 <div class="hero">
+  <div class="hero-bg-icons left">
+    <i class="fa-solid fa-scissors"></i>
+    <i class="fa-solid fa-sailboat"></i>
+    <i class="fa-solid fa-person-swimming"></i>
+    <i class="fa-solid fa-mobile-screen"></i>
+    <i class="fa-solid fa-headphones"></i>
+    <i class="fa-solid fa-hammer"></i>
+  </div>
+  <div class="hero-bg-icons right">
+    <i class="fa-solid fa-parachute-box"></i>
+    <i class="fa-solid fa-helmet-safety"></i>
+    <i class="fa-solid fa-music"></i>
+    <i class="fa-solid fa-water"></i>
+    <i class="fa-solid fa-dumbbell"></i>
+    <i class="fa-solid fa-camera"></i>
+  </div>
   <h1><span class="nc">NC</span><span class="deals">Deals</span></h1>
   <div class="hero-partenaire">◆ Espace Fournisseur</div>
   <div class="hero-accent"></div>
