@@ -282,6 +282,16 @@
         <label class="field-label"><span class="ico">⚠️</span> Conditions <span style="font-weight:400;color:#888;">(optionnel)</span></label>
         <input type="text" id="offre-conditions" placeholder="Ex: Sur réservation — Hors boissons — Valable pour 2 pers.">
       </div>
+      <div class="prix-row">
+        <div class="form-group">
+          <label class="field-label"><span class="ico">🕐</span> Horaires <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+          <input type="text" id="offre-horaires" placeholder="Ex: Mar–Sam 9h–19h, fermé lundi">
+        </div>
+        <div class="form-group">
+          <label class="field-label"><span class="ico">📅</span> Valable jusqu'au <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+          <input type="date" id="offre-validite">
+        </div>
+      </div>
       <button class="btn-publish" onclick="creerOffre()">🚀 Publier mon offre</button>
       <div class="motivation-text">✅ Gratuit pour vous · Visible immédiatement après validation</div>
       <div id="offre-msg"></div>
@@ -434,6 +444,8 @@ function creerOffre() {
   var prixNormal = document.getElementById('offre-prix-normal').value;
   var ville = document.getElementById('offre-ville').value.trim();
   var conditions = document.getElementById('offre-conditions').value.trim();
+  var horaires = document.getElementById('offre-horaires').value.trim();
+  var validite = document.getElementById('offre-validite').value;
   var categorie = getCategorie();
   var msg = document.getElementById('offre-msg');
   if (!titre) { msg.innerHTML = '<p class="erreur">Le titre est obligatoire.</p>'; return; }
@@ -442,6 +454,8 @@ function creerOffre() {
   if (ville) extras.push('📍 ' + ville);
   if (prixNormal) extras.push('Prix normal : ' + parseInt(prixNormal).toLocaleString('fr-FR') + ' XPF');
   if (conditions) extras.push('⚠️ ' + conditions);
+  if (horaires) extras.push('🕐 ' + horaires);
+  if (validite) { var d = new Date(validite); extras.push('📅 Valable jusqu\'au ' + d.toLocaleDateString('fr-FR')); }
   var descFinale = description + (extras.length ? '\n\n' + extras.join(' · ') : '');
   fetch(BACKEND + '/api/offres', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fournisseur_id: fournisseurId, titre: titre, description: descFinale, prix_xpf: parseInt(prix) || 0, categorie: categorie }) })
   .then(function(r) { return r.json(); })
@@ -457,6 +471,8 @@ function creerOffre() {
       document.getElementById('offre-prix-normal').value = '';
       document.getElementById('offre-ville').value = '';
       document.getElementById('offre-conditions').value = '';
+      document.getElementById('offre-horaires').value = '';
+      document.getElementById('offre-validite').value = '';
       document.getElementById('section-photos').classList.remove('cache');
       msg.innerHTML = '<p class="succes">🎉 Offre publiée dans "' + categorie + '" ! Ajoutez vos photos.</p>';
     }
