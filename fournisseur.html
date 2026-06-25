@@ -6,7 +6,9 @@
   <title>NC Deals — Espace Fournisseur</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #eef4ee; color: #1a3a1a; min-height: 100vh; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a3a1a; min-height: 100vh; position: relative; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/bb/Ile_des_pins_new_caledonia.jpg'); background-size: cover; background-position: center; filter: blur(6px) brightness(0.9); z-index: -2; transform: scale(1.05); }
+    body::after { content: ''; position: fixed; inset: 0; background: rgba(230, 245, 230, 0.82); z-index: -1; }
 
     .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 60px 20px 50px; text-align: center; }
     .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 12px; }
