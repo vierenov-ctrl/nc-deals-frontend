@@ -9,12 +9,18 @@
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
 
     /* HERO */
-    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 50px 20px 35px; text-align: center; }
-    .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 10px; }
-    .hero h1 .deals { color: #7ee8a2; }
-    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; margin-bottom: 20px; }
-    .hero-lien { display: inline-block; padding: 11px 28px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); border-radius: 30px; color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s; }
-    .hero-lien:hover { background: rgba(255,255,255,0.25); }
+    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 55%, #0d4a6b 100%); padding: 50px 20px 70px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: rgba(126,232,162,0.08); border-radius: 50%; }
+    .hero::after { content: ''; position: absolute; bottom: -60px; left: -60px; width: 250px; height: 250px; background: rgba(13,74,107,0.12); border-radius: 50%; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); border-radius: 30px; padding: 5px 16px; font-size: 0.72rem; color: rgba(255,255,255,0.82); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 18px; }
+    .hero h1 { line-height: 1; margin-bottom: 0; }
+    .hero h1 .nc { display: block; font-size: 1.8rem; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 16px; text-transform: uppercase; }
+    .hero h1 .deals { display: block; font-size: 5.5rem; font-weight: 900; color: #7ee8a2; letter-spacing: 4px; text-shadow: 0 0 60px rgba(126,232,162,0.4), 2px 4px 20px rgba(0,0,0,0.4); line-height: 1.05; }
+    .hero-accent { width: 70px; height: 4px; background: linear-gradient(90deg, #7ee8a2, rgba(126,232,162,0.2)); border-radius: 2px; margin: 16px auto 20px; }
+    .hero .tagline { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-style: italic; margin-bottom: 22px; }
+    .hero-lien { display: inline-block; padding: 11px 28px; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.35); border-radius: 30px; color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s; backdrop-filter: blur(4px); }
+    .hero-lien:hover { background: rgba(255,255,255,0.22); transform: translateY(-1px); }
+    .hero-wave { position: absolute; bottom: 0; left: 0; width: 100%; line-height: 0; }
 
     /* VITRINES CATÉGORIES HERO */
     .hero-vitrines { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 28px; padding: 0 10px; }
@@ -87,10 +93,13 @@
 <body>
 
 <div class="hero">
-  <h1>NC <span class="deals">Deals</span></h1>
+  <div class="hero-badge">🌺 Nouvelle-Calédonie</div>
+  <h1><span class="nc">NC</span><span class="deals">Deals</span></h1>
+  <div class="hero-accent"></div>
   <div class="tagline">Les meilleurs bons plans de Nouvelle-Calédonie</div>
   <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
 
+  <div class="hero-wave"><svg viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C240,55 480,0 720,28 C960,55 1200,10 1440,30 L1440,55 L0,55 Z" fill="#f0f4f0"/></svg></div>
   <div class="hero-vitrines">
     <a class="vitrine" href="#" onclick="filtrerVitrine('🏨')"><span class="vitrine-ico">🏨</span><span class="vitrine-label">Hôtels</span></a>
     <a class="vitrine" href="#" onclick="filtrerVitrine('💄')"><span class="vitrine-ico">💄</span><span class="vitrine-label">Beauté</span></a>

@@ -15,10 +15,15 @@
     .blob-4 { width: 300px; height: 300px; background: rgba(0, 188, 212, 0.18); bottom: -80px; right: 150px; animation-delay: 1s; }
     @keyframes flotte { 0%, 100% { transform: translateY(0px) scale(1); } 50% { transform: translateY(-30px) scale(1.05); } }
 
-    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 50%, #0d4a6b 100%); padding: 60px 20px 50px; text-align: center; }
-    .hero h1 { font-size: 4rem; font-weight: 900; color: white; letter-spacing: 5px; text-shadow: 2px 4px 20px rgba(0,0,0,0.5); margin-bottom: 12px; }
-    .hero h1 .deals { color: #7ee8a2; }
-    .hero .tagline { color: rgba(255,255,255,0.78); font-size: 1rem; font-style: italic; }
+    .hero { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 55%, #0d4a6b 100%); padding: 45px 20px 65px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: rgba(126,232,162,0.08); border-radius: 50%; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); border-radius: 30px; padding: 5px 16px; font-size: 0.72rem; color: rgba(255,255,255,0.82); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 14px; }
+    .hero h1 { line-height: 1; margin-bottom: 0; }
+    .hero h1 .nc { display: block; font-size: 1.8rem; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 16px; }
+    .hero h1 .deals { display: block; font-size: 5rem; font-weight: 900; color: #7ee8a2; letter-spacing: 4px; text-shadow: 0 0 60px rgba(126,232,162,0.4), 2px 4px 20px rgba(0,0,0,0.4); line-height: 1.05; }
+    .hero-accent { width: 70px; height: 4px; background: linear-gradient(90deg, #7ee8a2, rgba(126,232,162,0.2)); border-radius: 2px; margin: 14px auto 16px; }
+    .hero .tagline { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-style: italic; }
+    .hero-wave { position: absolute; bottom: 0; left: 0; width: 100%; line-height: 0; }
 
     .accroche { background: white; border-left: 5px solid #1a6b3a; margin: 25px auto; max-width: 580px; padding: 25px 30px; border-radius: 0 12px 12px 0; box-shadow: 0 4px 18px rgba(0,0,0,0.08); }
     .accroche h3 { color: #1a6b3a; font-size: 1.1rem; margin-bottom: 14px; }
@@ -101,8 +106,11 @@
 <div class="blob blob-4"></div>
 
 <div class="hero">
-  <h1>NC <span class="deals">Deals</span></h1>
+  <div class="hero-badge">🌺 Espace Fournisseur</div>
+  <h1><span class="nc">NC</span><span class="deals">Deals</span></h1>
+  <div class="hero-accent"></div>
   <div class="tagline">La marketplace des bons plans de Nouvelle-Calédonie</div>
+  <div class="hero-wave"><svg viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C240,55 480,0 720,28 C960,55 1200,10 1440,30 L1440,55 L0,55 Z" fill="#e8f5ee"/></svg></div>
 </div>
 
 <div class="accroche" id="bloc-accroche">
