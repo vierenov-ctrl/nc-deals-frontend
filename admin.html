@@ -76,16 +76,45 @@
 
     .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
     .form-row .form-group { flex: 1; min-width: 140px; }
+
+    /* ── ÉCRAN DE CONNEXION ── */
+    #login-overlay { position: fixed; inset: 0; background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 60%, #0d4a6b 100%); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    #login-overlay.cache { display: none; }
+    .login-box { background: white; border-radius: 20px; padding: 40px 36px; max-width: 380px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.35); text-align: center; }
+    .login-logo { font-size: 2.2rem; font-weight: 900; color: #1a3a1a; letter-spacing: 2px; margin-bottom: 4px; }
+    .login-logo span { color: #1a6b3a; }
+    .login-sub { font-size: 0.78rem; color: #888; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; }
+    .login-box input[type=password] { width: 100%; padding: 13px 16px; border: 2px solid #d0e8d0; border-radius: 10px; font-size: 1rem; font-family: inherit; color: #1a3a1a; outline: none; margin-bottom: 14px; transition: border-color 0.2s; text-align: center; letter-spacing: 3px; }
+    .login-box input[type=password]:focus { border-color: #1a6b3a; }
+    .login-box button { width: 100%; padding: 13px; background: linear-gradient(135deg, #1a6b3a, #0d4a6b); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .login-box button:hover { opacity: 0.88; }
+    .login-erreur { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
+    .btn-deconnexion { background: none; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.75); padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-deconnexion:hover { background: rgba(255,255,255,0.15); color: white; }
   </style>
 </head>
 <body>
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">NC <span>Deals</span></div>
+    <div class="login-sub">◆ Espace Admin</div>
+    <input type="password" id="login-input" placeholder="Clé d'administration" onkeydown="if(event.key==='Enter')seConnecter()">
+    <button onclick="seConnecter()">🔐 Accéder au panneau</button>
+    <div class="login-erreur" id="login-erreur">❌ Clé incorrecte — réessaie</div>
+  </div>
+</div>
 
 <div class="header">
   <div>
     <h1>NC <span>Deals</span> — Admin</h1>
     <small>Panneau d'administration</small>
   </div>
-  <a href="index.html" style="color:rgba(255,255,255,0.7);font-size:0.85rem;text-decoration:none;">← Retour au site</a>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="index.html" style="color:rgba(255,255,255,0.7);font-size:0.85rem;text-decoration:none;">← Retour au site</a>
+    <button class="btn-deconnexion" onclick="seDeconnecter()">🔓 Déconnexion</button>
+  </div>
 </div>
 
 <div class="container">
@@ -185,7 +214,69 @@
 
 <script>
 var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
-var ADMIN_KEY = prompt('Clé admin :') || '';
+var ADMIN_KEY = '';
+
+function seConnecter() {
+  var saisie = document.getElementById('login-input').value.trim();
+  if (!saisie) return;
+  // Vérifie la clé en appelant une route admin
+  fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(saisie))
+  .then(function(r) {
+    if (r.status === 403) throw new Error('Clé incorrecte');
+    return r.json();
+  })
+  .then(function() {
+    ADMIN_KEY = saisie;
+    localStorage.setItem('nc_admin_key', saisie);
+    document.getElementById('login-overlay').classList.add('cache');
+    chargerTout();
+  })
+  .catch(function() {
+    var err = document.getElementById('login-erreur');
+    err.style.display = 'block';
+    document.getElementById('login-input').style.borderColor = '#c62828';
+    setTimeout(function() {
+      err.style.display = 'none';
+      document.getElementById('login-input').style.borderColor = '#d0e8d0';
+    }, 3000);
+  });
+}
+
+function seDeconnecter() {
+  localStorage.removeItem('nc_admin_key');
+  ADMIN_KEY = '';
+  document.getElementById('login-input').value = '';
+  document.getElementById('login-overlay').classList.remove('cache');
+}
+
+// Auto-connexion si clé mémorisée
+window.addEventListener('load', function() {
+  var cle = localStorage.getItem('nc_admin_key');
+  if (cle) {
+    fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(cle))
+    .then(function(r) {
+      if (r.status === 403) throw new Error();
+      return r.json();
+    })
+    .then(function() {
+      ADMIN_KEY = cle;
+      document.getElementById('login-overlay').classList.add('cache');
+      chargerTout();
+    })
+    .catch(function() {
+      localStorage.removeItem('nc_admin_key');
+    });
+  }
+});
+
+function chargerTout() {
+  chargerPubs();
+  chargerOffres();
+  chargerPhotos();
+  chargerFournisseurs();
+  chargerFournsForPaiement();
+  chargerPaiements();
+}
 
 /* ── PUBLICITÉS ── */
 function ajouterPub() {
@@ -449,12 +540,7 @@ function chargerPaiements() {
   .catch(function() { document.getElementById('liste-paiements').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
 }
 
-chargerPubs();
-chargerOffres();
-chargerPhotos();
-chargerFournisseurs();
-chargerFournsForPaiement();
-chargerPaiements();
+// Chargement déclenché uniquement après connexion (voir seConnecter / auto-connexion)
 </script>
 
 </body>
