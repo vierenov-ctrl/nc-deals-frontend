@@ -34,6 +34,19 @@
     .btn-activer { background: #e8f5e9; color: #1a6b3a; border: 1.5px solid #a5d6a7; font-size: 0.82rem; padding: 6px 14px; }
     .btn-desactiver { background: #fff3e0; color: #e65100; border: 1.5px solid #ffcc80; font-size: 0.82rem; padding: 6px 14px; }
     .btn-supprimer { background: #ffebee; color: #c62828; border: 1.5px solid #ef9a9a; font-size: 0.82rem; padding: 6px 14px; }
+    .btn-supprimer-def { background: #c62828; color: white; border: none; font-size: 0.82rem; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+    .btn-supprimer-def:hover { opacity: 0.82; }
+
+    /* ONGLETS OFFRES */
+    .offres-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab-btn { padding: 7px 16px; border: 2px solid #e0e0e0; border-radius: 30px; background: white; color: #666; font-size: 0.83rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.18s; }
+    .tab-btn:hover { border-color: #1a6b3a; color: #1a6b3a; }
+    .tab-btn.actif { background: #1a6b3a; color: white; border-color: #1a6b3a; }
+    .tab-count { display: inline-block; background: rgba(255,255,255,0.3); border-radius: 20px; padding: 1px 7px; font-size: 0.75rem; margin-left: 4px; }
+    .tab-btn:not(.actif) .tab-count { background: #f0f0f0; color: #666; }
+    .tab-btn.actif .tab-count { background: rgba(255,255,255,0.25); }
+    .section-offres { margin-bottom: 24px; }
+    .section-offres-titre { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #f0f0f0; }
 
     .offre-ligne, .fourn-ligne, .paiement-ligne, .pub-ligne { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
     .offre-ligne:last-child, .fourn-ligne:last-child, .paiement-ligne:last-child, .pub-ligne:last-child { border-bottom: none; }
@@ -91,6 +104,21 @@
     .login-erreur { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
     .btn-deconnexion { background: none; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.75); padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; cursor: pointer; font-family: inherit; transition: all 0.2s; }
     .btn-deconnexion:hover { background: rgba(255,255,255,0.15); color: white; }
+
+    /* COMMANDES STRIPE */
+    .commande-ligne { display: flex; align-items: flex-start; gap: 14px; padding: 14px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+    .commande-ligne:last-child { border-bottom: none; }
+    .commande-info { flex: 1; min-width: 200px; }
+    .commande-offre { font-weight: 700; font-size: 0.95rem; margin-bottom: 3px; }
+    .commande-detail { font-size: 0.78rem; color: #888; margin-bottom: 2px; }
+    .commande-montant { text-align: right; white-space: nowrap; }
+    .commande-xpf { font-size: 1.05rem; font-weight: 800; color: #1a6b3a; }
+    .commande-commission { font-size: 0.75rem; color: #e65100; }
+    .commande-net { font-size: 0.75rem; color: #555; }
+    .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .stat-box { flex: 1; min-width: 130px; background: #f0faf0; border: 2px solid #c8e6c9; border-radius: 12px; padding: 16px; text-align: center; }
+    .stat-box .stat-val { font-size: 1.4rem; font-weight: 900; color: #1a6b3a; }
+    .stat-box .stat-label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
   </style>
 </head>
 <body>
@@ -162,6 +190,12 @@
   <!-- OFFRES -->
   <div class="card">
     <h2>📋 Modération des offres</h2>
+    <div class="offres-tabs">
+      <button class="tab-btn actif" id="tab-toutes" onclick="filtrerOffres('toutes')">Toutes <span class="tab-count" id="count-toutes"></span></button>
+      <button class="tab-btn" id="tab-en_attente" onclick="filtrerOffres('en_attente')">⏳ En attente <span class="tab-count" id="count-en_attente"></span></button>
+      <button class="tab-btn" id="tab-approuvee" onclick="filtrerOffres('approuvee')">✅ Approuvées <span class="tab-count" id="count-approuvee"></span></button>
+      <button class="tab-btn" id="tab-refusee" onclick="filtrerOffres('refusee')">❌ Refusées <span class="tab-count" id="count-refusee"></span></button>
+    </div>
     <div id="liste-offres"><div class="vide">Chargement...</div></div>
   </div>
 
@@ -208,6 +242,17 @@
   <div class="card">
     <h2>📜 Historique des virements</h2>
     <div id="liste-paiements"><div class="vide">Chargement...</div></div>
+  </div>
+
+  <!-- COMMANDES STRIPE -->
+  <div class="card">
+    <h2>💳 Paiements en ligne (Stripe)</h2>
+    <div class="stat-row" id="commandes-stats">
+      <div class="stat-box"><div class="stat-val" id="stat-nb">—</div><div class="stat-label">Commandes</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-ca">—</div><div class="stat-label">Chiffre d'affaires</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-comm">—</div><div class="stat-label">Commissions NC Deals</div></div>
+    </div>
+    <div id="liste-commandes"><div class="vide">Chargement...</div></div>
   </div>
 
 </div>
@@ -276,6 +321,7 @@ function chargerTout() {
   chargerFournisseurs();
   chargerFournsForPaiement();
   chargerPaiements();
+  chargerCommandes();
 }
 
 /* ── PUBLICITÉS ── */
@@ -356,31 +402,54 @@ function supprimerPub(id) {
 }
 
 /* ── OFFRES ── */
+var toutesOffres = [];
+var ongletActif = 'toutes';
+
 function chargerOffres() {
   fetch(BACKEND + '/api/admin/offres?admin_key=' + encodeURIComponent(ADMIN_KEY))
   .then(function(r) { return r.json(); })
   .then(function(offres) {
-    var container = document.getElementById('liste-offres');
-    if (!offres.length) { container.innerHTML = '<div class="vide">Aucune offre.</div>'; return; }
-    var html = '';
-    for (var i = 0; i < offres.length; i++) {
-      var o = offres[i];
-      var statutClass = 'statut-' + (o.statut || 'en_attente');
-      var statutLabel = o.statut === 'approuvee' ? '✅ Approuvée' : o.statut === 'refusee' ? '❌ Refusée' : '⏳ En attente';
-      html += '<div class="offre-ligne" id="offre-' + o.id + '">';
-      if (o.photo_url) html += '<img class="offre-photo" src="' + o.photo_url + '" onerror="this.style.display=\'none\'">';
-      html += '<div class="offre-info">';
-      html += '<div class="offre-titre">' + o.titre + '</div>';
-      html += '<div class="offre-meta">' + (o.fournisseur_nom || '—') + ' · ' + (o.prix_xpf || 0).toLocaleString('fr-FR') + ' XPF · ' + (o.categorie || '') + '</div>';
-      html += '<div class="statut-badge ' + statutClass + '">' + statutLabel + '</div><br>';
-      html += '<button class="btn btn-approuver" onclick="statutOffre(' + o.id + ',\'approuvee\')">✅ Approuver</button> ';
-      html += '<button class="btn btn-refuser" onclick="statutOffre(' + o.id + ',\'refusee\')">❌ Refuser</button> ';
-      html += '<button class="btn" style="background:#f5f5f5;color:#555;border:1.5px solid #ddd;font-size:0.82rem;padding:6px 14px;" onclick="statutOffre(' + o.id + ',\'en_attente\')">↩ Remettre en attente</button>';
-      html += '</div></div>';
-    }
-    container.innerHTML = html;
+    toutesOffres = offres;
+    // Mettre à jour les compteurs
+    var counts = { toutes: offres.length, en_attente: 0, approuvee: 0, refusee: 0 };
+    offres.forEach(function(o) { if (counts[o.statut] !== undefined) counts[o.statut]++; });
+    ['toutes','en_attente','approuvee','refusee'].forEach(function(s) {
+      var el = document.getElementById('count-' + s);
+      if (el) el.textContent = counts[s] || '';
+    });
+    afficherOffres(offres, ongletActif);
   })
   .catch(function() { document.getElementById('liste-offres').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
+
+function filtrerOffres(statut) {
+  ongletActif = statut;
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('actif'); });
+  document.getElementById('tab-' + statut).classList.add('actif');
+  afficherOffres(toutesOffres, statut);
+}
+
+function afficherOffres(offres, statut) {
+  var container = document.getElementById('liste-offres');
+  var filtrees = statut === 'toutes' ? offres : offres.filter(function(o) { return o.statut === statut; });
+  if (!filtrees.length) { container.innerHTML = '<div class="vide">Aucune offre dans cette catégorie.</div>'; return; }
+  var html = '';
+  filtrees.forEach(function(o) {
+    var statutClass = 'statut-' + (o.statut || 'en_attente');
+    var statutLabel = o.statut === 'approuvee' ? '✅ Approuvée' : o.statut === 'refusee' ? '❌ Refusée' : '⏳ En attente';
+    html += '<div class="offre-ligne" id="offre-' + o.id + '">';
+    if (o.photo_url) html += '<img class="offre-photo" src="' + o.photo_url + '" onerror="this.style.display=\'none\'">';
+    html += '<div class="offre-info">';
+    html += '<div class="offre-titre">' + o.titre + '</div>';
+    html += '<div class="offre-meta">' + (o.fournisseur_nom || '—') + ' · ' + (o.prix_xpf || 0).toLocaleString('fr-FR') + ' XPF · ' + (o.categorie || '') + '</div>';
+    html += '<div class="statut-badge ' + statutClass + '">' + statutLabel + '</div><br>';
+    html += '<button class="btn btn-approuver" onclick="statutOffre(' + o.id + ',\'approuvee\')">✅ Approuver</button> ';
+    html += '<button class="btn btn-refuser" onclick="statutOffre(' + o.id + ',\'refusee\')">❌ Refuser</button> ';
+    html += '<button class="btn" style="background:#f5f5f5;color:#555;border:1.5px solid #ddd;font-size:0.82rem;padding:6px 14px;" onclick="statutOffre(' + o.id + ',\'en_attente\')">↩ En attente</button> ';
+    html += '<button class="btn-supprimer-def" onclick="supprimerOffre(' + o.id + ',\'' + o.titre.replace(/'/g,'') + '\')">🗑 Supprimer</button>';
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
 }
 
 function statutOffre(id, statut) {
@@ -391,6 +460,20 @@ function statutOffre(id, statut) {
   .then(function(r) { return r.json(); })
   .then(function() { chargerOffres(); })
   .catch(function() { alert('Erreur lors de la mise à jour.'); });
+}
+
+function supprimerOffre(id, titre) {
+  if (!confirm('⚠️ Supprimer définitivement "' + titre + '" ?\n\nCette action est irréversible.')) return;
+  fetch(BACKEND + '/api/admin/offres/' + id, {
+    method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ admin_key: ADMIN_KEY })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { alert('Erreur : ' + data.error); return; }
+    chargerOffres();
+  })
+  .catch(function() { alert('Erreur lors de la suppression.'); });
 }
 
 /* ── PHOTOS ── */
@@ -538,6 +621,49 @@ function chargerPaiements() {
     container.innerHTML = html;
   })
   .catch(function() { document.getElementById('liste-paiements').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
+}
+
+/* ── COMMANDES STRIPE ── */
+function chargerCommandes() {
+  fetch(BACKEND + '/api/admin/commandes?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var commandes = data.commandes || [];
+    var totalCommissions = data.total_commissions || 0;
+    var container = document.getElementById('liste-commandes');
+    var totalCA = commandes.reduce(function(s, c) { return s + (c.montant_xpf || 0); }, 0);
+
+    // Stats
+    document.getElementById('stat-nb').textContent = commandes.length;
+    document.getElementById('stat-ca').textContent = totalCA.toLocaleString('fr-FR') + ' XPF';
+    document.getElementById('stat-comm').textContent = totalCommissions.toLocaleString('fr-FR') + ' XPF';
+
+    if (!commandes.length) { container.innerHTML = '<div class="vide">Aucune commande Stripe pour l\'instant.</div>'; return; }
+
+    var html = '';
+    for (var i = 0; i < commandes.length; i++) {
+      var c = commandes[i];
+      var date = new Date(c.cree_le).toLocaleDateString('fr-FR');
+      var net = (c.montant_xpf || 0) - (c.commission_xpf || 0);
+      var sessionCourt = c.stripe_session_id ? c.stripe_session_id.slice(0, 20) + '...' : '—';
+      html += '<div class="commande-ligne">';
+      html += '<div class="commande-info">';
+      html += '<div class="commande-offre">' + (c.offre_titre || 'Offre supprimée') + '</div>';
+      html += '<div class="commande-detail">👤 ' + (c.fournisseur_nom || '—') + '</div>';
+      html += '<div class="commande-detail">📧 ' + (c.client_email || '—') + '</div>';
+      html += '<div class="commande-detail">📅 ' + date + '</div>';
+      html += '<div class="commande-detail" style="font-family:monospace;font-size:0.72rem;color:#bbb;">' + sessionCourt + '</div>';
+      html += '</div>';
+      html += '<div class="commande-montant">';
+      html += '<div class="commande-xpf">' + (c.montant_xpf || 0).toLocaleString('fr-FR') + ' XPF</div>';
+      html += '<div class="commande-commission">Commission: -' + (c.commission_xpf || 0).toLocaleString('fr-FR') + ' XPF</div>';
+      html += '<div class="commande-net">Net fourn.: ' + net.toLocaleString('fr-FR') + ' XPF</div>';
+      html += '</div>';
+      html += '</div>';
+    }
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-commandes').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
 }
 
 // Chargement déclenché uniquement après connexion (voir seConnecter / auto-connexion)

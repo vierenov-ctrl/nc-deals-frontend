@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NC Deals — Espace Fournisseur</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a6b3a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NC Deals">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -120,6 +126,113 @@
       .offre-card-header { margin: -22px -18px 20px -18px; }
       .prix-row { grid-template-columns: 1fr; }
     }
+
+    /* ===== OPTIMISATIONS MOBILE ===== */
+
+    /* Inputs 16px minimum → évite le zoom automatique iOS */
+    @media (max-width: 600px) {
+      .form-group input, .form-group textarea, .form-group select {
+        font-size: 1rem;
+        padding: 13px 14px;
+        min-height: 48px;
+      }
+      .form-group textarea { min-height: 100px; }
+    }
+
+    /* Hero compact sur mobile */
+    @media (max-width: 600px) {
+      .hero { padding: 28px 16px 50px; }
+      .hero h1 .nc { font-size: 1.4rem; letter-spacing: 10px; }
+      .hero h1 .deals { font-size: 3.8rem; }
+      .hero .tagline { font-size: 0.85rem; }
+      .hero-partenaire { font-size: 0.78rem; letter-spacing: 2.5px; }
+      .accroche { margin: 16px 14px; padding: 18px 20px; }
+      .accroche h3 { font-size: 1rem; }
+      .accroche li { font-size: 0.85rem; }
+    }
+
+    /* Bouton retour accueil */
+    .btn-accueil-mobile {
+      display: none;
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 22px;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      backdrop-filter: blur(4px);
+      z-index: 10;
+    }
+    @media (max-width: 600px) {
+      .btn-accueil-mobile { display: inline-block; }
+    }
+
+    /* Zone upload améliorée mobile */
+    @media (max-width: 600px) {
+      .upload-zone {
+        padding: 28px 18px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-width: 3px;
+        border-radius: 14px;
+      }
+      .upload-zone::before {
+        content: '📱 ';
+      }
+    }
+
+    /* Barre de navigation mobile en bas */
+    .bottom-nav {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1.5px solid #d0e8d0;
+        z-index: 100;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+      }
+      .bottom-nav a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 4px 8px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: #888;
+        text-decoration: none;
+        gap: 3px;
+        transition: color 0.15s;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+      .bottom-nav a.actif { color: #1a6b3a; }
+      .bottom-nav a span.ico { font-size: 1.35rem; display: block; }
+      .bottom-nav a.btn-publier {
+        color: white;
+        background: linear-gradient(135deg, #1a6b3a, #0d7a50);
+        margin: 6px 8px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.72rem;
+      }
+      /* Espace en bas pour la nav */
+      body { padding-bottom: 70px; }
+    }
   </style>
 </head>
 <body>
@@ -130,6 +243,7 @@
 <div class="blob blob-4"></div>
 
 <div class="hero">
+  <a href="index.html" class="btn-accueil-mobile">← Accueil</a>
   <div class="hero-bg-icons left">
     <i class="fa-solid fa-scissors"></i>
     <i class="fa-solid fa-house"></i>
@@ -334,11 +448,11 @@
       <div class="prix-row">
         <div class="form-group">
           <label class="field-label"><span class="ico">💰</span> Prix promotionnel (XPF)</label>
-          <input type="number" id="offre-prix" placeholder="Ex: 3 000" min="0">
+          <input type="number" id="offre-prix" placeholder="Ex: 3 000" min="0" inputmode="numeric">
         </div>
         <div class="form-group">
           <label class="field-label"><span class="ico">🏷️</span> Prix normal (XPF)</label>
-          <input type="number" id="offre-prix-normal" placeholder="Ex: 5 000" min="0">
+          <input type="number" id="offre-prix-normal" placeholder="Ex: 5 000" min="0" inputmode="numeric">
           <div class="prix-barre-hint">Affiché barré pour montrer l'économie</div>
         </div>
       </div>
@@ -381,6 +495,22 @@
 
   </div>
 </div>
+
+<!-- BARRE NAVIGATION MOBILE -->
+<nav class="bottom-nav" id="bottom-nav">
+  <a href="index.html">
+    <span class="ico">🏠</span>Accueil
+  </a>
+  <a onclick="navVers('connexion')" id="nav-connexion">
+    <span class="ico">🔑</span>Connexion
+  </a>
+  <a onclick="navVers('publier')" class="btn-publier" id="nav-publier">
+    <span class="ico">✚</span>Publier
+  </a>
+  <a onclick="navVers('paiements')" id="nav-paiements">
+    <span class="ico">💰</span>Paiements
+  </a>
+</nav>
 
 <script>
 var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
@@ -434,6 +564,55 @@ function afficherSection(nom) {
   var accroche = document.getElementById('bloc-accroche');
   if (nom === 'dashboard') { if (accroche) accroche.classList.add('cache'); }
   else { if (accroche) accroche.classList.remove('cache'); }
+  // Scroll vers le haut sur mobile
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Mise à jour barre de nav mobile
+  majNavMobile(nom);
+}
+
+function majNavMobile(section) {
+  var estConnecte = !!token;
+  var navConnexion = document.getElementById('nav-connexion');
+  var navPublier = document.getElementById('nav-publier');
+  var navPaiements = document.getElementById('nav-paiements');
+  if (!navConnexion) return;
+  // Réinitialiser
+  navConnexion.classList.remove('actif');
+  navPublier.classList.remove('actif');
+  navPaiements.classList.remove('actif');
+  if (estConnecte) {
+    navConnexion.innerHTML = '<span class="ico">👤</span>Mon compte';
+  } else {
+    navConnexion.innerHTML = '<span class="ico">🔑</span>Connexion';
+  }
+  if (section === 'connexion' || section === 'inscription') navConnexion.classList.add('actif');
+}
+
+function navVers(dest) {
+  if (dest === 'connexion') {
+    if (token) {
+      // Déjà connecté : scroll vers le dashboard
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      afficherSection('connexion');
+    }
+  } else if (dest === 'publier') {
+    if (!token) { afficherSection('connexion'); return; }
+    afficherSection('dashboard');
+    // Scroll vers le formulaire de publication
+    setTimeout(function() {
+      var form = document.querySelector('.offre-card-header');
+      if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  } else if (dest === 'paiements') {
+    if (!token) { afficherSection('connexion'); return; }
+    afficherSection('dashboard');
+    // Scroll vers les paiements
+    setTimeout(function() {
+      var pmt = document.getElementById('liste-paiements');
+      if (pmt) pmt.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
 
 function afficherDashboard(nom, iban) {
@@ -442,6 +621,9 @@ function afficherDashboard(nom, iban) {
   document.getElementById('iban-valeur').textContent = iban || 'Non renseigné';
   chargerMesPaiements();
   chargerCategories();
+  // Met à jour la nav mobile pour montrer l'état connecté
+  var navConnexion = document.getElementById('nav-connexion');
+  if (navConnexion) navConnexion.innerHTML = '<span class="ico">👤</span>Mon compte';
 }
 
 function seConnecter() {
@@ -607,6 +789,10 @@ function chargerMesPaiements() {
 }
 
 restaurerSession();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
 </script>
 
 </body>

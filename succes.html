@@ -7,30 +7,165 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .carte { background: white; border-radius: 20px; padding: 48px 40px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.1); }
-    .icone { font-size: 4rem; margin-bottom: 20px; }
-    h1 { font-size: 1.8rem; font-weight: 900; color: #1a6b3a; margin-bottom: 12px; }
-    p { color: #555; font-size: 0.97rem; line-height: 1.6; margin-bottom: 8px; }
-    .ref { font-size: 0.78rem; color: #bbb; margin-top: 20px; word-break: break-all; }
-    .btn { display: inline-block; margin-top: 28px; padding: 14px 32px; background: #1a6b3a; color: white; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1rem; transition: background 0.2s; }
-    .btn:hover { background: #0d4a2a; }
+
+    .ticket { background: white; border-radius: 20px; max-width: 480px; width: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.12); overflow: hidden; }
+
+    /* EN-TÊTE */
+    .ticket-header { background: linear-gradient(135deg, #0a2e18 0%, #1a6b3a 60%, #0d4a6b 100%); padding: 30px 28px; text-align: center; }
+    .ticket-logo { font-size: 2rem; font-weight: 900; color: #7ee8a2; letter-spacing: 3px; }
+    .ticket-logo span { color: rgba(255,255,255,0.7); font-size: 0.85rem; display: block; letter-spacing: 4px; margin-top: 2px; font-weight: 400; }
+    .ticket-icone { font-size: 3rem; margin: 16px 0 8px; }
+    .ticket-titre { color: white; font-size: 1.3rem; font-weight: 800; }
+    .ticket-sous { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 4px; }
+
+    /* PERFORATION */
+    .perforation { display: flex; align-items: center; margin: 0; position: relative; }
+    .perforation::before { content: ''; position: absolute; left: -18px; width: 36px; height: 36px; background: #f0f4f0; border-radius: 50%; z-index: 1; }
+    .perforation::after { content: ''; position: absolute; right: -18px; width: 36px; height: 36px; background: #f0f4f0; border-radius: 50%; z-index: 1; }
+    .tirets { flex: 1; border-top: 2.5px dashed #d0e8d0; margin: 0 20px; }
+
+    /* CORPS TICKET */
+    .ticket-corps { padding: 24px 28px; }
+    .ticket-offre { font-size: 1.1rem; font-weight: 800; color: #1a3a1a; margin-bottom: 4px; text-align: center; }
+    .ticket-fourn { font-size: 0.85rem; color: #888; text-align: center; margin-bottom: 20px; }
+    .ticket-ligne { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 0.88rem; border-bottom: 1px solid #f0f0f0; }
+    .ticket-ligne:last-of-type { border-bottom: none; }
+    .ticket-ligne .label { color: #888; }
+    .ticket-ligne .valeur { font-weight: 600; color: #1a3a1a; text-align: right; }
+    .ticket-total { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding: 14px 16px; background: #f0faf0; border: 2px solid #c8e6c9; border-radius: 10px; }
+    .ticket-total .label { font-weight: 700; color: #1a6b3a; }
+    .ticket-total .valeur { font-size: 1.35rem; font-weight: 900; color: #1a6b3a; }
+
+    /* CODE REF */
+    .ticket-ref { margin-top: 18px; background: #f8f8f8; border-radius: 10px; padding: 12px 16px; text-align: center; }
+    .ticket-ref .ref-label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+    .ticket-ref .ref-code { font-family: monospace; font-size: 0.72rem; color: #666; word-break: break-all; }
+
+    /* ACTIONS */
+    .ticket-actions { padding: 20px 28px 28px; display: flex; gap: 10px; }
+    .btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; font-family: inherit; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-primary { background: #1a6b3a; color: white; }
+    .btn-primary:hover { background: #0d4a2a; }
+    .btn-secondary { background: #e8f5e9; color: #1a6b3a; border: 2px solid #c8e6c9; }
+    .btn-secondary:hover { background: #c8e6c9; }
+
+    /* PIED */
+    .ticket-pied { background: #f8f8f8; padding: 14px; text-align: center; font-size: 0.72rem; color: #bbb; }
+
+    /* Chargement / erreur */
+    .chargement { text-align: center; padding: 60px 20px; color: #888; }
+    .message-erreur { text-align: center; padding: 60px 20px; color: #c62828; }
+
+    /* IMPRESSION / PDF */
+    @media print {
+      @page { margin: 0; size: A5 portrait; }
+      body { background: white; padding: 0; margin: 0; display: block; }
+      .ticket { box-shadow: none; border-radius: 0; max-width: 100%; width: 100%; }
+      .ticket-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .ticket-actions { display: none !important; }
+      .ticket-pied { display: none; }
+      .perforation::before, .perforation::after { background: white; }
+      .ticket-total { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
   </style>
 </head>
 <body>
-  <div class="carte">
-    <div class="icone">✅</div>
-    <h1>Paiement confirmé !</h1>
-    <p>Merci pour votre achat sur <strong>NC Deals</strong>.</p>
-    <p>Un email de confirmation vous a été envoyé.</p>
-    <div class="ref" id="ref"></div>
-    <a href="index.html" class="btn">← Retour aux offres</a>
-  </div>
-  <script>
-    var params = new URLSearchParams(window.location.search);
-    var sessionId = params.get('session_id');
-    if (sessionId) {
-      document.getElementById('ref').textContent = 'Référence : ' + sessionId;
-    }
-  </script>
+
+<div id="contenu">
+  <div class="chargement">⏳ Chargement de votre ticket...</div>
+</div>
+
+<script>
+var BACKEND = 'https://nc-deals-backend-production.up.railway.app';
+
+function afficherTicket(c) {
+  var date = new Date(c.cree_le).toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  var heure = new Date(c.cree_le).toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+  var montantXpf = c.montant_xpf || 0;
+  var montantEur = (montantXpf / 119.33174).toFixed(2);
+  var sessionId = c.stripe_session_id || '';
+
+  document.title = 'Ticket NC Deals — ' + (c.offre_titre || 'Commande');
+
+  document.getElementById('contenu').innerHTML =
+    '<div class="ticket">' +
+      '<div class="ticket-header">' +
+        '<div class="ticket-logo">NC Deals<span>Nouvelle-Calédonie</span></div>' +
+        '<div class="ticket-icone">✅</div>' +
+        '<div class="ticket-titre">Paiement confirmé !</div>' +
+        '<div class="ticket-sous">Merci pour votre confiance</div>' +
+      '</div>' +
+
+      '<div class="perforation"><div class="tirets"></div></div>' +
+
+      '<div class="ticket-corps">' +
+        '<div class="ticket-offre">' + (c.offre_titre || 'Offre NC Deals') + '</div>' +
+        '<div class="ticket-fourn">Proposé par ' + (c.fournisseur_nom || '—') + '</div>' +
+
+        '<div class="ticket-ligne"><span class="label">📧 Client</span><span class="valeur">' + (c.client_email || '—') + '</span></div>' +
+        '<div class="ticket-ligne"><span class="label">📅 Date</span><span class="valeur">' + date + '</span></div>' +
+        '<div class="ticket-ligne"><span class="label">🕐 Heure</span><span class="valeur">' + heure + '</span></div>' +
+        (c.categorie ? '<div class="ticket-ligne"><span class="label">📂 Catégorie</span><span class="valeur">' + c.categorie + '</span></div>' : '') +
+        '<div class="ticket-ligne"><span class="label">💱 Équivalent EUR</span><span class="valeur">≈ ' + montantEur + ' €</span></div>' +
+
+        '<div class="ticket-total"><span class="label">💰 Montant payé</span><span class="valeur">' + montantXpf.toLocaleString('fr-FR') + ' XPF</span></div>' +
+
+        '<div class="ticket-ref">' +
+          '<div class="ref-label">Référence de paiement</div>' +
+          '<div class="ref-code">' + sessionId + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="perforation"><div class="tirets"></div></div>' +
+
+      '<div class="ticket-actions">' +
+        '<button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimer</button>' +
+        '<a class="btn btn-primary" href="index.html">← Voir les offres</a>' +
+      '</div>' +
+
+      '<div class="ticket-pied">NC Deals — Les bons plans de Nouvelle-Calédonie · ncdeals.netlify.app</div>' +
+    '</div>';
+}
+
+function afficherFallback(sessionId) {
+  document.getElementById('contenu').innerHTML =
+    '<div class="ticket">' +
+      '<div class="ticket-header">' +
+        '<div class="ticket-logo">NC Deals<span>Nouvelle-Calédonie</span></div>' +
+        '<div class="ticket-icone">✅</div>' +
+        '<div class="ticket-titre">Paiement confirmé !</div>' +
+        '<div class="ticket-sous">Merci pour votre achat</div>' +
+      '</div>' +
+      '<div class="ticket-corps">' +
+        '<div style="text-align:center;padding:20px 0;color:#555;font-size:0.9rem;">Un email de confirmation vous a été envoyé.</div>' +
+        '<div class="ticket-ref">' +
+          '<div class="ref-label">Référence</div>' +
+          '<div class="ref-code">' + (sessionId || '—') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ticket-actions">' +
+        '<button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimer</button>' +
+        '<a class="btn btn-primary" href="index.html">← Voir les offres</a>' +
+      '</div>' +
+    '</div>';
+}
+
+var params = new URLSearchParams(window.location.search);
+var sessionId = params.get('session_id');
+
+if (!sessionId) {
+  document.getElementById('contenu').innerHTML =
+    '<div class="message-erreur"><p>Aucune référence de commande trouvée.</p><br><a href="index.html" style="color:#1a6b3a;">← Retour aux offres</a></div>';
+} else {
+  fetch(BACKEND + '/api/commande/session/' + encodeURIComponent(sessionId))
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { afficherFallback(sessionId); }
+    else { afficherTicket(data); }
+  })
+  .catch(function() { afficherFallback(sessionId); });
+}
+</script>
+
 </body>
 </html>
