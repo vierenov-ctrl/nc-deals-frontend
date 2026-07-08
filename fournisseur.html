@@ -103,7 +103,7 @@
     .upload-zone:hover { background: #e0f5e0; border-color: #0d4a2a; }
 
     hr.sep { border: none; border-top: 2px solid #e8e8e8; margin: 22px 0; }
-    .cache { display: none; }
+    .cache { display: none !important; }
 
     /* MES OFFRES */
     .mes-offres-liste { display: flex; flex-direction: column; }
@@ -516,6 +516,20 @@
           <input type="date" id="offre-validite">
         </div>
       </div>
+      <div class="form-group">
+        <label class="field-label"><span class="ico">🌐</span> Site web <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+        <input type="url" id="offre-site-web" placeholder="Ex: https://monsite.nc">
+      </div>
+      <div class="prix-row">
+        <div class="form-group">
+          <label class="field-label"><span class="ico">📘</span> Facebook <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+          <input type="url" id="offre-facebook" placeholder="Ex: https://facebook.com/moncommerce">
+        </div>
+        <div class="form-group">
+          <label class="field-label"><span class="ico">📷</span> Instagram <span style="font-weight:400;color:#888;">(optionnel)</span></label>
+          <input type="url" id="offre-instagram" placeholder="Ex: https://instagram.com/moncommerce">
+        </div>
+      </div>
       <button class="btn-publish" onclick="creerOffre()" id="btn-publier"><span id="btn-publish-label">🚀 Publier mon offre</span></button>
       <div class="motivation-text" id="motivation-text">✅ Gratuit pour vous · Visible immédiatement après validation</div>
       <div id="offre-msg"></div>
@@ -734,7 +748,8 @@ function seDeconnecter() {
 
 function viderFormOffre() {
   ['offre-categorie','offre-titre','offre-description','offre-prix','offre-prix-normal',
-   'offre-ville','offre-conditions','offre-horaires','offre-validite'].forEach(function(id) {
+   'offre-ville','offre-conditions','offre-horaires','offre-validite',
+   'offre-site-web','offre-facebook','offre-instagram'].forEach(function(id) {
     document.getElementById(id).value = '';
   });
 }
@@ -748,6 +763,9 @@ function creerOffre() {
   var conditions = document.getElementById('offre-conditions').value.trim();
   var horaires = document.getElementById('offre-horaires').value.trim();
   var validite = document.getElementById('offre-validite').value;
+  var siteWeb = document.getElementById('offre-site-web').value.trim();
+  var facebook = document.getElementById('offre-facebook').value.trim();
+  var instagram = document.getElementById('offre-instagram').value.trim();
   var categorie = getCategorie();
   var msg = document.getElementById('offre-msg');
   if (!titre) { msg.innerHTML = '<p class="erreur">Le titre est obligatoire.</p>'; return; }
@@ -758,6 +776,9 @@ function creerOffre() {
   if (conditions) extras.push('⚠️ ' + conditions);
   if (horaires) extras.push('🕐 ' + horaires);
   if (validite) { var d = new Date(validite); extras.push('📅 Valable jusqu\'au ' + d.toLocaleDateString('fr-FR')); }
+  if (siteWeb) extras.push('🌐 ' + siteWeb);
+  if (facebook) extras.push('📘 ' + facebook);
+  if (instagram) extras.push('📷 ' + instagram);
   var descFinale = description + (extras.length ? '\n\n' + extras.join(' · ') : '');
   var btn = document.getElementById('btn-publier');
   btn.disabled = true;
@@ -869,6 +890,15 @@ function ouvrirEdition(idx) {
 
   var horM = extrasStr.match(/🕐\s*([^·\n]+)/);
   document.getElementById('offre-horaires').value = horM ? horM[1].trim() : '';
+
+  var siteM = extrasStr.match(/🌐\s*([^·\n]+)/);
+  document.getElementById('offre-site-web').value = siteM ? siteM[1].trim() : '';
+
+  var fbM = extrasStr.match(/📘\s*([^·\n]+)/);
+  document.getElementById('offre-facebook').value = fbM ? fbM[1].trim() : '';
+
+  var igM = extrasStr.match(/📷\s*([^·\n]+)/);
+  document.getElementById('offre-instagram').value = igM ? igM[1].trim() : '';
 
   // Passer en mode édition visuellement
   document.getElementById('edition-banner').classList.remove('cache');

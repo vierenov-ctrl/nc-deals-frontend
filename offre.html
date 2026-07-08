@@ -32,6 +32,7 @@
     .fiche-separateur { border: none; border-top: 2px solid #e8f5e9; margin: 20px 0; }
     .fiche-label { font-size: 0.75rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
     .fiche-description { font-size: 0.97rem; color: #444; line-height: 1.7; margin-bottom: 20px; white-space: pre-line; }
+    .fiche-description a { color: #1a6b3a; font-weight: 600; }
 
     /* BLOC PAIEMENT */
     .bloc-paiement { background: #f0faf0; border: 2px solid #c8e6c9; border-radius: 14px; padding: 22px; margin-bottom: 24px; }
@@ -151,6 +152,10 @@ function lancerPaiement(offreId, prixXpf) {
   });
 }
 
+function linkifier(texte) {
+  return texte.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+}
+
 function afficherOffre(offre) {
   var photos = offre.photos || [];
   var premierePhoto = photos.length > 0 ? photos[0] : null;
@@ -169,7 +174,7 @@ function afficherOffre(offre) {
   var prixAffiche = prixXpf ? prixXpf.toLocaleString('fr-FR') + ' XPF' : 'Prix sur demande';
 
   var descriptionHtml = offre.description
-    ? '<div class="fiche-label">Description</div><div class="fiche-description">' + offre.description + '</div><hr class="fiche-separateur">'
+    ? '<div class="fiche-label">Description</div><div class="fiche-description">' + linkifier(offre.description) + '</div><hr class="fiche-separateur">'
     : '';
 
   var initiale = offre.fournisseur_nom ? offre.fournisseur_nom.charAt(0).toUpperCase() : '?';
