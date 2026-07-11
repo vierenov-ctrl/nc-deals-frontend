@@ -115,6 +115,13 @@
     .commande-xpf { font-size: 1.05rem; font-weight: 800; color: #1a6b3a; }
     .commande-commission { font-size: 0.75rem; color: #e65100; }
     .commande-net { font-size: 0.75rem; color: #555; }
+    .solde-ligne { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+    .solde-ligne:last-child { border-bottom: none; }
+    .solde-nom { font-weight: 700; font-size: 0.95rem; }
+    .solde-detail { font-size: 0.78rem; color: #888; }
+    .solde-du { font-size: 1.05rem; font-weight: 800; white-space: nowrap; }
+    .solde-du.a-payer { color: #e65100; }
+    .solde-du.a-jour { color: #1a6b3a; }
     .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
     .stat-box { flex: 1; min-width: 130px; background: #f0faf0; border: 2px solid #c8e6c9; border-radius: 12px; padding: 16px; text-align: center; }
     .stat-box .stat-val { font-size: 1.4rem; font-weight: 900; color: #1a6b3a; }
@@ -209,6 +216,12 @@
   <div class="card">
     <h2>👤 Gestion des fournisseurs</h2>
     <div id="liste-fournisseurs"><div class="vide">Chargement...</div></div>
+  </div>
+
+  <!-- SOLDES DUS -->
+  <div class="card">
+    <h2>💸 Soldes dus aux fournisseurs</h2>
+    <div id="liste-soldes"><div class="vide">Chargement...</div></div>
   </div>
 
   <!-- PAIEMENTS -->
@@ -322,6 +335,34 @@ function chargerTout() {
   chargerFournsForPaiement();
   chargerPaiements();
   chargerCommandes();
+  chargerSoldes();
+}
+
+/* ── SOLDES DUS ── */
+function chargerSoldes() {
+  fetch(BACKEND + '/api/admin/soldes?admin_key=' + encodeURIComponent(ADMIN_KEY))
+  .then(function(r) { return r.json(); })
+  .then(function(soldes) {
+    var container = document.getElementById('liste-soldes');
+    if (!soldes.length) { container.innerHTML = '<div class="vide">Aucune vente en ligne pour l\'instant.</div>'; return; }
+    var html = '';
+    for (var i = 0; i < soldes.length; i++) {
+      var s = soldes[i];
+      var du = s.solde_du || 0;
+      var classe = du > 0 ? 'a-payer' : 'a-jour';
+      var texte = du > 0 ? du.toLocaleString('fr-FR') + ' XPF à verser' : 'À jour';
+      html += '<div class="solde-ligne">';
+      html += '<div>';
+      html += '<div class="solde-nom">' + (s.nom || '—') + '</div>';
+      html += '<div class="solde-detail">' + (s.iban || 'IBAN non renseigné') + '</div>';
+      html += '<div class="solde-detail">Vendu net : ' + Number(s.total_net).toLocaleString('fr-FR') + ' XPF · Déjà versé : ' + Number(s.total_verse).toLocaleString('fr-FR') + ' XPF</div>';
+      html += '</div>';
+      html += '<div class="solde-du ' + classe + '">' + texte + '</div>';
+      html += '</div>';
+    }
+    container.innerHTML = html;
+  })
+  .catch(function() { document.getElementById('liste-soldes').innerHTML = '<div class="vide">Erreur de chargement.</div>'; });
 }
 
 /* ── PUBLICITÉS ── */
@@ -591,6 +632,7 @@ function enregistrerPaiement() {
       document.getElementById('paiement-ref').value = '';
       document.getElementById('paiement-note').value = '';
       chargerPaiements();
+      chargerSoldes();
     }
   })
   .catch(function() { msg.innerHTML = '<div class="erreur">Erreur réseau.</div>'; });
