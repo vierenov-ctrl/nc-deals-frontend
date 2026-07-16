@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NC Deals — Détail de l'offre</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1a6b3a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NC Deals">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f0; color: #1a3a1a; min-height: 100vh; }
@@ -67,9 +74,29 @@
       .fiche-prix { font-size: 1.6rem; }
       .fiche { padding: 20px 18px; }
     }
+
+    /* BOUTON INSTALLER L'APP (flottant) */
+    .btn-installer-flottant { position: fixed; bottom: 20px; right: 20px; z-index: 500; display: none; align-items: center; gap: 8px; padding: 12px 20px; background: #7ee8a2; border: none; border-radius: 30px; color: #0a2e18; font-weight: 700; font-size: 0.85rem; font-family: inherit; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+    .btn-installer-flottant:hover { background: #97eeb4; transform: translateY(-2px); }
+    .ios-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .ios-modal { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 55%, #0d4a6b 100%); border-radius: 18px; padding: 26px 24px; max-width: 340px; width: 100%; color: white; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .ios-modal-titre { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
+    .ios-modal-etape { font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px; background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 12px; }
+    .ios-modal-fermer { display: block; width: 100%; margin-top: 8px; padding: 10px; background: #7ee8a2; border: none; border-radius: 30px; color: #0a2e18; font-weight: 700; font-size: 0.88rem; cursor: pointer; }
   </style>
 </head>
 <body>
+
+<button id="btn-installer" class="btn-installer-flottant">📲 Installer l'app</button>
+<div id="modal-ios-install" class="ios-modal-overlay">
+  <div class="ios-modal">
+    <div class="ios-modal-titre">📲 Installer NC Deals</div>
+    <div class="ios-modal-etape">1️⃣ Appuyez sur le bouton <strong>Partager</strong> (le carré avec la flèche ⬆️) en bas de Safari</div>
+    <div class="ios-modal-etape">2️⃣ Faites défiler et appuyez sur <strong>« Sur l'écran d'accueil »</strong></div>
+    <div class="ios-modal-etape">3️⃣ Appuyez sur <strong>« Ajouter »</strong> en haut à droite</div>
+    <button class="ios-modal-fermer" onclick="document.getElementById('modal-ios-install').style.display='none'">Fermer</button>
+  </div>
+</div>
 
 <div class="header">
   <a href="index.html" class="header-logo">NC <span>Deals</span></a>
@@ -238,6 +265,52 @@ function charger() {
 }
 
 charger();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+}
+
+// INSTALLATION DE L'APP (PWA)
+(function() {
+  var btnInstaller = document.getElementById('btn-installer');
+  var deferredPrompt = null;
+
+  function estDejaInstallee() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function estIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+
+  if (estDejaInstallee()) return;
+
+  if (estIOS()) {
+    btnInstaller.style.display = 'flex';
+    btnInstaller.onclick = function() {
+      document.getElementById('modal-ios-install').style.display = 'flex';
+    };
+  } else {
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      btnInstaller.style.display = 'flex';
+    });
+
+    btnInstaller.onclick = function() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function() {
+        deferredPrompt = null;
+        btnInstaller.style.display = 'none';
+      });
+    };
+
+    window.addEventListener('appinstalled', function() {
+      btnInstaller.style.display = 'none';
+    });
+  }
+})();
 </script>
 
 </body>
