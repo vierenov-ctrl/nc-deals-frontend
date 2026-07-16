@@ -27,7 +27,17 @@
     .hero .tagline { color: rgba(255,255,255,0.72); font-size: 0.95rem; font-style: italic; margin-bottom: 22px; }
     .hero-lien { display: inline-block; padding: 11px 28px; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.35); border-radius: 30px; color: white; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.2s; backdrop-filter: blur(4px); }
     .hero-lien:hover { background: rgba(255,255,255,0.22); transform: translateY(-1px); }
+    .hero-boutons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+    .btn-installer { display: none; padding: 11px 28px; background: #7ee8a2; border: 1.5px solid #7ee8a2; border-radius: 30px; color: #0a2e18; text-decoration: none; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+    .btn-installer:hover { background: #97eeb4; transform: translateY(-1px); }
     .hero-wave { position: absolute; bottom: 0; left: 0; width: 100%; line-height: 0; }
+
+    /* MODAL INSTALLATION IOS */
+    .ios-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .ios-modal { background: linear-gradient(150deg, #0a2e18 0%, #1a6b3a 55%, #0d4a6b 100%); border-radius: 18px; padding: 26px 24px; max-width: 340px; width: 100%; color: white; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .ios-modal-titre { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; text-align: center; }
+    .ios-modal-etape { font-size: 0.9rem; line-height: 1.5; margin-bottom: 12px; background: rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 12px; }
+    .ios-modal-fermer { display: block; width: 100%; margin-top: 8px; padding: 10px; background: #7ee8a2; border: none; border-radius: 30px; color: #0a2e18; font-weight: 700; font-size: 0.88rem; cursor: pointer; }
 
     /* VITRINES CATÉGORIES HERO */
     .hero-vitrines { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 28px; padding: 0 10px; }
@@ -101,12 +111,25 @@
 </head>
 <body>
 
+<div id="modal-ios-install" class="ios-modal-overlay">
+  <div class="ios-modal">
+    <div class="ios-modal-titre">📲 Installer NC Deals</div>
+    <div class="ios-modal-etape">1️⃣ Appuyez sur le bouton <strong>Partager</strong> (le carré avec la flèche ⬆️) en bas de Safari</div>
+    <div class="ios-modal-etape">2️⃣ Faites défiler et appuyez sur <strong>« Sur l'écran d'accueil »</strong></div>
+    <div class="ios-modal-etape">3️⃣ Appuyez sur <strong>« Ajouter »</strong> en haut à droite</div>
+    <button class="ios-modal-fermer" onclick="document.getElementById('modal-ios-install').style.display='none'">Fermer</button>
+  </div>
+</div>
+
 <div class="hero">
   <div class="hero-badge">🌺 Nouvelle-Calédonie</div>
   <h1><span class="nc">NC</span><span class="deals">Deals</span></h1>
   <div class="hero-accent"></div>
   <div class="tagline">Les meilleurs bons plans de Nouvelle-Calédonie</div>
-  <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
+  <div class="hero-boutons">
+    <a href="fournisseur.html" class="hero-lien">Vous êtes fournisseur ? Publiez vos offres →</a>
+    <button id="btn-installer" class="btn-installer">📲 Installer l'app</button>
+  </div>
 
   <div class="hero-wave"><svg viewBox="0 0 1440 55" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C240,55 480,0 720,28 C960,55 1200,10 1440,30 L1440,55 L0,55 Z" fill="#f0f4f0"/></svg></div>
   <div class="hero-vitrines">
@@ -360,6 +383,48 @@ chargerPub();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
 }
+
+// INSTALLATION DE L'APP (PWA)
+(function() {
+  var btnInstaller = document.getElementById('btn-installer');
+  var deferredPrompt = null;
+
+  function estDejaInstallee() {
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  }
+
+  function estIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+
+  if (estDejaInstallee()) return;
+
+  if (estIOS()) {
+    btnInstaller.style.display = 'inline-block';
+    btnInstaller.onclick = function() {
+      document.getElementById('modal-ios-install').style.display = 'flex';
+    };
+  } else {
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      btnInstaller.style.display = 'inline-block';
+    });
+
+    btnInstaller.onclick = function() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function() {
+        deferredPrompt = null;
+        btnInstaller.style.display = 'none';
+      });
+    };
+
+    window.addEventListener('appinstalled', function() {
+      btnInstaller.style.display = 'none';
+    });
+  }
+})();
 </script>
 
 </body>
